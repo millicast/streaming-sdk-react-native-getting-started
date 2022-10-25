@@ -48,10 +48,7 @@ class MillicastWidget extends React.Component {
 
     //Set track event handler to receive streams from Publisher.
     this.millicastView.on('track', (event) => {
-      console.log(JSON.stringify(event));
       const videoUrl = event.streams[0] ? event.streams[0].toURL() : null
-      console.log('video url' + videoUrl);
-      console.log(JSON.stringify(this.state));
       if (!videoUrl) return null
       this.setState({
         ...(event.track.kind == 'video' && { streamURL: [...this.state.streamURL, videoUrl] }),
@@ -66,9 +63,9 @@ class MillicastWidget extends React.Component {
       this.millicastView.on("broadcastEvent", async (event) => {
         //Get event name and data
         const { name, data } = event;
-        console.log(JSON.stringify(data));
         switch (name) {
           case "active":
+            console.log(JSON.stringify(data));
             this.setState({
               ...((this.state.sourceIds.indexOf(data.sourceId) === -1 && data.sourceId != null) && {
                 sourceIds: [...this.state.sourceIds, data.sourceId],
@@ -107,16 +104,13 @@ class MillicastWidget extends React.Component {
 
   addRemoteTrack = async () => {
     const mediaStream = new MediaStream()
-    console.log('CHUCHAA' + JSON.stringify(mediaStream.getTracks()));
     const transceiver = await this.millicastView.addRemoteTrack('video', [mediaStream])
     const mediaId = transceiver.mid;
-    console.log('LLEGO EL MID ' + mediaId);
     await this.millicastView.project(this.state.sourceIds[this.state.streamURL.length], [{
       media: 'video',
       mediaId,
       trackId: 'video'
     }])
-    console.log(JSON.stringify(mediaStream.getTracks()));
     this.setState({
       streamURL: [...this.state.streamURL, mediaStream.toURL()]
     })
