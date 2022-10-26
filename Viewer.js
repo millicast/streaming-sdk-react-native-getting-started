@@ -9,14 +9,12 @@ class MillicastWidget extends React.Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
-      streamURL: [],
+      streams: [],
       sourceIds: ['main'],
-      audioMid: [],
-      videoMid: [],
       activeLayers: [],
-      remoteMediaStream: null,
-      stream: null
+      multiView: false
     }
 
     this.millicastView = null
@@ -47,15 +45,23 @@ class MillicastWidget extends React.Component {
     this.millicastView = new MillicastView(streamName, tokenGenerator, null)
 
     //Set track event handler to receive streams from Publisher.
-    this.millicastView.on('track', (event) => {
+    this.millicastView.on('track', async (event) => {
       const videoUrl = event.streams[0] ? event.streams[0].toURL() : null
       if (!videoUrl) return null
+      const streams = [...this.state.streams]
+      if (event.track.kind == 'audio') {
+        await Promise.all(streams.map((stream) => {
+          if (stream.streamURL == event.streams[0].toURL()) {
+            stream.audioMid = event.transceiver.mid
+          }
+        }))
+      } else {
+        streams.push({ streamURL: videoUrl, videoMid: event.transceiver.mid })
+      }
       this.setState({
-        ...(event.track.kind == 'video' && { streamURL: [...this.state.streamURL, videoUrl] }),
-        ...(event.track.kind == 'video' && { stream: event.streams[0] }),
-        ...(event.track.kind == 'video' && { videoMid: [...this.state.videoMid, event.transceiver.mid] }),
-        ...(event.track.kind == 'audio' && { audioMid: [...this.state.audioMid, event.transceiver.mid] }),
+        streams: [...streams]
       })
+      console.log(JSON.stringify(this.state.streams));
     })
 
     //Start connection to viewer
@@ -102,62 +108,87 @@ class MillicastWidget extends React.Component {
     this.setState()
   }
 
-  addRemoteTrack = async () => {
+  addRemoteTrack = async (sourceId) => {
     const mediaStream = new MediaStream()
     const transceiver = await this.millicastView.addRemoteTrack('video', [mediaStream])
     const mediaId = transceiver.mid;
-    await this.millicastView.project(this.state.sourceIds[this.state.streamURL.length], [{
+    await this.millicastView.project(sourceId, [{
       media: 'video',
       mediaId,
       trackId: 'video'
     }])
     this.setState({
-      streamURL: [...this.state.streamURL, mediaStream.toURL()]
+      streams: [...this.state.streams, { streamURL: mediaStream.toURL(), videoMid: mediaId }],
     })
+    console.log(JSON.stringify(this.state.streams));
   }
 
-  project = async (sourceId, mid) => {
+  project = async (sourceId, videoMid, audioMid) => {
     if (sourceId == 'main') {
       sourceId = null
     }
     this.millicastView.project(sourceId, [{
       media: 'video',
-      mediaId: mid,
+      mediaId: videoMid,
       trackId: 'video'
     }])
-    this.millicastView.project(sourceId, [{
-      media: 'audio',
-      mediaId: this.state.audioMid[0],
-      trackId: 'audio'
-    }])
+    if (audioMid) {
+      this.millicastView.project(sourceId, [{
+        media: 'audio',
+        mediaId: this.state.streams[0].audioMid,
+        trackId: 'audio'
+      }])
+    }
   }
 
   select = async (id) => {
     this.millicastView.select({ encodingId: id })
   }
 
+  multiView = async () => {
+    const sourceIds = this.state.sourceIds
+    console.log(JSON.stringify(sourceIds));
+    if (!this.state.multiView) {
+      await Promise.all(sourceIds.map(async (sourceId) => {
+        if (sourceId != 'main') {
+          this.addRemoteTrack(sourceId)
+        }
+      }))
+    } else {
+      this.setState({
+        streams: [...[this.state.streams[0]]]
+      })
+    }
+    this.setState({
+      multiView: !this.state.multiView
+    })
+  }
+
 
   render() {
     return (
       <>
-        {this.state.streamURL.map((url, mid) => {
-          if (mid >= 1) mid++
-          return (
-            <View key={mid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
-              <View>
-                {this.state.sourceIds.map((sourceId, index) => {
-                  return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, mid)} />)
-                })
-                }
-              </View>
-              <RTCView key={url + mid} streamURL={url} style={this.styles.video} objectFit='contain' />
-            </View>
-          )
-        })
+        {
+          this.state.multiView == true ?
+            this.state.streams.map((stream) => {
+              return (
+                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+                  <View>
+                    {this.state.sourceIds.map((sourceId, index) => {
+                      return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
+                    })
+                    }
+                  </View>
+                  <RTCView key={stream.streamURL + stream.videoMid} streamURL={stream.streamURL} style={this.styles.video} objectFit='contain' />
+                </View>
+              )
+            })
+            :
+            this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].streamURL} style={this.styles.video} objectFit='contain' /> : null
         }
         <View style={this.styles.footer}>
           <Button style={styles.footer} title='Reconnect' onPress={this.reconnect} />
-          <Button style={styles.footer} title='AddRemoteTrack' onPress={this.addRemoteTrack} />
+          <Button style={styles.footer} title='Multi view' onPress={this.multiView} />
           <View>
             {this.state.activeLayers.map(layer => {
               return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)
@@ -169,6 +200,7 @@ class MillicastWidget extends React.Component {
     );
   }
 };
+
 export default function App() {
   return (
     <>
