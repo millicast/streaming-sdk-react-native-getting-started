@@ -10,12 +10,13 @@
   "main": "./index.js",
   "dependencies": {
     "@millicast/sdk": "^0.1.33",
-    "expo": "~46.0.13",
+    "expo": "^46.0.16",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
     "react": "^18.0.0",
     "react-dom": "18.0.0",
     "react-native": "^0.69.6",
+    "react-native-dotenv": "^3.3.1",
     "react-native-webrtc": "^106.0.0-beta.5"
   },
   "devDependencies": {

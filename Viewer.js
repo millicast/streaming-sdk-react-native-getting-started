@@ -4,6 +4,7 @@ import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
+import { MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID } from '@env'
 
 class MillicastWidget extends React.Component {
 
@@ -206,7 +207,7 @@ export default function App() {
     <>
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
-        <MillicastWidget streamName='' accountID='' />
+        <MillicastWidget streamName={MILLICAST_STREAM_NAME} accountID={MILLICAST_ACCOUNT_ID} />
       </SafeAreaView>
     </>
   );
