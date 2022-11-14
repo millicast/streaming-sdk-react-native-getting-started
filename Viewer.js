@@ -14,7 +14,9 @@ class MillicastWidget extends React.Component {
       streams: [],
       sourceIds: ['main'],
       activeLayers: [],
-      multiView: false
+      multiView: false,
+      videoPaused: false,
+      audioMuted: false
     }
 
     this.millicastView = null
@@ -29,6 +31,13 @@ class MillicastWidget extends React.Component {
         left: 0,
         bottom: 0,
         justifyContent: 'center'
+      },
+      buttonPlayPause: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'green',
+        paddingVertical: 4,
+        paddingHorizontal: 20
       }
     })
 
@@ -46,17 +55,17 @@ class MillicastWidget extends React.Component {
 
     //Set track event handler to receive streams from Publisher.
     this.millicastView.on('track', async (event) => {
-      const videoUrl = event.streams[0] ? event.streams[0].toURL() : null
-      if (!videoUrl) return null
+      const mediaStream = event.streams[0] ? event.streams[0] : null
+      if (!mediaStream) return null
       const streams = [...this.state.streams]
       if (event.track.kind == 'audio') {
         await Promise.all(streams.map((stream) => {
-          if (stream.streamURL == event.streams[0].toURL()) {
+          if (stream.stream.toURL() == event.streams[0].toURL()) {
             stream.audioMid = event.transceiver.mid
           }
         }))
       } else {
-        streams.push({ streamURL: videoUrl, videoMid: event.transceiver.mid })
+        streams.push({ stream: mediaStream, videoMid: event.transceiver.mid })
       }
       this.setState({
         streams: [...streams]
@@ -118,9 +127,55 @@ class MillicastWidget extends React.Component {
       trackId: 'video'
     }])
     this.setState({
-      streams: [...this.state.streams, { streamURL: mediaStream.toURL(), videoMid: mediaId }],
+      streams: [...this.state.streams, { stream: mediaStream, videoMid: mediaId }],
     })
     console.log(JSON.stringify(this.state.streams));
+  }
+
+  changeStateOfMediaTracks(streams, value) {
+    streams.map(s => (
+      s.stream.getVideoTracks().forEach(videoTrack => { // No se por que getVideoTracks trae el audio tambien y getTracks no 
+        videoTrack.enabled = value;
+      })
+    ))
+    this.setState({
+      videoPaused: !value
+    })
+  }
+
+  playPause = async () => {
+    let isPaused = this.state.videoPaused;
+    if (!isPaused) {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused);
+      isPaused = true;
+    } else {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused)
+      isPaused = false;
+    }
+  }
+
+  changeStateOfAudioTracks(streams, value) {
+    streams.map(s => (
+      s.stream.getTracks().forEach(track => { 
+        if (track.kind == "audio") {
+          track.enabled = value;
+        }
+      })
+    ))
+    this.setState({
+      audioMuted: !value
+    })
+  }
+
+  muteAudio = async () => {
+    let isPaused = this.state.audioMuted;
+    if (!isPaused) {
+      this.changeStateOfAudioTracks(this.state.streams, isPaused); 
+      isPaused = true;
+    } else {
+      this.changeStateOfAudioTracks(this.state.streams, isPaused); 
+      isPaused = false;
+    }
   }
 
   project = async (sourceId, videoMid, audioMid) => {
@@ -164,7 +219,6 @@ class MillicastWidget extends React.Component {
     })
   }
 
-
   render() {
     return (
       <>
@@ -175,18 +229,22 @@ class MillicastWidget extends React.Component {
                 <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
                   <View>
                     {this.state.sourceIds.map((sourceId, index) => {
-                      return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
+                      return (
+                        <Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />
+                      )
                     })
                     }
                   </View>
-                  <RTCView key={stream.streamURL + stream.videoMid} streamURL={stream.streamURL} style={this.styles.video} objectFit='contain' />
+                  <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
                 </View>
               )
             })
             :
-            this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].streamURL} style={this.styles.video} objectFit='contain' /> : null
+            this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
         <View style={this.styles.footer}>
+          <Button style={styles.button} title='Play/Pause' onPress={this.playPause} />
+          <Button style={styles.button} title='Mute Audio' onPress={this.muteAudio} />
           <Button style={styles.footer} title='Reconnect' onPress={this.reconnect} />
           <Button style={styles.footer} title='Multi view' onPress={this.multiView} />
           <View>
@@ -206,7 +264,7 @@ export default function App() {
     <>
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
-        <MillicastWidget streamName='' accountID='' />
+        <MillicastWidget streamName='l7rpte0h' accountID='tnJhvK' />
       </SafeAreaView>
     </>
   );
