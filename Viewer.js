@@ -111,11 +111,11 @@ class MillicastWidget extends React.Component {
     }
   }
 
-  reconnect = async () => {
-    await this.millicastView.stop()
-    await this.subscribe(this.props.streamName, this.props.accountID)
-    this.setState()
-  }
+  // reconnect = async () => {
+  //   await this.millicastView.stop()
+  //   await this.subscribe(this.props.streamName, this.props.accountID)
+  //   this.setState()
+  // }
 
   addRemoteTrack = async (sourceId) => {
     const mediaStream = new MediaStream()
@@ -243,9 +243,8 @@ class MillicastWidget extends React.Component {
             this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
         <View style={this.styles.footer}>
-          <Button style={styles.button} title='Play/Pause' onPress={this.playPause} />
+          <Button style={styles.playPause} title='Play/Pause' onPress={this.playPause} />
           <Button style={styles.button} title='Mute Audio' onPress={this.muteAudio} />
-          <Button style={styles.footer} title='Reconnect' onPress={this.reconnect} />
           <Button style={styles.footer} title='Multi view' onPress={this.multiView} />
           <View>
             {this.state.activeLayers.map(layer => {
