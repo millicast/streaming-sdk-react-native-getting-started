@@ -15,8 +15,6 @@ import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
 
 class MillicastWidget extends React.Component {
-
-
     constructor(props) {
         super(props)
         this.millicastPublish = null
@@ -24,7 +22,9 @@ class MillicastWidget extends React.Component {
             mediaStream: null,
             stream: null,
             codec: 'vp8',
-            mirror: true
+            mirror: true, // for switching camera
+            playing: false,
+            muted: false
         }
 
         this.styles = StyleSheet.create({
@@ -37,7 +37,6 @@ class MillicastWidget extends React.Component {
 
     toggleCamera = () => {
         this.state.mediaStream.getVideoTracks().forEach((track) => {
-            console.log('sc', track);
             track._switchCamera();
             this.setState({
                 mirror: !this.state.mirror
@@ -45,9 +44,7 @@ class MillicastWidget extends React.Component {
         })
     }
 
-
     start = async () => {
-        console.log('start');
         if (!this.state.mediaStream) {
             let s;
             try {
@@ -70,7 +67,6 @@ class MillicastWidget extends React.Component {
     }
 
     stop = () => {
-        console.log('stop');
         this.millicastPublish.stop();
         if (this.state.mediaStream) {
             this.state.mediaStream.release();
@@ -80,9 +76,7 @@ class MillicastWidget extends React.Component {
         }
     };
 
-
     async publish(streamName, token) {
-
         const tokenGenerator = () => Director.getPublisher({
             token,
             streamName
@@ -99,13 +93,26 @@ class MillicastWidget extends React.Component {
             codec: this.state.codec
         }
 
-
         //Start broadcast
         try {
             await this.millicastPublish.connect(broadcastOptions)
         } catch (e) {
             console.log('Connection failed, handle error', e)
         }
+    }
+
+    handleClickPlay = () => {
+        if (!this.state.playing){
+            this.start()
+        } else {
+            this.stop()
+        }
+        this.setState({playing: !this.state.playing});
+    }
+
+    handleClickMute = () => {
+        this.setState({muted: !this.state.muted});
+        console.log("yet to be implemented")
     }
 
     render() {
@@ -122,15 +129,15 @@ class MillicastWidget extends React.Component {
                         onChangeText={this.setCodec}
                         value={this.state.codec}
                     />
-                    <Button
-                        title="Start"
-                        onPress={this.start} />
-                    <Button
-                        title="Stop"
-                        onPress={this.stop} />
-                    <Button
-                        title="Switch Camera"
-                        onPress={this.toggleCamera} />
+                <Button
+                    title={ !this.state.playing ? "Play" : "Pause" }
+                    onPress={ this.handleClickPlay } />
+                <Button
+                    title="Switch Camera"
+                    onPress={ this.toggleCamera } />
+                <Button
+                    title={ !this.state.muted ? "Mute" : "Unmute" }
+                    onPress={ this.handleClickMute } />
                 </View>
             </View>
         )
