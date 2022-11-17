@@ -207,7 +207,7 @@ export default function App() {
     <>
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
-        <MillicastWidget streamName={MILLICAST_STREAM_NAME} accountID={MILLICAST_ACCOUNT_ID} />
+        <MillicastWidget streamName={ MILLICAST_STREAM_NAME } accountID={ MILLICAST_ACCOUNT_ID } />
       </SafeAreaView>
     </>
   );
