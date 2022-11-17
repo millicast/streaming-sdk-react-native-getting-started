@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Button, SafeAreaView, Pressable } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
+
+import myStyles from './styles.js'
 
 class MillicastWidget extends React.Component {
 
@@ -20,26 +22,27 @@ class MillicastWidget extends React.Component {
     }
 
     this.millicastView = null
-    this.styles = StyleSheet.create({
-      video: {
-        flex: 10,
-        position: 'relative',
-      },
-      footer: {
-        position: 'absolute',
-        right: 0,
-        left: 0,
-        bottom: 0,
-        justifyContent: 'center'
-      },
-      buttonPlayPause: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'green',
-        paddingVertical: 4,
-        paddingHorizontal: 20
-      }
-    })
+    this.styles = myStyles
+    
+
+    // StyleSheet.create({
+    //   video: {
+    //     flex: 10,
+    //     position: 'relative',
+    //   },
+    //   footer: {
+    //     position: 'absolute',
+    //     right: 0,
+    //     left: 0,
+    //     bottom: 0,
+    //     justifyContent: 'center'
+    //   },
+    //   button: {
+    //     position: 'absolute',
+    //     justifyContent: 'center',
+    //     backgroundColor: 'green'
+    //   }
+    // })
 
     this.subscribe(props.streamName, props.accountID)
   }
@@ -111,11 +114,11 @@ class MillicastWidget extends React.Component {
     }
   }
 
-  // reconnect = async () => {
-  //   await this.millicastView.stop()
-  //   await this.subscribe(this.props.streamName, this.props.accountID)
-  //   this.setState()
-  // }
+  reconnect = async () => {
+    await this.millicastView.stop()
+    await this.subscribe(this.props.streamName, this.props.accountID)
+    this.setState()
+  }
 
   addRemoteTrack = async (sourceId) => {
     const mediaStream = new MediaStream()
@@ -242,10 +245,12 @@ class MillicastWidget extends React.Component {
             :
             this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
-        <View style={this.styles.footer}>
-          <Button style={styles.playPause} title='Play/Pause' onPress={this.playPause} />
-          <Button style={styles.button} title='Mute Audio' onPress={this.muteAudio} />
-          <Button style={styles.footer} title='Multi view' onPress={this.multiView} />
+        
+        <View style={myStyles.footer}>
+          <Button style={myStyles.button} title='Play/Pause' onPress={this.playPause} />
+          <Button style={myStyles.footer} title='Mute Audio' onPress={this.muteAudio} />
+          {/* <Button style={styles.footer} title='Reconnect' onPress={this.reconnect} /> */}
+          <Button style={myStyles.footer} title='Multi view' onPress={this.multiView} />
           <View>
             {this.state.activeLayers.map(layer => {
               return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)
@@ -261,15 +266,15 @@ class MillicastWidget extends React.Component {
 export default function App() {
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={stylesContainer.container}>
         <StatusBar style="auto" />
-        <MillicastWidget streamName='l7rpte0h' accountID='tnJhvK' />
+        <MillicastWidget streamName='' accountID='' />
       </SafeAreaView>
     </>
   );
 }
 
-const styles = StyleSheet.create({
+const stylesContainer = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     ...StyleSheet.absoluteFill
