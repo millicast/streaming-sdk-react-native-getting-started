@@ -4,9 +4,10 @@ import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
-import { MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID } from '@env'
 
 import myStyles from './styles.js'
+const streamName = process.env.MILLICAST_STREAM_NAME;
+const accountId = process.env.MILLICAST_ACCOUNT_ID;
 
 class MillicastWidget extends React.Component {
 
@@ -18,32 +19,12 @@ class MillicastWidget extends React.Component {
       sourceIds: ['main'],
       activeLayers: [],
       multiView: false,
-      videoPaused: false,
-      audioMuted: false
+      playing: false,
+      muted: false
     }
 
     this.millicastView = null
     this.styles = myStyles
-    
-
-    // StyleSheet.create({
-    //   video: {
-    //     flex: 10,
-    //     position: 'relative',
-    //   },
-    //   footer: {
-    //     position: 'absolute',
-    //     right: 0,
-    //     left: 0,
-    //     bottom: 0,
-    //     justifyContent: 'center'
-    //   },
-    //   button: {
-    //     position: 'absolute',
-    //     justifyContent: 'center',
-    //     backgroundColor: 'green'
-    //   }
-    // })
 
     this.subscribe(props.streamName, props.accountID)
   }
@@ -143,19 +124,18 @@ class MillicastWidget extends React.Component {
       })
     ))
     this.setState({
-      videoPaused: !value
+      playing: !value
     })
   }
 
-  playPause = async () => {
-    let isPaused = this.state.videoPaused;
+  playPauseVideo = async () => {
+    let isPaused = this.state.playing;
     if (!isPaused) {
       this.changeStateOfMediaTracks(this.state.streams, isPaused);
-      isPaused = true;
     } else {
       this.changeStateOfMediaTracks(this.state.streams, isPaused)
-      isPaused = false;
     }
+    isPaused = !isPaused;
   }
 
   changeStateOfAudioTracks(streams, value) {
@@ -167,19 +147,18 @@ class MillicastWidget extends React.Component {
       })
     ))
     this.setState({
-      audioMuted: !value
+      muted: !value
     })
   }
 
   muteAudio = async () => {
-    let isPaused = this.state.audioMuted;
+    let isPaused = this.state.muted;
     if (!isPaused) {
       this.changeStateOfAudioTracks(this.state.streams, isPaused); 
-      isPaused = true;
     } else {
       this.changeStateOfAudioTracks(this.state.streams, isPaused); 
-      isPaused = false;
     }
+    isPaused = !isPaused;
   }
 
   project = async (sourceId, videoMid, audioMid) => {
@@ -248,9 +227,8 @@ class MillicastWidget extends React.Component {
         }
         
         <View style={myStyles.footer}>
-          <Button style={myStyles.button} title='Play/Pause' onPress={this.playPause} />
-          <Button style={myStyles.footer} title='Mute Audio' onPress={this.muteAudio} />
-          {/* <Button style={styles.footer} title='Reconnect' onPress={this.reconnect} /> */}
+          <Button style={myStyles.button} title={ !this.state.playing ? "Play" : "Pause" } onPress={this.playPauseVideo} />
+          <Button style={myStyles.footer} title={ !this.state.muted ? "Mute" : "Unmute" } onPress={this.muteAudio} />
           <Button style={myStyles.footer} title='Multi view' onPress={this.multiView} />
           <View>
             {this.state.activeLayers.map(layer => {
@@ -269,7 +247,7 @@ export default function App() {
     <>
       <SafeAreaView style={stylesContainer.container}>
         <StatusBar style="auto" />
-        <MillicastWidget streamName={MILLICAST_STREAM_NAME} accountID={MILLICAST_ACCOUNT_ID} />
+        <MillicastWidget streamName={streamName} accountID={accountId} />
       </SafeAreaView>
     </>
   );

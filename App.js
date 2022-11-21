@@ -7,6 +7,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RTCView } from 'react-native-webrtc';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
 
+import Viewer from './Viewer'
+import Publisher from './Publisher'
+
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -59,7 +62,7 @@ function App() {
       <Stack.Navigator>
       <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} options={{ headerTitle: (props) => <LogoTitle {...props} /> }} />
       <Stack.Screen name="Publisher App" component={PublisherScreen} />
-      <Stack.Screen name="Subscriber App" component={SubscriberScreen} />
+      <Stack.Screen name="Subscriber App" component={Viewer} />
       </Stack.Navigator>
     </NavigationContainer>
   );

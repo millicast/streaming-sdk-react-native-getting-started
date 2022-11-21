@@ -1471,10 +1471,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@millicast/sdk@^0.1.33":
-  version "0.1.34"
-  resolved "https://registry.npmjs.org/@millicast/sdk/-/sdk-0.1.34.tgz"
-  integrity sha512-S7juabJWi25chgxcrw7xsMBABmI53pNim3BG9TJoTAYokD3Zyt7Fmk4GXW2NXysBlIQaOTiyCCB445sP4rXfug==
+"@millicast/sdk@^0.1.35":
+  version "0.1.35"
+  resolved "https://registry.yarnpkg.com/@millicast/sdk/-/sdk-0.1.35.tgz#bc025e6b35ed237e14454c51e3fee05da2b5e64c"
+  integrity sha512-1D51HF0w9H76t9QI9t1Iv2tkylC+l4JSMrXN3a5XLPXcW+BOCv3Ls2093wEqDuRShpo0MkcuqpDMEcd2mWh0fw==
   dependencies:
     Base64 "^1.1.0"
     buffer "^6.0.3"
@@ -5482,10 +5482,10 @@ react-native-screens@~3.15.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-webrtc@^106.0.0-beta.5:
-  version "106.0.0-beta.5"
-  resolved "https://registry.npmjs.org/react-native-webrtc/-/react-native-webrtc-106.0.0-beta.5.tgz"
-  integrity sha512-3S5sw8SnCW3MoI2gqT+YkDIDWheIMk5cuj1AUG5E56HtRCWaqYpcN4JliW4rcEG6j7R5Wmy5mP/dizfIaITCuw==
+react-native-webrtc@^106.0.0-beta.6:
+  version "106.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-106.0.0-beta.6.tgz#b4e84c0e7435177e82a25d2a86debe10caf23cf7"
+  integrity sha512-LAL9H7h7SJ4Pl85QJ9YSU0/LCHjHGdjwjErJpefNJiQCsQcpU7JEkH66JGMv8PLaBI2zXEwgIYTdJDGcqRobnw==
   dependencies:
     adm-zip "0.5.9"
     base64-js "1.5.1"
