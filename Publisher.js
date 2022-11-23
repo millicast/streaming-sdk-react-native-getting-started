@@ -4,7 +4,8 @@ import {
     StyleSheet,
     View,
     StatusBar,
-    TextInput
+    TextInput,
+    Text
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
@@ -24,7 +25,8 @@ class MillicastWidget extends React.Component {
             codec: 'vp8',
             mirror: true, // for switching camera
             playing: false,
-            muted: false
+            audioEnabled: true,
+            videoEnabled: true
         }
 
         this.styles = StyleSheet.create({
@@ -44,14 +46,23 @@ class MillicastWidget extends React.Component {
         })
     }
 
+    updateDevices = async () => {
+        let mediaDevices;
+        try {
+            mediaDevices = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
+            this.setState({ mediaStream: mediaDevices });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+ 
+
     start = async () => {
         if (!this.state.mediaStream) {
-            let s;
+            let mediaDevices;
             try {
-                s = await mediaDevices.getUserMedia({ video: true, audio: true });
-                this.setState({
-                    mediaStream: s
-                });
+                mediaDevices = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
+                this.setState({ mediaStream: mediaDevices });
                 this.publish(this.props.streamName, this.props.token)
             } catch (e) {
                 console.error(e);
@@ -111,33 +122,50 @@ class MillicastWidget extends React.Component {
     }
 
     handleClickMute = () => {
-        this.setState({muted: !this.state.muted});
+        this.setState({audioEnabled: !this.state.audioEnabled});
         console.log("yet to be implemented")
+    }
+
+    handleClickDisableVideo = () => {
+        this.setState({videoEnabled: !this.state.videoEnabled});
+        if (this.state.mediaStream && this.state.mediaStream.getVideoTracks()[0]) {
+            if (this.state.playing) {
+                this.state.mediaStream.getVideoTracks()[0].stop()
+            } else {
+                this.updateDevices()
+                this.state.mediaStream.getVideoTracks()[0].play()
+            }    
+        }
     }
 
     render() {
         return (
             <View style={styles.body}>
                 {
-                    this.state.mediaStream ?
+                    this.state.mediaStream && this.state.videoEnabled ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
                         :
-                        null
+                        <Text>
+                            No video is being published.
+                        </Text>
                 }
                 <View style={styles.footer}>
                     <TextInput
                         onChangeText={this.setCodec}
                         value={this.state.codec}
                     />
-                <Button
-                    title={ !this.state.playing ? "Play" : "Pause" }
-                    onPress={ this.handleClickPlay } />
-                <Button
-                    title="Switch Camera"
-                    onPress={ this.toggleCamera } />
-                <Button
-                    title={ !this.state.muted ? "Mute" : "Unmute" }
-                    onPress={ this.handleClickMute } />
+                    <Button
+                        title={ !this.state.playing ? "Play" : "Pause" }
+                        onPress={ this.handleClickPlay } />
+                    <Button
+                        title="Switch Camera"
+                        onPress={ this.toggleCamera } />
+                    <Button
+                        title={ !this.state.audioEnabled ? "Mute" : "Unmute" }
+                        onPress={ this.handleClickMute } />
+                    <Button
+                        title={ !this.state.videoEnabled ? "Enable video" : "Disable video" }
+                        onPress={ this.handleClickDisableVideo } />
                 </View>
             </View>
         )
