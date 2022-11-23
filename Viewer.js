@@ -6,6 +6,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
 
 import myStyles from './styles.js'
+// import RTCRtpHeaderExtension from 'react-native-webrtc/lib/typescript/RTCRtpHeaderExtension.js';
 const streamName = process.env.MILLICAST_STREAM_NAME;
 const accountId = process.env.MILLICAST_ACCOUNT_ID;
 
@@ -20,13 +21,19 @@ class MillicastWidget extends React.Component {
       activeLayers: [],
       multiView: false,
       playing: false,
-      muted: false
+      muted: false,
+      millicastView: null
     }
 
-    this.millicastView = null
     this.styles = myStyles
+  }
 
-    this.subscribe(props.streamName, props.accountID)
+  componentDidMount() {
+    this.subscribe(streamName, accountId);
+  }
+
+  componentWillUnmount() {
+    this.stopStream();
   }
 
   async subscribe(streamName, accountID) {
@@ -34,12 +41,10 @@ class MillicastWidget extends React.Component {
       streamName: streamName,
       streamAccountId: accountID
     })
-
+    let view = new MillicastView(streamName, tokenGenerator, null);
     //Create a new instance
-    this.millicastView = new MillicastView(streamName, tokenGenerator, null)
-
     //Set track event handler to receive streams from Publisher.
-    this.millicastView.on('track', async (event) => {
+    view.on('track', async (event) => {
       const mediaStream = event.streams[0] ? event.streams[0] : null
       if (!mediaStream) return null
       const streams = [...this.state.streams]
@@ -60,7 +65,7 @@ class MillicastWidget extends React.Component {
 
     //Start connection to viewer
     try {
-      this.millicastView.on("broadcastEvent", async (event) => {
+      view.on("broadcastEvent", async (event) => {
         //Get event name and data
         const { name, data } = event;
         switch (name) {
@@ -90,23 +95,31 @@ class MillicastWidget extends React.Component {
         }
 
       });
-      await this.millicastView.connect({ events: ["active", "inactive", "vad", "layers"] })
+      await view.connect({ events: ["active", "inactive", "vad", "layers"] })
+      this.setState({
+        millicastView : view
+      });
     } catch (e) {
       console.error('Connection failed. Reason:', e)
     }
   }
 
-  reconnect = async () => {
-    await this.millicastView.stop()
-    await this.subscribe(this.props.streamName, this.props.accountID)
-    this.setState()
+  stopStream = async () => {
+    await this.state.millicastView.stop();
+    this.setState();
   }
+
+  // reconnect = async () => {
+  //   await this.millicastView.stop()
+  //   await this.subscribe(this.props.streamName, this.props.accountID)
+  //   this.setState()
+  // }
 
   addRemoteTrack = async (sourceId) => {
     const mediaStream = new MediaStream()
-    const transceiver = await this.millicastView.addRemoteTrack('video', [mediaStream])
+    const transceiver = await this.state.millicastView.addRemoteTrack('video', [mediaStream])
     const mediaId = transceiver.mid;
-    await this.millicastView.project(sourceId, [{
+    await this.state.millicastView.project(sourceId, [{
       media: 'video',
       mediaId,
       trackId: 'video'
@@ -119,7 +132,7 @@ class MillicastWidget extends React.Component {
 
   changeStateOfMediaTracks(streams, value) {
     streams.map(s => (
-      s.stream.getVideoTracks().forEach(videoTrack => { // No se por que getVideoTracks trae el audio tambien y getTracks no 
+      s.stream.getVideoTracks().forEach(videoTrack => { 
         videoTrack.enabled = value;
       })
     ))
@@ -165,13 +178,13 @@ class MillicastWidget extends React.Component {
     if (sourceId == 'main') {
       sourceId = null
     }
-    this.millicastView.project(sourceId, [{
+    this.state.millicastView.project(sourceId, [{
       media: 'video',
       mediaId: videoMid,
       trackId: 'video'
     }])
     if (audioMid) {
-      this.millicastView.project(sourceId, [{
+      this.state.millicastView.project(sourceId, [{
         media: 'audio',
         mediaId: this.state.streams[0].audioMid,
         trackId: 'audio'
@@ -180,7 +193,7 @@ class MillicastWidget extends React.Component {
   }
 
   select = async (id) => {
-    this.millicastView.select({ encodingId: id })
+    this.state.millicastView.select({ encodingId: id })
   }
 
   multiView = async () => {

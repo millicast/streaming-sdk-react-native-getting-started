@@ -5482,10 +5482,10 @@ react-native-screens@~3.15.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-webrtc@^106.0.0-beta.6:
-  version "106.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-106.0.0-beta.6.tgz#b4e84c0e7435177e82a25d2a86debe10caf23cf7"
-  integrity sha512-LAL9H7h7SJ4Pl85QJ9YSU0/LCHjHGdjwjErJpefNJiQCsQcpU7JEkH66JGMv8PLaBI2zXEwgIYTdJDGcqRobnw==
+react-native-webrtc@^106.0.0-beta.7:
+  version "106.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-106.0.0-beta.7.tgz#c333c2a57a5fd2c1ca35f4b401912a95502d850b"
+  integrity sha512-GoIl/99BgVouFCb0gc9BfboPm6tOAQ1skHmpZR6CDtPxCbRxt8pEZXRiRxfvW9LbOm6yTpbSe2DK/kQrffZN3w==
   dependencies:
     adm-zip "0.5.9"
     base64-js "1.5.1"
