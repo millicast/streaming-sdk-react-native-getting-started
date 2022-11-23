@@ -28,9 +28,9 @@ class MillicastWidget extends React.Component {
     this.styles = myStyles
   }
 
-  componentDidMount() {
-    this.subscribe(streamName, accountId);
-  }
+  // componentDidMount() {
+  //   this.subscribe(streamName, accountId);
+  // }
 
   componentWillUnmount() {
     this.stopStream();
@@ -97,11 +97,14 @@ class MillicastWidget extends React.Component {
       });
       await view.connect({ events: ["active", "inactive", "vad", "layers"] })
       this.setState({
-        millicastView : view
+        millicastView: view
       });
     } catch (e) {
       console.error('Connection failed. Reason:', e)
     }
+    console.log("11111111", this.state);
+    console.log("11111111", this.state.streams[0]);
+    console.log("11111111", this.state.streams[1]);
   }
 
   stopStream = async () => {
@@ -132,7 +135,7 @@ class MillicastWidget extends React.Component {
 
   changeStateOfMediaTracks(streams, value) {
     streams.map(s => (
-      s.stream.getVideoTracks().forEach(videoTrack => { 
+      s.stream.getVideoTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
       })
     ))
@@ -153,7 +156,7 @@ class MillicastWidget extends React.Component {
 
   changeStateOfAudioTracks(streams, value) {
     streams.map(s => (
-      s.stream.getTracks().forEach(track => { 
+      s.stream.getTracks().forEach(track => {
         if (track.kind == "audio") {
           track.enabled = value;
         }
@@ -167,9 +170,9 @@ class MillicastWidget extends React.Component {
   muteAudio = async () => {
     let isPaused = this.state.muted;
     if (!isPaused) {
-      this.changeStateOfAudioTracks(this.state.streams, isPaused); 
+      this.changeStateOfAudioTracks(this.state.streams, isPaused);
     } else {
-      this.changeStateOfAudioTracks(this.state.streams, isPaused); 
+      this.changeStateOfAudioTracks(this.state.streams, isPaused);
     }
     isPaused = !isPaused;
   }
@@ -236,12 +239,14 @@ class MillicastWidget extends React.Component {
               )
             })
             :
-            this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
+            this.state.streams[0] ?
+            < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : 
+            <Button key="Connect" title="Connect" onPress={() => this.subscribe(streamName, accountId)}/> 
         }
-        
+
         <View style={myStyles.footer}>
-          <Button style={myStyles.button} title={ !this.state.playing ? "Play" : "Pause" } onPress={this.playPauseVideo} />
-          <Button style={myStyles.footer} title={ !this.state.muted ? "Mute" : "Unmute" } onPress={this.muteAudio} />
+          <Button style={myStyles.button} title={!this.state.playing ? "Play" : "Pause"} onPress={this.playPauseVideo} />
+          <Button style={myStyles.footer} title={!this.state.muted ? "Mute" : "Unmute"} onPress={this.muteAudio} />
           <Button style={myStyles.footer} title='Multi view' onPress={this.multiView} />
           <View>
             {this.state.activeLayers.map(layer => {
