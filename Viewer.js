@@ -22,7 +22,8 @@ class MillicastWidget extends React.Component {
       multiView: false,
       playing: false,
       muted: false,
-      millicastView: null
+      millicastView: null,
+      setMedia: true
     }
 
     this.styles = myStyles
@@ -31,6 +32,9 @@ class MillicastWidget extends React.Component {
 
   componentWillUnmount() {
     this.stopStream();
+    this.setState({
+      setMedia : true
+    })
   }
 
   async subscribe(streamName, accountID) {
@@ -99,9 +103,6 @@ class MillicastWidget extends React.Component {
     } catch (e) {
       console.error('Connection failed. Reason:', e)
     }
-    console.log("11111111", this.state);
-    console.log("11111111", this.state.streams[0]);
-    console.log("11111111", this.state.streams[1]);
   }
 
   stopStream = async () => {
@@ -136,6 +137,13 @@ class MillicastWidget extends React.Component {
   }
 
   playPauseVideo = async () => {
+    if (this.state.setMedia) {
+      this.subscribe(streamName, accountId);
+      this.setState({
+        setMedia: false
+      })
+    }
+    console.log("imprimo el estado de subscripcion", this.state.setMedia)
     let isPaused = this.state.playing;
     if (!isPaused) {
       this.changeStateOfMediaTracks(this.state.streams, isPaused);
@@ -143,6 +151,7 @@ class MillicastWidget extends React.Component {
       this.changeStateOfMediaTracks(this.state.streams, isPaused)
     }
     isPaused = !isPaused;
+    console.log("imprimo el estado de is paused", isPaused)
   }
 
   changeStateOfAudioTracks(streams, value) {
@@ -231,8 +240,7 @@ class MillicastWidget extends React.Component {
             })
             :
             this.state.streams[0] ?
-            < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : 
-            <Button key="Connect" title="Connect" onPress={() => this.subscribe(streamName, accountId)}/> 
+            < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
 
         <View style={myStyles.footer}>
