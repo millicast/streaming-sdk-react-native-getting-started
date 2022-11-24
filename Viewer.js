@@ -28,9 +28,6 @@ class MillicastWidget extends React.Component {
     this.styles = myStyles
   }
 
-  // componentDidMount() {
-  //   this.subscribe(streamName, accountId);
-  // }
 
   componentWillUnmount() {
     this.stopStream();
@@ -42,8 +39,8 @@ class MillicastWidget extends React.Component {
       streamAccountId: accountID
     })
     let view = new MillicastView(streamName, tokenGenerator, null);
-    //Create a new instance
-    //Set track event handler to receive streams from Publisher.
+    // Create a new instance
+    // Set track event handler to receive streams from Publisher.
     view.on('track', async (event) => {
       const mediaStream = event.streams[0] ? event.streams[0] : null
       if (!mediaStream) return null
@@ -112,12 +109,6 @@ class MillicastWidget extends React.Component {
     this.setState();
   }
 
-  // reconnect = async () => {
-  //   await this.millicastView.stop()
-  //   await this.subscribe(this.props.streamName, this.props.accountID)
-  //   this.setState()
-  // }
-
   addRemoteTrack = async (sourceId) => {
     const mediaStream = new MediaStream()
     const transceiver = await this.state.millicastView.addRemoteTrack('video', [mediaStream])
@@ -135,7 +126,7 @@ class MillicastWidget extends React.Component {
 
   changeStateOfMediaTracks(streams, value) {
     streams.map(s => (
-      s.stream.getVideoTracks().forEach(videoTrack => {
+      s.stream.getTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
       })
     ))
