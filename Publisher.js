@@ -59,10 +59,10 @@ class MillicastWidget extends React.Component {
 
     start = async () => {
         if (!this.state.mediaStream) {
-            let mediaDevices;
+            let medias;
             try {
-                mediaDevices = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
-                this.setState({ mediaStream: mediaDevices });
+                medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
+                this.setState({ mediaStream: medias });
                 this.publish(this.props.streamName, this.props.token)
             } catch (e) {
                 console.error(e);
