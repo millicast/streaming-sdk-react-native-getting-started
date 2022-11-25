@@ -23,7 +23,7 @@ class MillicastWidget extends React.Component {
             mediaStream: null,
             stream: null,
             codec: 'vp8',
-            mirror: true, // for switching camera
+            mirror: false,
             playing: false,
             audioEnabled: true,
             videoEnabled: true
@@ -38,10 +38,7 @@ class MillicastWidget extends React.Component {
     }
 
     toggleCamera = () => {
-        this.state.mediaStream.getVideoTracks().forEach((track) => {
-            track._switchCamera();
-            this.setState({ mirror: !this.state.mirror })
-        })
+        this.state.mediaStream.getVideoTracks().forEach((track) => { track._switchCamera() })
     }
 
     updateDevices = async () => {
@@ -127,13 +124,18 @@ class MillicastWidget extends React.Component {
     handleClickDisableVideo = () => {
         this.setState({videoEnabled: !this.state.videoEnabled});
         if (this.state.mediaStream) {
+            this.updateDevices()
             if (this.state.playing) {
                 this.state.mediaStream.getVideoTracks().forEach( track => track.stop() )
             } else {
-                this.updateDevices()
                 this.state.mediaStream.getVideoTracks().forEach( track => track.play() )
             }
         }
+        console.log("yet to be implemented")
+    }
+
+    handleClickMirrorVideo = () => {
+        this.setState({ mirror: !this.state.mirror })
     }
 
     render() {
@@ -155,15 +157,18 @@ class MillicastWidget extends React.Component {
                     <Button
                         title={ !this.state.playing ? "Play" : "Pause" }
                         onPress={ this.handleClickPlay } />
-                    <Button
-                        title="Switch Camera"
-                        onPress={ this.toggleCamera } />
+                    { !!this.state.playing && <Button
+                                                title={ "Switch Camera" }
+                                                onPress={ this.toggleCamera } /> }
                     { !!this.state.playing && <Button
                                                 title={ !this.state.audioEnabled ? "Mute" : "Unmute" }
                                                 onPress={ this.handleClickMute } /> }
                     { !!this.state.playing && <Button
                                                 title={ !this.state.videoEnabled ? "Enable video" : "Disable video" }
                                                 onPress={ this.handleClickDisableVideo } /> }
+                    { !!this.state.playing && <Button
+                                                title={ "Mirror video" }
+                                                onPress={ this.handleClickMirrorVideo } /> }
                 </View>
             </View>
         )
