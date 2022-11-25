@@ -38,19 +38,20 @@ class MillicastWidget extends React.Component {
     }
 
     toggleCamera = () => {
-        this.state.mediaStream.getVideoTracks().forEach((track) => { track._switchCamera() })
+        this.state.mediaStream.getVideoTracks().forEach((track) => {
+            track._switchCamera()
+        })
     }
 
     updateDevices = async () => {
         let medias;
         try {
-            medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
-            this.setState({ mediaStream: medias });
+            medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled })
+            this.setState({ mediaStream: medias })
         } catch (e) {
-            console.error(e);
+            console.error(e)
         }
     };
- 
 
     start = async () => {
         if (!this.state.mediaStream) {
@@ -63,7 +64,7 @@ class MillicastWidget extends React.Component {
                 console.error(e);
             }
         }
-    };
+    }
 
     setCodec = (value) => {
         console.log(value);
@@ -87,12 +88,14 @@ class MillicastWidget extends React.Component {
             token,
             streamName
         })
+
         // Create a new instance
         this.millicastPublish = new Publish(streamName, tokenGenerator)
 
         this.setState({
             streamURL: this.state.mediaStream
         })
+        
         // Publishing Options
         const broadcastOptions = {
             mediaStream: this.state.mediaStream,
@@ -117,21 +120,17 @@ class MillicastWidget extends React.Component {
     }
 
     handleClickMute = () => {
+        this.state.mediaStream.getAudioTracks().forEach((track) =>  {
+            track.enabled = !track.enabled
+        })
         this.setState({audioEnabled: !this.state.audioEnabled});
-        console.log("yet to be implemented")
     }
 
     handleClickDisableVideo = () => {
+        this.state.mediaStream.getVideoTracks().forEach((track) =>  {
+            track.enabled = !track.enabled
+        })
         this.setState({videoEnabled: !this.state.videoEnabled});
-        if (this.state.mediaStream) {
-            this.updateDevices()
-            if (this.state.playing) {
-                this.state.mediaStream.getVideoTracks().forEach( track => track.stop() )
-            } else {
-                this.state.mediaStream.getVideoTracks().forEach( track => track.play() )
-            }
-        }
-        console.log("yet to be implemented")
     }
 
     handleClickMirrorVideo = () => {
@@ -142,7 +141,7 @@ class MillicastWidget extends React.Component {
         return (
             <View style={styles.body}>
                 {
-                    this.state.mediaStream && this.state.videoEnabled ?
+                    this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
                         :
                         <Text>
