@@ -37,6 +37,17 @@ class MillicastWidget extends React.Component {
         })
     }
 
+    componentWillUnmount() {
+        this.stop()
+        this.setState({ mediaStream : null })
+        this.setState({ stream : null })
+        this.setState({ codec : 'vp8' })
+        this.setState({ mirror : false })
+        this.setState({ playing : false })
+        this.setState({ audioEnabled : true })
+        this.setState({ videoEnabled : true })
+      }
+    
     toggleCamera = () => {
         this.state.mediaStream.getVideoTracks().forEach((track) => {
             track._switchCamera()
@@ -95,7 +106,7 @@ class MillicastWidget extends React.Component {
         this.setState({
             streamURL: this.state.mediaStream
         })
-        
+
         // Publishing Options
         const broadcastOptions = {
             mediaStream: this.state.mediaStream,
