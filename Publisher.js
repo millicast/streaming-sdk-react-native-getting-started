@@ -160,10 +160,11 @@ class MillicastWidget extends React.Component {
                         </Text>
                 }
                 <View style={styles.footer}>
-                    <TextInput
+                    { !!this.state.playing && <TextInput
                         onChangeText={this.setCodec}
                         value={this.state.codec}
-                    />
+                    /> }
+
                     <Button
                         title={ !this.state.playing ? "Play" : "Pause" }
                         onPress={ this.handleClickPlay } />
