@@ -40,18 +40,18 @@ class MillicastWidget extends React.Component {
 
     componentWillUnmount() {
         this.stop()
-        this.setState({ mediaStream : null })
-        this.setState({ stream : null })
-        this.setState({ codec : 'vp8' })
-        this.setState({ mirror : false })
-        this.setState({ playing : false })
-        this.setState({ audioEnabled : true })
-        this.setState({ videoEnabled : true })
+        this.setState({ mediaStream: null })
+        this.setState({ stream: null })
+        this.setState({ codec: 'vp8' })
+        this.setState({ mirror: false })
+        this.setState({ playing: false })
+        this.setState({ audioEnabled: true })
+        this.setState({ videoEnabled: true })
 
         clearInterval(this.interval)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.interval = setInterval(
             () => {
                 if (this.state.playing) {
@@ -59,9 +59,9 @@ class MillicastWidget extends React.Component {
                 }
             },
             1000
-            );
+        );
     }
-      
+
     toggleCamera = () => {
         this.state.mediaStream.getVideoTracks().forEach((track) => {
             track._switchCamera()
@@ -85,7 +85,7 @@ class MillicastWidget extends React.Component {
                 medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
                 this.setState({ mediaStream: medias });
                 this.publish(this.props.streamName, this.props.token)
-                this.setState({playing: !this.state.playing});
+                this.setState({ playing: !this.state.playing });
             } catch (e) {
                 console.error(e);
             }
@@ -107,8 +107,8 @@ class MillicastWidget extends React.Component {
                 mediaStream: null
             });
         }
-        this.setState({ timePlaying : 0 })
-        this.setState({playing: !this.state.playing});
+        this.setState({ timePlaying: 0 })
+        this.setState({ playing: !this.state.playing });
     };
 
     async publish(streamName, token) {
@@ -139,7 +139,7 @@ class MillicastWidget extends React.Component {
     }
 
     handleClickPlay = () => {
-        if (!this.state.playing){
+        if (!this.state.playing) {
             this.start()
         } else {
             this.stop()
@@ -147,17 +147,17 @@ class MillicastWidget extends React.Component {
     }
 
     handleClickMute = () => {
-        this.state.mediaStream.getAudioTracks().forEach((track) =>  {
+        this.state.mediaStream.getAudioTracks().forEach((track) => {
             track.enabled = !track.enabled
         })
-        this.setState({audioEnabled: !this.state.audioEnabled});
+        this.setState({ audioEnabled: !this.state.audioEnabled });
     }
 
     handleClickDisableVideo = () => {
-        this.state.mediaStream.getVideoTracks().forEach((track) =>  {
+        this.state.mediaStream.getVideoTracks().forEach((track) => {
             track.enabled = !track.enabled
         })
-        this.setState({videoEnabled: !this.state.videoEnabled});
+        this.setState({ videoEnabled: !this.state.videoEnabled });
     }
 
     handleClickMirrorVideo = () => {
@@ -199,25 +199,25 @@ class MillicastWidget extends React.Component {
                         </Text>
                 }
                 <View style={styles.footer}>
-                    { !!this.state.playing && <TextInput
+                    {!!this.state.playing && <TextInput
                         onChangeText={this.setCodec}
                         value={this.state.codec}
-                    /> }
+                    />}
                     <Button
-                        title={ !this.state.playing ? "Play" : "Pause" }
-                        onPress={ this.handleClickPlay } />
-                    { !!this.state.playing && <Button
-                                                title={ "Switch Camera" }
-                                                onPress={ this.toggleCamera } /> }
-                    { !!this.state.playing && <Button
-                                                title={ !this.state.audioEnabled ? "Mute" : "Unmute" }
-                                                onPress={ this.handleClickMute } /> }
-                    { !!this.state.playing && <Button
-                                                title={ !this.state.videoEnabled ? "Enable video" : "Disable video" }
-                                                onPress={ this.handleClickDisableVideo } /> }
-                    { !!this.state.playing && <Button
-                                                title={ "Mirror video" }
-                                                onPress={ this.handleClickMirrorVideo } /> }
+                        title={!this.state.playing ? "Play" : "Pause"}
+                        onPress={this.handleClickPlay} />
+                    {!!this.state.playing && <Button
+                        title={"Switch Camera"}
+                        onPress={this.toggleCamera} />}
+                    {!!this.state.playing && <Button
+                        title={!this.state.audioEnabled ? "Mute" : "Unmute"}
+                        onPress={this.handleClickMute} />}
+                    {!!this.state.playing && <Button
+                        title={!this.state.videoEnabled ? "Enable video" : "Disable video"}
+                        onPress={this.handleClickDisableVideo} />}
+                    {!!this.state.playing && <Button
+                        title={"Mirror video"}
+                        onPress={this.handleClickMirrorVideo} />}
                 </View>
             </View>
         )
@@ -229,12 +229,11 @@ export default function App() {
         <>
             <StatusBar barStyle="dark-content" />
             <SafeAreaView style={styles.body}>
-                <MillicastWidget streamName={ MILLICAST_STREAM_NAME } token={ MILLICAST_PUBLISHING_TOKEN } />
+                <MillicastWidget streamName={MILLICAST_STREAM_NAME} token={MILLICAST_PUBLISHING_TOKEN} />
             </SafeAreaView>
         </>
     );
 }
-
 
 const styles = StyleSheet.create({
     body: {
