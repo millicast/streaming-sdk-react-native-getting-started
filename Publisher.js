@@ -26,7 +26,8 @@ class MillicastWidget extends React.Component {
             mirror: false,
             playing: false,
             audioEnabled: true,
-            videoEnabled: true
+            videoEnabled: true,
+            timePlaying: 0, // in seconds
         }
 
         this.styles = StyleSheet.create({
@@ -46,8 +47,21 @@ class MillicastWidget extends React.Component {
         this.setState({ playing : false })
         this.setState({ audioEnabled : true })
         this.setState({ videoEnabled : true })
-      }
-    
+
+        clearInterval(this.interval)
+    }
+
+    componentDidMount(){
+        this.interval = setInterval(
+            () => {
+                if (this.state.playing) {
+                    this.setState({ timePlaying: this.state.timePlaying + 1 })
+                }
+            },
+            1000
+            );
+    }
+      
     toggleCamera = () => {
         this.state.mediaStream.getVideoTracks().forEach((track) => {
             track._switchCamera()
@@ -71,6 +85,7 @@ class MillicastWidget extends React.Component {
                 medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
                 this.setState({ mediaStream: medias });
                 this.publish(this.props.streamName, this.props.token)
+                this.setState({playing: !this.state.playing});
             } catch (e) {
                 console.error(e);
             }
@@ -92,6 +107,8 @@ class MillicastWidget extends React.Component {
                 mediaStream: null
             });
         }
+        this.setState({ timePlaying : 0 })
+        this.setState({playing: !this.state.playing});
     };
 
     async publish(streamName, token) {
@@ -127,7 +144,6 @@ class MillicastWidget extends React.Component {
         } else {
             this.stop()
         }
-        this.setState({playing: !this.state.playing});
     }
 
     handleClickMute = () => {
@@ -148,9 +164,32 @@ class MillicastWidget extends React.Component {
         this.setState({ mirror: !this.state.mirror })
     }
 
+    showTimePlaying = () => {
+        let time = this.state.timePlaying
+
+        let seconds = '' + time % 60
+        let minutes = '' + Math.floor(time / 60) % 60
+        let hours = '' + Math.floor(Math.floor(time / 60) / 60)
+
+        if (seconds < 10) {
+            seconds = '0' + seconds
+        }
+        if (minutes < 10) {
+            minutes = '0' + minutes
+        }
+        if (hours < 10) {
+            hours = '0' + hours
+        }
+
+        return hours + ':' + minutes + ':' + seconds
+    }
+
     render() {
         return (
             <View style={styles.body}>
+                <Text>
+                    {`${this.showTimePlaying()}`}
+                </Text>
                 {
                     this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
@@ -164,7 +203,6 @@ class MillicastWidget extends React.Component {
                         onChangeText={this.setCodec}
                         value={this.state.codec}
                     /> }
-
                     <Button
                         title={ !this.state.playing ? "Play" : "Pause" }
                         onPress={ this.handleClickPlay } />
