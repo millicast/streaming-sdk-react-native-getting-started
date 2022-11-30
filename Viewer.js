@@ -30,11 +30,12 @@ class MillicastWidget extends React.Component {
 
 
   componentWillUnmount() {
-    // how to check if there is a stream running?
-    this.stopStream();
-    this.setState({
-      setMedia : true
-    })
+    if (!this.state.setMedia) {
+      this.stopStream();
+      this.setState({
+        setMedia : true
+      })
+    }
   }
 
   async subscribe(streamName, accountID) {
@@ -143,7 +144,6 @@ class MillicastWidget extends React.Component {
         setMedia: false
       })
     }
-    console.log("imprimo el estado de subscripcion", this.state.setMedia)
     let isPaused = this.state.playing;
     if (!isPaused) {
       this.changeStateOfMediaTracks(this.state.streams, isPaused);
@@ -151,7 +151,6 @@ class MillicastWidget extends React.Component {
       this.changeStateOfMediaTracks(this.state.streams, isPaused)
     }
     isPaused = !isPaused;
-    console.log("imprimo el estado de is paused", isPaused)
   }
 
   changeStateOfAudioTracks(streams, value) {
