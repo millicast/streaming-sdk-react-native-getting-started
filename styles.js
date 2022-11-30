@@ -14,19 +14,38 @@ var myStyles = StyleSheet.create({
         justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 20,
-        textAlign: 'center'
+        backgroundColor: '#6C0AC3',
+        color: '#FFF',
+        width: "70%",
+        borderRadius: 10,
+        textAlign: 'center',
+        fontWeight: '600',
+        padding: "2%",
+        fontSize:  20,
+        marginTop: '8%'
     },
-    containerOfButton: {
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#43a1c9',
+    buttonDesign:{
+        width:'60%',
+        height:'10%',
+        alignItems: 'center'
     },
     container: {
         backgroundColor: Colors.white,
         ...StyleSheet.absoluteFill
-    }
+    },
+    screenContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems:"center",
+        backgroundColor: '#FFF',
+        width:'100%'
+    },
+    title:{
+        height: '20%',
+        color: "#6C0AC3",
+        fontWeight: 'bold',
+        fontSize:  20
+      }
 })
 
 module.exports = myStyles;

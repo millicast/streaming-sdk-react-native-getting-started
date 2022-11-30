@@ -4,9 +4,8 @@ import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
-
 import myStyles from './styles.js'
-// import RTCRtpHeaderExtension from 'react-native-webrtc/lib/typescript/RTCRtpHeaderExtension.js';
+
 const streamName = process.env.MILLICAST_STREAM_NAME;
 const accountId = process.env.MILLICAST_ACCOUNT_ID;
 
@@ -31,6 +30,7 @@ class MillicastWidget extends React.Component {
 
 
   componentWillUnmount() {
+    // how to check if there is a stream running?
     this.stopStream();
     this.setState({
       setMedia : true
