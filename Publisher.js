@@ -28,6 +28,7 @@ class MillicastWidget extends React.Component {
             audioEnabled: true,
             videoEnabled: true,
             timePlaying: 0, // in seconds
+            userCount: 0
         }
 
         this.styles = StyleSheet.create({
@@ -68,16 +69,6 @@ class MillicastWidget extends React.Component {
         })
     }
 
-    updateDevices = async () => {
-        let medias;
-        try {
-            medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled })
-            this.setState({ mediaStream: medias })
-        } catch (e) {
-            console.error(e)
-        }
-    };
-
     start = async () => {
         if (!this.state.mediaStream) {
             let medias;
@@ -85,11 +76,25 @@ class MillicastWidget extends React.Component {
                 medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
                 this.setState({ mediaStream: medias });
                 this.publish(this.props.streamName, this.props.token)
-                this.setState({ playing: !this.state.playing });
             } catch (e) {
                 console.error(e);
             }
         }
+
+        if (this.millicastPublish) {
+            // State of the broadcast
+            this.millicastPublish.on('connectionStateChange', (event) => {
+                if (event === 'connected' || event === 'disconnected' || event === 'closed') {
+                    this.setState({ playing: !this.state.playing });
+                }
+            })
+
+            this.millicastPublish.on('broadcastEvent', (event) => {
+                console.log("22222222222", event)
+            })
+    
+        }
+
     }
 
     setCodec = (value) => {
@@ -100,15 +105,26 @@ class MillicastWidget extends React.Component {
     }
 
     stop = () => {
-        this.millicastPublish.stop();
-        if (this.state.mediaStream) {
-            this.state.mediaStream.release();
-            this.setState({
-                mediaStream: null
-            });
+        if (this.state.playing) {
+            this.millicastPublish.stop();
+            if (this.state.mediaStream) {
+                this.state.mediaStream.release();
+                this.setState({
+                    mediaStream: null
+                });
+            }
+            this.setState({ timePlaying: 0 })
         }
-        this.setState({ timePlaying: 0 })
-        this.setState({ playing: !this.state.playing });
+
+        if (this.millicastPublish) {
+            // State of the broadcast
+            this.millicastPublish.on('connectionStateChange', (event) => {
+                if (event === 'connected' || event === 'disconnected' || event === 'closed') {
+                    this.setState({ playing: !this.state.playing });
+                }
+            })
+        }
+
     };
 
     async publish(streamName, token) {
@@ -136,6 +152,8 @@ class MillicastWidget extends React.Component {
         } catch (e) {
             console.log('Connection failed, handle error', e)
         }
+
+
     }
 
     handleClickPlay = () => {
@@ -169,7 +187,7 @@ class MillicastWidget extends React.Component {
 
         let seconds = '' + time % 60
         let minutes = '' + Math.floor(time / 60) % 60
-        let hours = '' + Math.floor(Math.floor(time / 60) / 60)
+        let hours = '' + Math.floor(time / 3600)
 
         if (seconds < 10) {
             seconds = '0' + seconds
@@ -189,6 +207,9 @@ class MillicastWidget extends React.Component {
             <View style={styles.body}>
                 <Text>
                     {`${this.showTimePlaying()}`}
+                </Text>
+                <Text>
+                    {`${this.state.userCount}`}
                 </Text>
                 {
                     this.state.mediaStream ?
