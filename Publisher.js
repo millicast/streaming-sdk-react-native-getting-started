@@ -23,12 +23,13 @@ class MillicastWidget extends React.Component {
             mediaStream: null,
             stream: null,
             codec: 'vp8',
-            mirror: false,
+            mirror: true,
             playing: false,
             audioEnabled: true,
             videoEnabled: true,
             timePlaying: 0, // in seconds
-            userCount: 0
+            userCount: 0,
+            bitrate: 0,
         }
 
         this.styles = StyleSheet.create({
@@ -67,6 +68,7 @@ class MillicastWidget extends React.Component {
         this.state.mediaStream.getVideoTracks().forEach((track) => {
             track._switchCamera()
         })
+        this.setState({ mirror: !this.state.mirror })
     }
 
     start = async () => {
@@ -83,30 +85,28 @@ class MillicastWidget extends React.Component {
 
         if (this.millicastPublish) {
             // State of the broadcast
-            this.millicastPublish.on('connectionStateChange', (event) => {
-                if (event === 'connected' || event === 'disconnected' || event === 'closed') {
-                    this.setState({ playing: !this.state.playing });
-                }
-            })
+            this.connectionState()
 
-
-            // This is not listening to any 'broadcastEvent'
             this.millicastPublish.on('broadcastEvent', (event) => {
                 const { name, data } = event
                 if (name === 'viewercount') {
                     this.setState({ userCount: data.viewercount })
                 }
             })
-    
         }
-
     }
 
     setCodec = (value) => {
-        console.log(value);
         this.setState({
             codec: value
         })
+    }
+
+    setBitrate = async (value) => {
+        this.setState({
+            bitrate: value
+        })
+        await this.millicastPublish.webRTCPeer.updateBitrate(value)
     }
 
     stop = () => {
@@ -122,15 +122,18 @@ class MillicastWidget extends React.Component {
         }
 
         if (this.millicastPublish) {
-            // State of the broadcast
-            this.millicastPublish.on('connectionStateChange', (event) => {
-                if (event === 'connected' || event === 'disconnected' || event === 'closed') {
-                    this.setState({ playing: !this.state.playing });
-                }
-            })
+            this.connectionState()
         }
-
     };
+
+    connectionState = () => {
+        // State of the broadcast
+        this.millicastPublish.on('connectionStateChange', (event) => {
+            if (event === 'connected' || event === 'disconnected' || event === 'closed') {
+                this.setState({ playing: !this.state.playing });
+            }
+        })
+    }
 
     async publish(streamName, token) {
         const tokenGenerator = () => Director.getPublisher({
@@ -226,10 +229,16 @@ class MillicastWidget extends React.Component {
                         </Text>
                 }
                 <View style={styles.footer}>
+                    <Text>Codec</Text>
                     {!!!this.state.playing && <TextInput
                         onChangeText={this.setCodec}
                         value={this.state.codec}
                     />}
+                    <Text>BitRate</Text>
+                    <TextInput
+                        onChangeText={this.setBitrate}
+                        value={this.state.bitrate}
+                    />
                     <Button
                         title={!this.state.playing ? "Play" : "Pause"}
                         onPress={this.handleClickPlay} />
@@ -242,9 +251,6 @@ class MillicastWidget extends React.Component {
                     {!!this.state.playing && <Button
                         title={!this.state.videoEnabled ? "Enable video" : "Disable video"}
                         onPress={this.handleClickDisableVideo} />}
-                    {!!this.state.playing && <Button
-                        title={"Mirror video"}
-                        onPress={this.handleClickMirrorVideo} />}
                 </View>
             </View>
         )
