@@ -89,6 +89,8 @@ class MillicastWidget extends React.Component {
                 }
             })
 
+
+            // This is not listening to any 'broadcastEvent'
             this.millicastPublish.on('broadcastEvent', (event) => {
                 console.log("22222222222", event)
             })
