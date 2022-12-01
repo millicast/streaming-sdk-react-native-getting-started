@@ -92,7 +92,10 @@ class MillicastWidget extends React.Component {
 
             // This is not listening to any 'broadcastEvent'
             this.millicastPublish.on('broadcastEvent', (event) => {
-                console.log("22222222222", event)
+                const { name, data } = event
+                if (name === 'viewercount') {
+                    this.setState({ userCount: data.viewercount })
+                }
             })
     
         }
@@ -145,7 +148,8 @@ class MillicastWidget extends React.Component {
         // Publishing Options
         const broadcastOptions = {
             mediaStream: this.state.mediaStream,
-            codec: this.state.codec
+            codec: this.state.codec,
+            events: ["active", "inactive", "vad", "layers", "viewercount"]
         }
 
         // Start broadcast
@@ -222,7 +226,7 @@ class MillicastWidget extends React.Component {
                         </Text>
                 }
                 <View style={styles.footer}>
-                    {!!this.state.playing && <TextInput
+                    {!!!this.state.playing && <TextInput
                         onChangeText={this.setCodec}
                         value={this.state.codec}
                     />}
