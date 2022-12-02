@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, SafeAreaView, Pressable } from 'react-native';
+import { StyleSheet, View, Button, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
+import { Ionicons } from 'react-native-vector-icons';
 
 const streamName = process.env.MILLICAST_STREAM_NAME;
 const accountId = process.env.MILLICAST_ACCOUNT_ID;
@@ -22,18 +23,18 @@ class MillicastWidget extends React.Component {
       playing: false,
       muted: false,
       millicastView: null,
-      setMedia: true
+      setMedia: true,
+      userCount: 0
     }
 
     this.styles = myStyles
   }
 
-
   componentWillUnmount() {
     if (!this.state.setMedia) {
       this.stopStream();
       this.setState({
-        setMedia : true
+        setMedia: true
       })
     }
   }
@@ -97,7 +98,15 @@ class MillicastWidget extends React.Component {
         }
 
       });
-      await view.connect({ events: ["active", "inactive", "vad", "layers"] })
+      await view.connect({ events: ["active", "inactive", "vad", "layers", "viewercount"] })
+
+      view.on('broadcastEvent', (event) => {
+        const { name, data } = event
+        if (name === 'viewercount') {
+          this.setState({ userCount: data.viewercount })
+        }
+      })
+
       this.setState({
         millicastView: view
       });
@@ -239,13 +248,23 @@ class MillicastWidget extends React.Component {
             })
             :
             this.state.streams[0] ?
-            < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
+              < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
 
-        <View style={myStyles.footer}>
-          <Button style={myStyles.button} title={!this.state.playing ? "Play" : "Pause"} onPress={this.playPauseVideo} />
-          <Button style={myStyles.footer} title={!this.state.muted ? "Mute" : "Unmute"} onPress={this.muteAudio} />
-          <Button style={myStyles.footer} title='Multi view' onPress={this.multiView} />
+        <View style={myStyles.screenContainer}>
+          <View>
+            <Ionicons name="play" size={30} />
+            <Text>{`${this.state.userCount}`} </Text>
+          </View>
+          <TouchableOpacity onPress={this.playPauseVideo} >
+            <Text style={myStyles.buttonText}>{!this.state.playing ? "Play" : "Pause"}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.muteAudio} >
+            <Text style={myStyles.buttonText}>{!this.state.muted ? "Mute" : "Unmute"}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.multiView} >
+            <Text style={myStyles.buttonText}>Multi view</Text>
+          </TouchableOpacity>
           <View>
             {this.state.activeLayers.map(layer => {
               return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)

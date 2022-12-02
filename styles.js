@@ -37,7 +37,13 @@ var myStyles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems:"center",
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFF'
+    },
+    screenMediaContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems:"center",
+        backgroundColor: '#474747',
         width:'100%'
     },
     title:{
