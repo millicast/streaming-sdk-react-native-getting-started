@@ -14,6 +14,7 @@ import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 
 // Import the required classes
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
+import myStyles from './styles.js'
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -30,14 +31,10 @@ class MillicastWidget extends React.Component {
             timePlaying: 0, // in seconds
             userCount: 0,
             bitrate: 0,
+            simulcastEnabled: false,
         }
 
-        this.styles = StyleSheet.create({
-            video: {
-                width: '100%',
-                height: '100%',
-            },
-        })
+        this.styles = myStyles
     }
 
     componentWillUnmount() {
@@ -161,8 +158,6 @@ class MillicastWidget extends React.Component {
         } catch (e) {
             console.log('Connection failed, handle error', e)
         }
-
-
     }
 
     handleClickPlay = () => {
@@ -187,8 +182,8 @@ class MillicastWidget extends React.Component {
         this.setState({ videoEnabled: !this.state.videoEnabled });
     }
 
-    handleClickMirrorVideo = () => {
-        this.setState({ mirror: !this.state.mirror })
+    handleClickSimulcast = () => {
+        this.setState({ simulcastEnabled: !this.state.simulcastEnabled })
     }
 
     showTimePlaying = () => {
@@ -215,11 +210,12 @@ class MillicastWidget extends React.Component {
         return (
             <View style={styles.body}>
                 <Text>
-                    {`${this.showTimePlaying()}`}
-                </Text>
-                <Text>
                     {`${this.state.userCount}`}
                 </Text>
+                <Text style={{textAlignVertical: 'center', textAlign:'center'}}>
+                    {`${this.state.playing ? this.showTimePlaying() : ""}`}
+                </Text>
+
                 {
                     this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
@@ -228,6 +224,7 @@ class MillicastWidget extends React.Component {
                             No video is being published.
                         </Text>
                 }
+
                 <View style={styles.footer}>
                     <Text>Codec</Text>
                     {!!!this.state.playing && <TextInput
@@ -239,18 +236,24 @@ class MillicastWidget extends React.Component {
                         onChangeText={this.setBitrate}
                         value={this.state.bitrate}
                     />
-                    <Button
+                    <Button style={myStyles.buttonText}
                         title={!this.state.playing ? "Play" : "Pause"}
                         onPress={this.handleClickPlay} />
-                    {!!this.state.playing && <Button
+                    {!!this.state.playing && <Button style={myStyles.button}
                         title={"Switch Camera"}
                         onPress={this.toggleCamera} />}
-                    {!!this.state.playing && <Button
+                    {!!this.state.playing && <Button style={myStyles.button}
                         title={!this.state.audioEnabled ? "Mute" : "Unmute"}
                         onPress={this.handleClickMute} />}
-                    {!!this.state.playing && <Button
+                    {!!this.state.playing && <Button style={myStyles.button}
                         title={!this.state.videoEnabled ? "Enable video" : "Disable video"}
                         onPress={this.handleClickDisableVideo} />}
+
+                    { /*
+                    !!this.state.playing && <Button
+                        title={!this.state.simulcastEnabled ? "Enable simulcast" : "Disable simulcast"}
+                        onPress={this.handleClickSimulcast} />
+                    */}
                 </View>
             </View>
         )
