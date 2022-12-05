@@ -150,7 +150,8 @@ class MillicastWidget extends React.Component {
     if (this.state.setMedia) {
       this.subscribe(streamName, accountId);
       this.setState({
-        setMedia: false
+        setMedia: false,
+        playing: true
       })
     }
     let isPaused = this.state.playing;
@@ -251,20 +252,23 @@ class MillicastWidget extends React.Component {
               < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
 
-        <View style={myStyles.screenContainer}>
-          <View>
-            <Ionicons name="play" size={30} />
-            <Text>{`${this.state.userCount}`} </Text>
+        <View style = {myStyles.topViewerCount}>
+          <Ionicons name="ios-person" size={30} color="#7f00b2" />
+          <Text style={{fontWeight:'bold'}}>{`${this.state.userCount}`} </Text>
+        </View>
+
+        <View style={myStyles.bottomMultimediaContainer}>
+          <View style={myStyles.bottomIconWrapper}>
+            <TouchableOpacity onPress={this.playPauseVideo} >
+              <Text>{!this.state.playing ? <Ionicons name="play" size={30} color="#7f00b2" /> : <Ionicons name="pause" size={30} color="#7f00b2" />}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.muteAudio} >
+              <Text >{!this.state.muted ? <Ionicons name="md-volume-high" size={30} color="#7f00b2" /> : <Ionicons name="md-volume-mute" size={30} color="#7f00b2" />}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.multiView} >
+              <Ionicons name="md-images" size={30} color="#7f00b2" />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={this.playPauseVideo} >
-            <Text style={myStyles.buttonText}>{!this.state.playing ? "Play" : "Pause"}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.muteAudio} >
-            <Text style={myStyles.buttonText}>{!this.state.muted ? "Mute" : "Unmute"}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.multiView} >
-            <Text style={myStyles.buttonText}>Multi view</Text>
-          </TouchableOpacity>
           <View>
             {this.state.activeLayers.map(layer => {
               return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)
