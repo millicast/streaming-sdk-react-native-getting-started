@@ -15,6 +15,7 @@ import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 // Import the required classes
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
+import { Ionicons } from 'react-native-vector-icons';
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -31,7 +32,6 @@ class MillicastWidget extends React.Component {
             timePlaying: 0, // in seconds
             userCount: 0,
             bitrate: 0,
-            simulcastEnabled: false,
         }
 
         this.styles = myStyles
@@ -182,10 +182,6 @@ class MillicastWidget extends React.Component {
         this.setState({ videoEnabled: !this.state.videoEnabled });
     }
 
-    handleClickSimulcast = () => {
-        this.setState({ simulcastEnabled: !this.state.simulcastEnabled })
-    }
-
     showTimePlaying = () => {
         let time = this.state.timePlaying
 
@@ -212,7 +208,7 @@ class MillicastWidget extends React.Component {
                 <Text>
                     {`${this.state.userCount}`}
                 </Text>
-                <Text style={{textAlignVertical: 'center', textAlign:'center'}}>
+                <Text style={{ textAlignVertical: 'center', textAlign: 'center' }}>
                     {`${this.state.playing ? this.showTimePlaying() : ""}`}
                 </Text>
 
@@ -236,24 +232,13 @@ class MillicastWidget extends React.Component {
                         onChangeText={this.setBitrate}
                         value={this.state.bitrate}
                     />
-                    <Button style={myStyles.buttonText}
-                        title={!this.state.playing ? "Play" : "Pause"}
-                        onPress={this.handleClickPlay} />
-                    {!!this.state.playing && <Button style={myStyles.button}
-                        title={"Switch Camera"}
-                        onPress={this.toggleCamera} />}
-                    {!!this.state.playing && <Button style={myStyles.button}
-                        title={!this.state.audioEnabled ? "Mute" : "Unmute"}
-                        onPress={this.handleClickMute} />}
-                    {!!this.state.playing && <Button style={myStyles.button}
-                        title={!this.state.videoEnabled ? "Enable video" : "Disable video"}
-                        onPress={this.handleClickDisableVideo} />}
+                    {!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" onPress={this.handleClickPlay} /> : <Ionicons name="md-pause" size={30} color="#7f00b2" onPress={this.handleClickPlay} />}
 
-                    { /*
-                    !!this.state.playing && <Button
-                        title={!this.state.simulcastEnabled ? "Enable simulcast" : "Disable simulcast"}
-                        onPress={this.handleClickSimulcast} />
-                    */}
+                    {!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" onPress={this.toggleCamera} />}
+
+                    {!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" onPress={this.handleClickMute} /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" onPress={this.handleClickMute} />)}
+
+                    {!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" onPress={this.handleClickDisableVideo} /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" onPress={this.handleClickDisableVideo} />)}
                 </View>
             </View>
         )
