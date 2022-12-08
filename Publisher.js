@@ -11,6 +11,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
 import { mediaDevices, RTCView } from 'react-native-webrtc';
 import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
+import { Ionicons } from 'react-native-vector-icons';
 
 // Import the required classes
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
@@ -204,11 +205,12 @@ class MillicastWidget extends React.Component {
 
     render() {
         return (
-            <View style={styles.body}>
-                <Text>
-                    {`${this.state.userCount}`}
-                </Text>
-                <Text style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+            <View style={{padding: '10% 10%'}}>
+                <View style={myStyles.topViewerCount}>
+                    <Ionicons name="ios-person" size={30} color="#7f00b2" />
+                    <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`} </Text>
+                </View>
+                <Text style={{ textAlignVertical: 'center', textAlign: 'center', fontWeight:'bold' }}>
                     {`${this.state.playing ? this.showTimePlaying() : ""}`}
                 </Text>
 

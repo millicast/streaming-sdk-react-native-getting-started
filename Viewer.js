@@ -142,7 +142,7 @@ class MillicastWidget extends React.Component {
       })
     ))
     this.setState({
-      playing: !value
+      playing: value
     })
   }
 
@@ -150,14 +150,15 @@ class MillicastWidget extends React.Component {
     if (this.state.setMedia) {
       this.subscribe(streamName, accountId);
       this.setState({
-        setMedia: false,
-        playing: true
+        setMedia: false
       })
     }
-    if (!this.state.playing) {
+    let isPaused = !this.state.playing;
+    if (isPaused) {
       this.changeStateOfMediaTracks(this.state.streams, isPaused);
+    } else {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused)
     }
-    this.setState({ playing : !this.state.playing})
   }
 
   changeStateOfAudioTracks(streams, value) {
@@ -228,14 +229,16 @@ class MillicastWidget extends React.Component {
     return (
       <>
         {
-          this.state.multiView == true ?
+          this.state.multiView == true ? 
             this.state.streams.map((stream) => {
               return (
-                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: '5%', alignContent: 'center'}}>
                   <View>
                     {this.state.sourceIds.map((sourceId, index) => {
                       return (
-                        <Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />
+                        <TouchableOpacity key={sourceId + index} onPress={() => this.project(sourceId, stream.videoMid)}>
+                          <Text style={myStyles.buttonMultiview}>Tap</Text>
+                        </TouchableOpacity>
                       )
                     })
                     }
@@ -263,7 +266,7 @@ class MillicastWidget extends React.Component {
               <Text >{!this.state.muted ? <Ionicons name="md-volume-high" size={30} color="#7f00b2" /> : <Ionicons name="md-volume-mute" size={30} color="#7f00b2" />}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.multiView} >
-              <Ionicons name="md-images" size={30} color="#7f00b2" />
+              <Text>{this.state.multiView ? <Ionicons name="chevron-back" size={30} color="#7f00b2" /> : <Ionicons name="md-images" size={30} color="#7f00b2" /> }</Text> 
             </TouchableOpacity>
           </View>
           <View>
