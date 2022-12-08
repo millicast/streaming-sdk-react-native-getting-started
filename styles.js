@@ -31,6 +31,13 @@ var myStyles = StyleSheet.create({
         height: '10%',
         alignItems: 'center'
     },
+    buttonMultiview: {
+        width: '80%',
+        height: '25%',
+        alignItems: 'center',
+        marginTop: '0%',
+        marginBottom: '0%'
+    },
     container: {
         backgroundColor: Colors.white,
         ...StyleSheet.absoluteFill
@@ -57,7 +64,7 @@ var myStyles = StyleSheet.create({
         width: width,
         alignItems: 'center',
         paddingVertical: 10,
-        borderTopColor: '#393E46',
+        borderColor: '#ADADAD',
         borderWidth: 1,
         position: 'absolute',
         bottom: 0,
