@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 var myStyles = StyleSheet.create({
     video: {
@@ -76,8 +76,8 @@ var myStyles = StyleSheet.create({
         width: '80%'
     },
     topViewerCount: {
-        position:'absolute',
-        top : '2%',
+        position: 'absolute',
+        top: '2%',
         right: '2%',
         justifyContent: 'space-between',
         alignItems: 'center'
