@@ -5,7 +5,8 @@ import {
     View,
     StatusBar,
     TextInput,
-    Text
+    Text,
+    TouchableOpacity
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
@@ -205,9 +206,11 @@ class MillicastWidget extends React.Component {
     render() {
         return (
             <View style={styles.body}>
-                <Text>
-                    {`${this.state.userCount}`}
-                </Text>
+                <View style={myStyles.topViewerCount}>
+                    <Ionicons name="ios-person" size={30} color="#7f00b2" />
+                    <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`} </Text>
+                </View>
+
                 <Text style={{ textAlignVertical: 'center', textAlign: 'center' }}>
                     {`${this.state.playing ? this.showTimePlaying() : ""}`}
                 </Text>
@@ -216,9 +219,7 @@ class MillicastWidget extends React.Component {
                     this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
                         :
-                        <Text>
-                            No video is being published.
-                        </Text>
+                        null
                 }
 
                 <View style={styles.footer}>
@@ -232,14 +233,28 @@ class MillicastWidget extends React.Component {
                         onChangeText={this.setBitrate}
                         value={this.state.bitrate}
                     />
-                    {!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" onPress={this.handleClickPlay} /> : <Ionicons name="md-pause" size={30} color="#7f00b2" onPress={this.handleClickPlay} />}
-
-                    {!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" onPress={this.toggleCamera} />}
-
-                    {!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" onPress={this.handleClickMute} /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" onPress={this.handleClickMute} />)}
-
-                    {!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" onPress={this.handleClickDisableVideo} /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" onPress={this.handleClickDisableVideo} />)}
                 </View>
+
+                <View style={myStyles.bottomMultimediaContainer}>
+                    <View style={myStyles.bottomIconWrapper}>
+                        <TouchableOpacity onPress={this.handleClickPlay} >
+                            <Text>{!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" /> : <Ionicons name="md-pause" size={30} color="#7f00b2" />}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={this.toggleCamera} >
+                            <Text>{!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={this.handleClickMute} >
+                            <Text>{!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" />)}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={this.handleClickDisableVideo} >
+                            <Text>{!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" />)}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
             </View>
         )
     }
