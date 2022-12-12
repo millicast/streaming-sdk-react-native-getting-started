@@ -1,10 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Button, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
-import { MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID } from '@env'
+import myStyles from './styles.js'
+import { Ionicons } from 'react-native-vector-icons';
+
+const streamName = process.env.MILLICAST_STREAM_NAME;
+const accountId = process.env.MILLICAST_ACCOUNT_ID;
 
 class MillicastWidget extends React.Component {
 
@@ -15,25 +19,24 @@ class MillicastWidget extends React.Component {
       streams: [],
       sourceIds: ['main'],
       activeLayers: [],
-      multiView: false
+      multiView: false,
+      playing: false,
+      muted: false,
+      millicastView: null,
+      setMedia: true,
+      userCount: 0
     }
 
-    this.millicastView = null
-    this.styles = StyleSheet.create({
-      video: {
-        flex: 10,
-        position: 'relative',
-      },
-      footer: {
-        position: 'absolute',
-        right: 0,
-        left: 0,
-        bottom: 0,
-        justifyContent: 'center'
-      }
-    })
+    this.styles = myStyles
+  }
 
-    this.subscribe(props.streamName, props.accountID)
+  componentWillUnmount() {
+    if (!this.state.setMedia) {
+      this.stopStream();
+      this.setState({
+        setMedia: true
+      })
+    }
   }
 
   async subscribe(streamName, accountID) {
@@ -41,23 +44,21 @@ class MillicastWidget extends React.Component {
       streamName: streamName,
       streamAccountId: accountID
     })
-
-    //Create a new instance
-    this.millicastView = new MillicastView(streamName, tokenGenerator, null)
-
-    //Set track event handler to receive streams from Publisher.
-    this.millicastView.on('track', async (event) => {
-      const videoUrl = event.streams[0] ? event.streams[0].toURL() : null
-      if (!videoUrl) return null
+    let view = new MillicastView(streamName, tokenGenerator, null);
+    // Create a new instance
+    // Set track event handler to receive streams from Publisher.
+    view.on('track', async (event) => {
+      const mediaStream = event.streams[0] ? event.streams[0] : null
+      if (!mediaStream) return null
       const streams = [...this.state.streams]
       if (event.track.kind == 'audio') {
         await Promise.all(streams.map((stream) => {
-          if (stream.streamURL == event.streams[0].toURL()) {
+          if (stream.stream.toURL() == event.streams[0].toURL()) {
             stream.audioMid = event.transceiver.mid
           }
         }))
       } else {
-        streams.push({ streamURL: videoUrl, videoMid: event.transceiver.mid })
+        streams.push({ stream: mediaStream, videoMid: event.transceiver.mid })
       }
       this.setState({
         streams: [...streams]
@@ -67,7 +68,7 @@ class MillicastWidget extends React.Component {
 
     //Start connection to viewer
     try {
-      this.millicastView.on("broadcastEvent", async (event) => {
+      view.on("broadcastEvent", async (event) => {
         //Get event name and data
         const { name, data } = event;
         switch (name) {
@@ -97,44 +98,103 @@ class MillicastWidget extends React.Component {
         }
 
       });
-      await this.millicastView.connect({ events: ["active", "inactive", "vad", "layers"] })
+      await view.connect({ events: ["active", "inactive", "vad", "layers", "viewercount"] })
+
+      view.on('broadcastEvent', (event) => {
+        const { name, data } = event
+        if (name === 'viewercount') {
+          this.setState({ userCount: data.viewercount })
+        }
+      })
+
+      this.setState({
+        millicastView: view
+      });
     } catch (e) {
       console.error('Connection failed. Reason:', e)
     }
   }
 
-  reconnect = async () => {
-    await this.millicastView.stop()
-    await this.subscribe(this.props.streamName, this.props.accountID)
-    this.setState()
+  stopStream = async () => {
+    await this.state.millicastView.stop();
+    this.setState();
   }
 
   addRemoteTrack = async (sourceId) => {
     const mediaStream = new MediaStream()
-    const transceiver = await this.millicastView.addRemoteTrack('video', [mediaStream])
+    const transceiver = await this.state.millicastView.addRemoteTrack('video', [mediaStream])
     const mediaId = transceiver.mid;
-    await this.millicastView.project(sourceId, [{
+    await this.state.millicastView.project(sourceId, [{
       media: 'video',
       mediaId,
       trackId: 'video'
     }])
     this.setState({
-      streams: [...this.state.streams, { streamURL: mediaStream.toURL(), videoMid: mediaId }],
+      streams: [...this.state.streams, { stream: mediaStream, videoMid: mediaId }],
     })
     console.log(JSON.stringify(this.state.streams));
+  }
+
+  changeStateOfMediaTracks(streams, value) {
+    streams.map(s => (
+      s.stream.getTracks().forEach(videoTrack => {
+        videoTrack.enabled = value;
+      })
+    ))
+    this.setState({
+      playing: value
+    })
+  }
+
+  playPauseVideo = async () => {
+    if (this.state.setMedia) {
+      this.subscribe(streamName, accountId);
+      this.setState({
+        setMedia: false
+      })
+    }
+    let isPaused = !this.state.playing;
+    if (isPaused) {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused);
+    } else {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused)
+    }
+  }
+
+  changeStateOfAudioTracks(streams, value) {
+    streams.map(s => (
+      s.stream.getTracks().forEach(track => {
+        if (track.kind == "audio") {
+          track.enabled = value;
+        }
+      })
+    ))
+    this.setState({
+      muted: !value
+    })
+  }
+
+  muteAudio = async () => {
+    let isPaused = this.state.muted;
+    if (!isPaused) {
+      this.changeStateOfAudioTracks(this.state.streams, isPaused);
+    } else {
+      this.changeStateOfAudioTracks(this.state.streams, isPaused);
+    }
+    isPaused = !isPaused;
   }
 
   project = async (sourceId, videoMid, audioMid) => {
     if (sourceId == 'main') {
       sourceId = null
     }
-    this.millicastView.project(sourceId, [{
+    this.state.millicastView.project(sourceId, [{
       media: 'video',
       mediaId: videoMid,
       trackId: 'video'
     }])
     if (audioMid) {
-      this.millicastView.project(sourceId, [{
+      this.state.millicastView.project(sourceId, [{
         media: 'audio',
         mediaId: this.state.streams[0].audioMid,
         trackId: 'audio'
@@ -143,7 +203,7 @@ class MillicastWidget extends React.Component {
   }
 
   select = async (id) => {
-    this.millicastView.select({ encodingId: id })
+    this.state.millicastView.select({ encodingId: id })
   }
 
   multiView = async () => {
@@ -165,31 +225,50 @@ class MillicastWidget extends React.Component {
     })
   }
 
-
   render() {
     return (
       <>
         {
-          this.state.multiView == true ?
+          this.state.multiView == true ? 
             this.state.streams.map((stream) => {
               return (
-                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: '5%', alignContent: 'center'}}>
                   <View>
                     {this.state.sourceIds.map((sourceId, index) => {
-                      return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
+                      return (
+                        <TouchableOpacity key={sourceId + index} onPress={() => this.project(sourceId, stream.videoMid)}>
+                          <Text style={myStyles.buttonMultiview}>Tap</Text>
+                        </TouchableOpacity>
+                      )
                     })
                     }
                   </View>
-                  <RTCView key={stream.streamURL + stream.videoMid} streamURL={stream.streamURL} style={this.styles.video} objectFit='contain' />
+                  <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
                 </View>
               )
             })
             :
-            this.state.streams[0] ? < RTCView key={'main'} streamURL={this.state.streams[0].streamURL} style={this.styles.video} objectFit='contain' /> : null
+            this.state.streams[0] ?
+              < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
-        <View style={this.styles.footer}>
-          <Button style={styles.footer} title='Reconnect' onPress={this.reconnect} />
-          <Button style={styles.footer} title='Multi view' onPress={this.multiView} />
+
+        <View style = {myStyles.topViewerCount}>
+          <Ionicons name="ios-person" size={30} color="#7f00b2" />
+          <Text style={{fontWeight:'bold'}}>{`${this.state.userCount}`} </Text>
+        </View>
+
+        <View style={myStyles.bottomMultimediaContainer}>
+          <View style={myStyles.bottomIconWrapper}>
+            <TouchableOpacity onPress={this.playPauseVideo} >
+              <Text>{!this.state.playing ? <Ionicons name="play" size={30} color="#7f00b2" /> : <Ionicons name="pause" size={30} color="#7f00b2" />}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.muteAudio} >
+              <Text >{!this.state.muted ? <Ionicons name="md-volume-high" size={30} color="#7f00b2" /> : <Ionicons name="md-volume-mute" size={30} color="#7f00b2" />}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.multiView} >
+              <Text>{this.state.multiView ? <Ionicons name="chevron-back" size={30} color="#7f00b2" /> : <Ionicons name="md-images" size={30} color="#7f00b2" /> }</Text> 
+            </TouchableOpacity>
+          </View>
           <View>
             {this.state.activeLayers.map(layer => {
               return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)
@@ -205,15 +284,15 @@ class MillicastWidget extends React.Component {
 export default function App() {
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={stylesContainer.container}>
         <StatusBar style="auto" />
-        <MillicastWidget streamName={MILLICAST_STREAM_NAME} accountID={MILLICAST_ACCOUNT_ID} />
+        <MillicastWidget streamName={streamName} accountID={accountId} />
       </SafeAreaView>
     </>
   );
 }
 
-const styles = StyleSheet.create({
+const stylesContainer = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     ...StyleSheet.absoluteFill
