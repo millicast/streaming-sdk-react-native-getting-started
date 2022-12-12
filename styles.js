@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 var myStyles = StyleSheet.create({
     video: {
-        flex: 10,
+        flex: 1,
         position: 'relative'
     },
     footer: {

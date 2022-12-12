@@ -1,12 +1,12 @@
 import {
-    Button,
     SafeAreaView,
     StyleSheet,
     View,
     StatusBar,
     TextInput,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Button
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
@@ -17,6 +17,18 @@ import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
 import { Ionicons } from 'react-native-vector-icons';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+function PublisherSettings({ navigation }) {
+    return (
+        <>
+            <Text>
+                WIP
+            </Text>
+            <Button title="Save" onPress={() => navigation.goBack()} />
+        </>
+    )
+}
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -204,6 +216,8 @@ class MillicastWidget extends React.Component {
     }
 
     render() {
+        const { navigation } = this.props;
+
         return (
             <View style={styles.body}>
                 <View style={myStyles.topViewerCount}>
@@ -252,6 +266,10 @@ class MillicastWidget extends React.Component {
                         <TouchableOpacity onPress={this.handleClickDisableVideo} >
                             <Text>{!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" />)}</Text>
                         </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings')} >
+                            <Text><Ionicons name="md-settings" size={30} color="#7f00b2" /></Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -260,14 +278,26 @@ class MillicastWidget extends React.Component {
     }
 };
 
-export default function App() {
+function PublisherMain(props) {
     return (
         <>
             <StatusBar barStyle="dark-content" />
             <SafeAreaView style={styles.body}>
-                <MillicastWidget streamName={MILLICAST_STREAM_NAME} token={MILLICAST_PUBLISHING_TOKEN} />
+                <MillicastWidget streamName={MILLICAST_STREAM_NAME} token={MILLICAST_PUBLISHING_TOKEN} {...props} />
             </SafeAreaView>
         </>
+    )
+}
+
+const PublisherStack = createNativeStackNavigator();
+
+export default function App(props) {
+    return (
+        <PublisherStack.Navigator screenOptions={{ headerShown: false }}>
+            <PublisherStack.Screen name="Publisher Main" component={PublisherMain} {...props} />
+            <PublisherStack.Screen name="Publisher Settings" component={PublisherSettings} {...props} />
+        </PublisherStack.Navigator>
+
     );
 }
 
