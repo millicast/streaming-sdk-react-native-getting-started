@@ -12,7 +12,6 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
 import { mediaDevices, RTCView } from 'react-native-webrtc';
 import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
-import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 
 // Import the required classes
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
