@@ -40,10 +40,6 @@ class MillicastWidget extends React.Component {
         this.styles = myStyles
     }
 
-    getCodec = () => {
-        return this.state.codec
-    }
-
     componentWillUnmount() {
         this.stop()
         this.setState({ mediaStream: null })
@@ -230,23 +226,6 @@ class MillicastWidget extends React.Component {
                         null
                 }
 
-                <View style={styles.footer}>
-                    <Text>
-                        Codec
-                    </Text>
-                    {!!!this.state.playing && <TextInput
-                        onChangeText={this.setCodec}
-                        value={this.state.codec}
-                    />}
-                    <Text>
-                        BitRate
-                    </Text>
-                    <TextInput
-                        onChangeText={this.setBitrate}
-                        value={this.state.bitrate}
-                    />
-                </View>
-
                 <View style={myStyles.bottomMultimediaContainer}>
                     <View style={myStyles.bottomIconWrapper}>
                         <TouchableOpacity onPress={this.handleClickPlay} >
@@ -273,7 +252,13 @@ class MillicastWidget extends React.Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {getCodec: 2})} >
+                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {
+                            codec: this.state.codec,
+                            bitrate: this.state.bitrate,
+                            setCodec: this.setCodec.bind(this),
+                            isPlaying: this.state.playing,
+                            setBitrate: this.setBitrate.bind(this)
+                        })} >
                             <Text>
                                 <Ionicons name="md-settings" size={30} color="#7f00b2" />
                             </Text>
