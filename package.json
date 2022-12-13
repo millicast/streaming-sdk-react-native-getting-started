@@ -25,7 +25,7 @@
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "~3.15.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-webrtc": "^106.0.0-beta.7"
+    "react-native-webrtc": "^106.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
