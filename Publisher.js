@@ -6,7 +6,6 @@ import {
     TextInput,
     Text,
     TouchableOpacity,
-    Button
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
@@ -19,16 +18,7 @@ import myStyles from './styles.js'
 import { Ionicons } from 'react-native-vector-icons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function PublisherSettings({ navigation }) {
-    return (
-        <>
-            <Text>
-                WIP
-            </Text>
-            <Button title="Save" onPress={() => navigation.goBack()} />
-        </>
-    )
-}
+import PublisherSettings from './PublisherSettings'
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -48,6 +38,10 @@ class MillicastWidget extends React.Component {
         }
 
         this.styles = myStyles
+    }
+
+    getCodec = () => {
+        return this.state.codec
     }
 
     componentWillUnmount() {
@@ -237,12 +231,16 @@ class MillicastWidget extends React.Component {
                 }
 
                 <View style={styles.footer}>
-                    <Text>Codec</Text>
+                    <Text>
+                        Codec
+                    </Text>
                     {!!!this.state.playing && <TextInput
                         onChangeText={this.setCodec}
                         value={this.state.codec}
                     />}
-                    <Text>BitRate</Text>
+                    <Text>
+                        BitRate
+                    </Text>
                     <TextInput
                         onChangeText={this.setBitrate}
                         value={this.state.bitrate}
@@ -252,23 +250,33 @@ class MillicastWidget extends React.Component {
                 <View style={myStyles.bottomMultimediaContainer}>
                     <View style={myStyles.bottomIconWrapper}>
                         <TouchableOpacity onPress={this.handleClickPlay} >
-                            <Text>{!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" /> : <Ionicons name="md-pause" size={30} color="#7f00b2" />}</Text>
+                            <Text>
+                                {!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" /> : <Ionicons name="md-pause" size={30} color="#7f00b2" />}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={this.toggleCamera} >
-                            <Text>{!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}</Text>
+                            <Text>
+                                {!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={this.handleClickMute} >
-                            <Text>{!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" />)}</Text>
+                            <Text>
+                                {!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" />)}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={this.handleClickDisableVideo} >
-                            <Text>{!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" />)}</Text>
+                            <Text>
+                                {!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" />)}
+                            </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings')} >
-                            <Text><Ionicons name="md-settings" size={30} color="#7f00b2" /></Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {getCodec: 2})} >
+                            <Text>
+                                <Ionicons name="md-settings" size={30} color="#7f00b2" />
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
