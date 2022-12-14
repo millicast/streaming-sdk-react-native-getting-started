@@ -1,11 +1,12 @@
 import {
     Text,
-    Button,
     TextInput,
+    TouchableOpacity,
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list'
 import React from 'react';
 import { LogBox } from 'react-native';
+import myStyles from './styles.js'
 
 
 LogBox.ignoreLogs([
@@ -49,7 +50,15 @@ export default function PublisherSettings({ route, navigation }) {
                 BitRate
             </Text>
 
-            <Button title="Save" onPress={() => navigation.goBack()} />
+            <TextInput
+                onChangeText={setBitrate}
+                value={bitrate}
+            />
+
+            <TouchableOpacity onPress={() => navigation.goBack()} style={myStyles.buttonDesign}>
+                <Text style={myStyles.buttonText}>Save</Text>
+            </TouchableOpacity>
+
         </>
     )
 }

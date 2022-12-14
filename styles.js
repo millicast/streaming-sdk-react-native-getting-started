@@ -6,7 +6,10 @@ const { width, height } = Dimensions.get('window');
 var myStyles = StyleSheet.create({
     video: {
         flex: 1,
-        position: 'relative'
+        position: 'relative',
+        zIndex: -1, // works on ios
+        elevation: -1, // works on android,
+        top: 0
     },
     footer: {
         position: 'absolute',
@@ -80,7 +83,33 @@ var myStyles = StyleSheet.create({
         top: '2%',
         right: '2%',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        /*
+        backgroundColor: "white",
+        opacity: 0.5,
+        borderRadius: 10,
+        padding: 10,
+        */
+    },
+    bottomBarTimePlaying: {
+        width: '100%',
+        bottom: 80,
+        textAlignVertical: 'center',
+        textAlign: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        right: 0,
+        left: 0,
+        zIndex: 2, // works on ios
+        elevation: 2, // works on android
+        fontSize: 30,
+    },
+    textShadow: {
+        fontWeight: 'bold',
+        color: 'black',
+        textShadowColor: "white",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 1,
     }
 })
 

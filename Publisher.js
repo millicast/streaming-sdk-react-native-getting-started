@@ -3,7 +3,6 @@ import {
     StyleSheet,
     View,
     StatusBar,
-    TextInput,
     Text,
     TouchableOpacity,
 } from 'react-native';
@@ -75,7 +74,10 @@ class MillicastWidget extends React.Component {
         if (!this.state.mediaStream) {
             let medias;
             try {
-                medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
+                medias = await mediaDevices.getUserMedia({
+                    video: this.state.videoEnabled,
+                    audio: this.state.audioEnabled
+                });
                 this.setState({ mediaStream: medias });
                 this.publish(this.props.streamName, this.props.token)
             } catch (e) {
@@ -210,21 +212,23 @@ class MillicastWidget extends React.Component {
 
         return (
             <View style={styles.body}>
-                <View style={myStyles.topViewerCount}>
-                    <Ionicons name="ios-person" size={30} color="#7f00b2" />
-                    <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`} </Text>
-                </View>
-
-                <Text style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-                    {`${this.state.playing ? this.showTimePlaying() : ""}`}
-                </Text>
-
                 {
                     this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
                         :
                         null
                 }
+
+                <View style={myStyles.topViewerCount}>
+                    <Ionicons name="ios-person" size={30} color="#7f00b2" />
+                    <Text style={myStyles.textShadow}>
+                        {`${this.state.userCount}`}
+                    </Text>
+                </View>
+
+                <Text style={[myStyles.bottomBarTimePlaying, myStyles.textShadow]}>
+                    {this.state.playing ? `${this.showTimePlaying()}` : ''}
+                </Text>
 
                 <View style={myStyles.bottomMultimediaContainer}>
                     <View style={myStyles.bottomIconWrapper}>
@@ -297,6 +301,8 @@ export default function App(props) {
 const styles = StyleSheet.create({
     body: {
         backgroundColor: Colors.white,
+        padding: 0,
+        margin: 0,
         ...StyleSheet.absoluteFill
     },
     stream: {
