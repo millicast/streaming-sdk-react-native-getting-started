@@ -2,7 +2,10 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    StyleSheet,
+    View,
 } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { SelectList } from 'react-native-dropdown-select-list'
 import React from 'react';
 import { LogBox } from 'react-native';
@@ -30,10 +33,10 @@ export default function PublisherSettings({ route, navigation }) {
     ]
 
     return (
-        <>
+        <View style={styles.body}>
             {!isPlaying ? (
                 <>
-                    <Text>
+                    <Text style={myStyles.titleSettings}>
                         Codec
                     </Text>
 
@@ -46,7 +49,9 @@ export default function PublisherSettings({ route, navigation }) {
                 </>
             ) : null}
 
-            <Text>
+            <Text></Text>
+
+            <Text style={myStyles.titleSettings}>
                 BitRate
             </Text>
 
@@ -59,6 +64,15 @@ export default function PublisherSettings({ route, navigation }) {
                 <Text style={myStyles.buttonText}>Save</Text>
             </TouchableOpacity>
 
-        </>
+        </View>
     )
 }
+
+const styles = StyleSheet.create({
+    body: {
+        backgroundColor: Colors.white,
+        padding: 20,
+        margin: 0,
+        ...StyleSheet.absoluteFill
+    },
+});

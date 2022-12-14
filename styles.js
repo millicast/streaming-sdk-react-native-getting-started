@@ -110,6 +110,9 @@ var myStyles = StyleSheet.create({
         textShadowColor: "white",
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 1,
+    },
+    titleSettings: {
+        fontWeight: 'bold',
     }
 })
 
