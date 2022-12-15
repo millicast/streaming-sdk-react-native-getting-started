@@ -8,6 +8,10 @@ var myStyles = StyleSheet.create({
         flex: 1,
         position: 'relative'
     },
+    videoMultiView: {
+        flex: 1,
+        alignItems: 'flex-start'
+    },
     footer: {
         position: 'absolute',
         right: 0,
