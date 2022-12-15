@@ -11,6 +11,10 @@ var myStyles = StyleSheet.create({
         elevation: -1, // works on android,
         top: 0
     },
+    videoMultiView: {
+        flex: 1,
+        alignItems: 'flex-start'
+    },
     footer: {
         position: 'absolute',
         right: 0,
