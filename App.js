@@ -18,10 +18,10 @@ function HomeScreen({ navigation }) {
     <View style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
       <TouchableOpacity onPress={() => navigation.navigate('Publisher App')} style={myStyles.buttonDesign}>
-        <Text style={myStyles.buttonText} >PUBLISHER</Text>
+        <Text style={myStyles.buttonText}>PUBLISHER</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Subscriber App')} style={myStyles.buttonDesign}>
-        <Text style={myStyles.buttonText} >SUBSCRIBER</Text>
+        <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
       </TouchableOpacity>
     </View>
   );
