@@ -27,7 +27,8 @@ var myStyles = StyleSheet.create({
         fontWeight: '600',
         padding: "2%",
         fontSize: 20,
-        marginTop: '8%'
+        marginTop: '8%',
+        height: 35,
     },
     buttonDesign: {
         width: '60%',

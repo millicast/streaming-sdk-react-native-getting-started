@@ -46,23 +46,30 @@ export default function PublisherSettings({ route, navigation }) {
                         save="key"
                         placeholder={codec}
                     />
+
+                    <Text></Text>
                 </>
             ) : null}
 
-            <Text></Text>
+            {isPlaying ? (
+                <>
+                    <Text style={myStyles.titleSettings}>
+                        BitRate
+                    </Text>
 
-            <Text style={myStyles.titleSettings}>
-                BitRate
-            </Text>
+                    <TextInput
+                        onChangeText={setBitrate}
+                        value={bitrate}
+                    />
+                </>) : null}
 
-            <TextInput
-                onChangeText={setBitrate}
-                value={bitrate}
-            />
-
-            <TouchableOpacity onPress={() => navigation.goBack()} style={myStyles.buttonDesign}>
-                <Text style={myStyles.buttonText}>Save</Text>
-            </TouchableOpacity>
+            <View style={{
+                alignItems: "center",
+            }}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={myStyles.buttonDesign}>
+                    <Text style={myStyles.buttonText}>Save</Text>
+                </TouchableOpacity>
+            </View>
 
         </View>
     )
