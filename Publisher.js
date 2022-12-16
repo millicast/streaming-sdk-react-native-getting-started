@@ -3,10 +3,8 @@ import {
     StyleSheet,
     View,
     StatusBar,
-    TextInput,
     Text,
     TouchableOpacity,
-    Button
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
@@ -19,16 +17,7 @@ import myStyles from './styles.js'
 import { Ionicons } from 'react-native-vector-icons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function PublisherSettings({ navigation }) {
-    return (
-        <>
-            <Text>
-                WIP
-            </Text>
-            <Button title="Save" onPress={() => navigation.goBack()} />
-        </>
-    )
-}
+import PublisherSettings from './PublisherSettings'
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -85,7 +74,10 @@ class MillicastWidget extends React.Component {
         if (!this.state.mediaStream) {
             let medias;
             try {
-                medias = await mediaDevices.getUserMedia({ video: this.state.videoEnabled, audio: this.state.audioEnabled });
+                medias = await mediaDevices.getUserMedia({
+                    video: this.state.videoEnabled,
+                    audio: this.state.audioEnabled
+                });
                 this.setState({ mediaStream: medias });
                 this.publish(this.props.streamName, this.props.token)
             } catch (e) {
@@ -220,15 +212,6 @@ class MillicastWidget extends React.Component {
 
         return (
             <View style={styles.body}>
-                <View style={myStyles.topViewerCount}>
-                    <Ionicons name="ios-person" size={30} color="#7f00b2" />
-                    <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`} </Text>
-                </View>
-
-                <Text style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-                    {`${this.state.playing ? this.showTimePlaying() : ""}`}
-                </Text>
-
                 {
                     this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
@@ -236,39 +219,53 @@ class MillicastWidget extends React.Component {
                         null
                 }
 
-                <View style={styles.footer}>
-                    <Text>Codec</Text>
-                    {!!!this.state.playing && <TextInput
-                        onChangeText={this.setCodec}
-                        value={this.state.codec}
-                    />}
-                    <Text>BitRate</Text>
-                    <TextInput
-                        onChangeText={this.setBitrate}
-                        value={this.state.bitrate}
-                    />
+                <View style={myStyles.topViewerCount}>
+                    <Ionicons name="ios-person" size={30} color="#7f00b2" />
+                    <Text style={myStyles.textShadow}>
+                        {`${this.state.userCount}`}
+                    </Text>
                 </View>
+
+                <Text style={[myStyles.bottomBarTimePlaying, myStyles.textShadow]}>
+                    {this.state.playing ? `${this.showTimePlaying()}` : ''}
+                </Text>
 
                 <View style={myStyles.bottomMultimediaContainer}>
                     <View style={myStyles.bottomIconWrapper}>
                         <TouchableOpacity onPress={this.handleClickPlay} >
-                            <Text>{!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" /> : <Ionicons name="md-pause" size={30} color="#7f00b2" />}</Text>
+                            <Text>
+                                {!this.state.playing ? <Ionicons name="md-play" size={30} color="#7f00b2" /> : <Ionicons name="md-pause" size={30} color="#7f00b2" />}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={this.toggleCamera} >
-                            <Text>{!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}</Text>
+                            <Text>
+                                {!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={this.handleClickMute} >
-                            <Text>{!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" />)}</Text>
+                            <Text>
+                                {!!this.state.playing && (this.state.audioEnabled ? <Ionicons name="md-mic" size={30} color="#7f00b2" /> : <Ionicons name="md-mic-off" size={30} color="#7f00b2" />)}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={this.handleClickDisableVideo} >
-                            <Text>{!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" />)}</Text>
+                            <Text>
+                                {!!this.state.playing && (!this.state.videoEnabled ? <Ionicons name="md-camera" size={30} color="#7f00b2" /> : <Ionicons name="md-camera-outline" size={30} color="#7f00b2" />)}
+                            </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings')} >
-                            <Text><Ionicons name="md-settings" size={30} color="#7f00b2" /></Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {
+                            codec: this.state.codec,
+                            bitrate: this.state.bitrate,
+                            setCodec: this.setCodec.bind(this),
+                            isPlaying: this.state.playing,
+                            setBitrate: this.setBitrate.bind(this)
+                        })} >
+                            <Text>
+                                <Ionicons name="md-settings" size={30} color="#7f00b2" />
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -304,6 +301,8 @@ export default function App(props) {
 const styles = StyleSheet.create({
     body: {
         backgroundColor: Colors.white,
+        padding: 0,
+        margin: 0,
         ...StyleSheet.absoluteFill
     },
     stream: {
