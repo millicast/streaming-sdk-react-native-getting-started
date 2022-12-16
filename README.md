@@ -2,7 +2,7 @@
 
 This is a sample app that showcases the integration between JS streaming SDK and React Native.
 
-Add a .env file in current path. You can find the following example in `.env.sample` file:
+Add a `.env` file in current path. You can find the following example in `.env.sample` file:
 
 ```
 MILLICAST_STREAM_NAME=yourStreamName
@@ -19,7 +19,7 @@ You need to set up an emulator or connect a device in order to run the app.
 For **Android**:
 
 1. Put you Android device in debug mode following this [tutorial](https://developer.android.com/studio/debug/dev-options).
-2. Connect device and using your specific IDE, 
+2. Connect device and using your specific IDE.
 3. Run flutter in the detected device.
 
 ### Setting Up Emulator with Android Studio
@@ -40,29 +40,37 @@ To give your Android emulator access to your microphone, start you emulator and 
 
 <img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
 
-# Usage
+## Usage
 
 To test the example app once the `.env` file is set up, simply run the following command in root folder:
 
-Once in the app you will be prompted with the home page allowing you to choose between the Publisher and View options.
+```
+yarn run
+```
+
+In case of using Android, you can simply run:
+
+```
+yarn run android
+```
+
+Once in the app you will be prompted with the home page allowing you to choose between the Publisher and Subscriber (Viewer) apps.
 
 <img src="assets/home.png" alt="drawing" width="500"/>
 
 ## Publisher App
 
-In the publisher app, you can play/pause, switch camera, mute/unmute and turn on/off camera.
-
-This app will also be subscribed to stream events, allowing you to keep the viewer user count.
+In the **Publisher app**, you can play/pause, switch camera, mute/unmute and turn on/off camera; allowing you to keep the viewer user count.
 
 <img src="assets/publisher.png" alt="drawing" width="500"/>
 
 ### Publisher Settings
 
-Publisher settings allow you to set the codec (only before the streaming starts) and set change the bitrate (only after the streaming starts). By default, the bitrate maximum possible.
+Publisher settings allow you to set the codec (only before the streaming is started) and change the bitrate (only after the streaming is started). By default, the bitrate maximum possible.
 
 ## Subscriber App
 
-In the Subscriber app, you can play/pause, mute/unmute and have access to the multiview.
+In the **Subscriber app**, you can play/pause, mute/unmute and have access to the multiview functionality.
 
 <img src="assets/viewerScreen.png" alt="drawing" width="500"/>
 
