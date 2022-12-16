@@ -20,7 +20,7 @@ For **Android**:
 
 1. Put you Android device in debug mode following this [tutorial](https://developer.android.com/studio/debug/dev-options).
 2. Connect device and using your specific IDE.
-3. Run flutter in the detected device.
+3. Run the app in the detected device.
 
 ### Setting Up Emulator with Android Studio
 
