@@ -1,7 +1,6 @@
 {
   "expo": {
     "name": "RN-webrtc-app",
-    "displayName": "Millicast React Native Example App",
     "slug": "RN-webrtc-app",
     "version": "1.0.0",
     "orientation": "portrait",
