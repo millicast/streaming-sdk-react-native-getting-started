@@ -229,17 +229,13 @@ class MillicastWidget extends React.Component {
     return (
       <>
         {
-          this.state.multiView == true ? 
+          this.state.multiView == true ?
             this.state.streams.map((stream) => {
               return (
-                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: '5%', alignContent: 'center'}}>
+                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
                   <View>
                     {this.state.sourceIds.map((sourceId, index) => {
-                      return (
-                        <TouchableOpacity key={sourceId + index} onPress={() => this.project(sourceId, stream.videoMid)}>
-                          <Text style={myStyles.buttonMultiview}>Tap</Text>
-                        </TouchableOpacity>
-                      )
+                      return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
                     })
                     }
                   </View>
@@ -252,9 +248,9 @@ class MillicastWidget extends React.Component {
               < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
         }
 
-        <View style = {myStyles.topViewerCount}>
+        <View style={myStyles.topViewerCount}>
           <Ionicons name="ios-person" size={30} color="#7f00b2" />
-          <Text style={{fontWeight:'bold'}}>{`${this.state.userCount}`} </Text>
+          <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`} </Text>
         </View>
 
         <View style={myStyles.bottomMultimediaContainer}>
@@ -266,7 +262,7 @@ class MillicastWidget extends React.Component {
               <Text >{!this.state.muted ? <Ionicons name="md-volume-high" size={30} color="#7f00b2" /> : <Ionicons name="md-volume-mute" size={30} color="#7f00b2" />}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.multiView} >
-              <Text>{this.state.multiView ? <Ionicons name="chevron-back" size={30} color="#7f00b2" /> : <Ionicons name="md-images" size={30} color="#7f00b2" /> }</Text> 
+              <Text>{this.state.multiView ? <Ionicons name="chevron-back" size={30} color="#7f00b2" /> : <Ionicons name="md-images" size={30} color="#7f00b2" />}</Text>
             </TouchableOpacity>
           </View>
           <View>
