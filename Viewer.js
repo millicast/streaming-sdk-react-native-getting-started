@@ -63,7 +63,6 @@ class MillicastWidget extends React.Component {
       this.setState({
         streams: [...streams]
       })
-      console.log(JSON.stringify(this.state.streams));
     })
 
     //Start connection to viewer
@@ -73,7 +72,6 @@ class MillicastWidget extends React.Component {
         const { name, data } = event;
         switch (name) {
           case "active":
-            console.log(JSON.stringify(data));
             this.setState({
               ...((this.state.sourceIds.indexOf(data.sourceId) === -1 && data.sourceId != null) && {
                 sourceIds: [...this.state.sourceIds, data.sourceId],
@@ -82,11 +80,9 @@ class MillicastWidget extends React.Component {
             //A source has been started on the steam
             break;
           case "inactive":
-            console.log(JSON.stringify(data));
             //A source has been stopped on the steam
             break;
           case "vad":
-            console.log(JSON.stringify(data));
             //A new source was multiplexed over the vad tracks
             break;
           case "layers":
@@ -132,7 +128,6 @@ class MillicastWidget extends React.Component {
     this.setState({
       streams: [...this.state.streams, { stream: mediaStream, videoMid: mediaId }],
     })
-    console.log(JSON.stringify(this.state.streams));
   }
 
   changeStateOfMediaTracks(streams, value) {
@@ -208,7 +203,6 @@ class MillicastWidget extends React.Component {
 
   multiView = async () => {
     const sourceIds = this.state.sourceIds
-    console.log(JSON.stringify(sourceIds));
     if (!this.state.multiView) {
       await Promise.all(sourceIds.map(async (sourceId) => {
         if (sourceId != 'main') {
