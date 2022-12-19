@@ -250,7 +250,7 @@ class MillicastWidget extends React.Component {
 
         <View style={myStyles.topViewerCount}>
           <Ionicons name="ios-person" size={30} color="#7f00b2" />
-          <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`} </Text>
+          <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`}</Text>
         </View>
 
         <View style={myStyles.bottomMultimediaContainer}>
