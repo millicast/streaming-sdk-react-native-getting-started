@@ -4,6 +4,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     View,
+    SafeAreaView
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -33,7 +34,7 @@ export default function PublisherSettings({ route, navigation }) {
     ]
 
     return (
-        <View style={styles.body}>
+        <SafeAreaView style={styles.body}>
             {!isPlaying ? (
                 <>
                     <Text style={myStyles.titleSettings}>
@@ -71,7 +72,7 @@ export default function PublisherSettings({ route, navigation }) {
                 </TouchableOpacity>
             </View>
 
-        </View>
+        </SafeAreaView>
     )
 }
 

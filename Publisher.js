@@ -74,7 +74,7 @@ class MillicastWidget extends React.Component {
         if (!this.state.mediaStream) {
             let medias;
             try {
-                medias = await mediaDevices.getUserMedia({
+                medias = await mediaDevices.getDisplayMedia({
                     video: this.state.videoEnabled,
                     audio: this.state.audioEnabled
                 });
@@ -211,7 +211,7 @@ class MillicastWidget extends React.Component {
         const { navigation } = this.props;
 
         return (
-            <View style={styles.body}>
+            <SafeAreaView style={styles.body}>
                 {
                     this.state.mediaStream ?
                         <RTCView streamURL={this.state.mediaStream.toURL()} style={this.styles.video} objectFit='contain' mirror={this.state.mirror} />
@@ -270,7 +270,7 @@ class MillicastWidget extends React.Component {
                     </View>
                 </View>
 
-            </View>
+            </SafeAreaView>
         )
     }
 };

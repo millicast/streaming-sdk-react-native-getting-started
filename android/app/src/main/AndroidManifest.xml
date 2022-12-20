@@ -4,6 +4,7 @@
   <uses-feature android:name="android.hardware.audio.output" />
   <uses-feature android:name="android.hardware.microphone" />
   
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
