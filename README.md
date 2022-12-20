@@ -42,6 +42,19 @@ To give your Android emulator access to your microphone, start you emulator and 
 
 ## Usage
 
+For running the example app is necessary to have installed Yarn, you can do this by simple running this sentence in the command line:
+```
+npm install --global yarn
+```
+
+Now, you are ready to use Yarn in the command line.
+
+To install all the required dependencies, run the following command:
+```
+yarn run
+```
+
+
 To test the example app once the `.env` file is set up, simply run the following command in root folder:
 
 ```
@@ -74,3 +87,6 @@ In the **Subscriber app**, you can play/pause, mute/unmute and have access to th
 
 <img src="assets/viewerScreen.png" alt="drawing" width="500"/>
 
+## Troubleshooting
+
+It is known that the app may experiment some issues in Samsung phones.
