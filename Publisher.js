@@ -74,7 +74,7 @@ class MillicastWidget extends React.Component {
         if (!this.state.mediaStream) {
             let medias;
             try {
-                medias = await mediaDevices.getDisplayMedia({
+                medias = await mediaDevices.getUserMedia({
                     video: this.state.videoEnabled,
                     audio: this.state.audioEnabled
                 });
