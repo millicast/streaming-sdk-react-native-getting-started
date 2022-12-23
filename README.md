@@ -22,6 +22,13 @@ For **Android**:
 2. Connect device to your PC and using your specific IDE.
 3. Run the app in the detected device.
 
+For **iOS**:
+
+1. Plug in your iPhone, sign in with your iCloud account in XCode.
+2. Change the device in your IDE.
+4. Build and run in the detected device.
+
+
 ### Setting Up an Emulator with Android Studio
 
 Following the guide above, you should already have your emulator up and running.
@@ -52,9 +59,8 @@ Now, you are ready to use Yarn in the command line.
 
 To install all the required dependencies, run the following command:
 ```
-yarn run
+yarn
 ```
-
 
 To test the example app once the `.env` file is set up, simply run the following command in the root folder:
 
@@ -62,11 +68,7 @@ To test the example app once the `.env` file is set up, simply run the following
 yarn run
 ```
 
-If you are using Android, you can simply run:
-
-```
-yarn run android
-```
+There you will be asked to lanuch it on Android or iOS.
 
 Once in the app you will be prompted with the home page allowing you to choose between the Publisher and Subscriber (Viewer) apps.
 
