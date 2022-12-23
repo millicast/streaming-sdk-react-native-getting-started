@@ -47,6 +47,10 @@ To give your Android emulator access to your microphone, start you emulator and 
 
 <img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
 
+## Setting up Emulator for iOS
+
+If you want to test the Publish feature in iOS you will need an actual Apple device, as the Apple emulator does not allow access to the camera.
+
 ## Usage
 
 In order to run the example app, it is necessary to have Yarn installed. You can do this by simply running the following command:
@@ -92,4 +96,5 @@ In the **Subscriber app**, you can play/pause, mute/unmute and have access to th
 
 ## Troubleshooting
 
-It is known that the app may experiment some issues in Samsung phones.
+- It is known that the app may experiment some issues in Samsung phones.
+- The codec H264 is known to not reproduce correctly on emulator.
