@@ -22,6 +22,13 @@ For **Android**:
 2. Connect device to your PC and using your specific IDE.
 3. Run the app in the detected device.
 
+For **iOS**:
+
+1. Plug in your iPhone, sign in with your iCloud account in XCode.
+2. Change the device in your IDE.
+4. Build and run in the detected device.
+
+
 ### Setting Up an Emulator with Android Studio
 
 Following the guide above, you should already have your emulator up and running.
@@ -40,6 +47,10 @@ To give your Android emulator access to your microphone, start you emulator and 
 
 <img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
 
+## Setting up Emulator for iOS
+
+If you want to test the Publish feature in iOS you will need an actual Apple device, as the Apple emulator does not allow access to the camera.
+
 ## Usage
 
 In order to run the example app, it is necessary to have Yarn installed. You can do this by simply running the following command:
@@ -52,9 +63,8 @@ Now, you are ready to use Yarn in the command line.
 
 To install all the required dependencies, run the following command:
 ```
-yarn run
+yarn
 ```
-
 
 To test the example app once the `.env` file is set up, simply run the following command in the root folder:
 
@@ -62,11 +72,7 @@ To test the example app once the `.env` file is set up, simply run the following
 yarn run
 ```
 
-If you are using Android, you can simply run:
-
-```
-yarn run android
-```
+There you will be asked to lanuch it on Android or iOS.
 
 Once in the app you will be prompted with the home page allowing you to choose between the Publisher and Subscriber (Viewer) apps.
 
@@ -90,4 +96,5 @@ In the **Subscriber app**, you can play/pause, mute/unmute and have access to th
 
 ## Troubleshooting
 
-It is known that the app may experiment some issues in Samsung phones.
+- It is known that the app may experiment some issues in Samsung phones.
+- The codec H264 is known to not reproduce correctly on emulator.
