@@ -29,9 +29,27 @@ For **iOS**:
 4. Build and run in the detected device.
 
 
+## Setting Up the Project in Android
+
+In case you want to run it on Android, be sure to create a file `/android/local.properties` having the following content:
+```
+sdk.dir = PATH_ANDROID_SDK
+```
+Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
+
+
 ### Setting Up an Emulator with Android Studio
 
 Following the guide above, you should already have your emulator up and running.
+
+From Android Studio, welcome page:
+1. Select `More actions`.
+2. Select `Virtual Device Manager`.
+
+As shown in the image below:
+
+<img src="assets/virtualEmulator.png" alt="drawing" width="500"/>
+
 
 Be sure to give access to your computer camera and microphone in order to be able to use it for testing, otherwise the emulator will create a sample video simulating the camera usage.
 
