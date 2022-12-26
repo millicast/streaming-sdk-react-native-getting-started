@@ -29,6 +29,16 @@ For **iOS**:
 4. Build and run in the detected device.
 
 
+### Setting Up the Project in Android
+
+In case you want to run it on Android, be sure to create a file `/android/local.properties` having the following content:
+```
+sdk.dir = PATH_ANDROID_SDK
+```
+Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
+
+
+
 ### Setting Up an Emulator with Android Studio
 
 Following the guide above, you should already have your emulator up and running.
