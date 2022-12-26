@@ -27,25 +27,13 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function LogoTitle() {
-  return (
-    <>
-      <Image
-        style={{ width: 50, height: 50, marginRight: 10 }}
-        source={require('./assets/millicastImage.png')}
-      />
-      <Text style={myStyles.title}>React Native Sample App</Text>
-    </>
-  );
-}
-
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} options={{ headerTitle: () => <LogoTitle /> }} />
+        <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
         <Stack.Screen name="Publisher App" component={Publisher} />
         <Stack.Screen name="Subscriber App" component={Viewer} />
       </Stack.Navigator>
