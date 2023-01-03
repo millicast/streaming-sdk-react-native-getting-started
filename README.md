@@ -1,6 +1,24 @@
+## Table of Contents
+
+- [Millicast React Native Example App](#millicast-react-native-example-app)
+  - [Add Your Credentials](#add-your-credentials)
+  - [Connecting a Real Device](#connecting-a-real-device)
+  - [Setting Up the Project in Android](#setting-up-the-project-in-android)
+    - [Setting Up an Emulator with Android Studio](#setting-up-an-emulator-with-android-studio)
+    - [Setting Up the Camera](#setting-up-the-camera)
+    - [Setting Up the Microphone](#setting-up-the-microphone)
+  - [Setting up Emulator for iOS](#setting-up-emulator-for-ios)
+  - [Usage](#usage)
+  - [Publisher App](#publisher-app)
+    - [Publisher Settings](#publisher-settings)
+  - [Subscriber App](#subscriber-app)
+  - [Troubleshooting](#troubleshooting)
+
 # Millicast React Native Example App
 
 This is a sample app that showcases the integration between the JS streaming SDK and React Native.
+
+## Add Your Credentials
 
 Add a `.env` file in the current path. You can find the following example in `.env.sample` file:
 
@@ -115,4 +133,4 @@ In the **Subscriber app**, you can play/pause, mute/unmute and have access to th
 ## Troubleshooting
 
 - It is known that the app may experiment some issues in Samsung phones.
-- The codec H264 is known to not reproduce correctly on emulator.
+- The codec H264 is known not to reproduce correctly in either android or ios emulators.
