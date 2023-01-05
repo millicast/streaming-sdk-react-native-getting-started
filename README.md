@@ -20,6 +20,8 @@ This is a sample app that showcases the integration between the Millicast SDK fo
 
 ## Add Your Credentials
 
+## Add Your Credentials
+
 Add a `.env` file in the current path. You can find the following example in `.env.sample` file:
 
 ```
