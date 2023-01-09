@@ -2,7 +2,7 @@
 
 - [Millicast React Native Sample App](#millicast-react-native-sample-app)
   - [Add Your Credentials](#add-your-credentials)
-  - [Connecting a Device](#connecting-a-real-device)
+  - [Connecting a Device](#connecting-a-device)
   - [Setting Up the Project in Android](#setting-up-the-project-in-android)
     - [Setting Up an Emulator with Android Studio](#setting-up-an-emulator-with-android-studio)
     - [Setting Up the Camera](#setting-up-the-camera)
@@ -13,6 +13,7 @@
     - [Publisher Settings](#publisher-settings)
   - [Subscriber App](#subscriber-app)
   - [Troubleshooting](#troubleshooting)
+  
 
 # Millicast React Native Sample App
 
