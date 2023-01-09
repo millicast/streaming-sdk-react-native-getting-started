@@ -1,6 +1,6 @@
 {
   "name": "rn-webrtc-app",
-  "version": "1.0.0",
+  "version": "0.1.0-beta.0",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
