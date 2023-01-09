@@ -407,6 +407,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Millicast React Native Example App";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = "0.1.0-beta.0";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -435,6 +436,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Millicast React Native Example App";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = "0.1.0-beta.0";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
