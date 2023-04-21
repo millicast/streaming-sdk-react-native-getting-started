@@ -1513,10 +1513,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@millicast/sdk@^0.1.35":
-  version "0.1.36"
-  resolved "https://registry.npmjs.org/@millicast/sdk/-/sdk-0.1.36.tgz"
-  integrity sha512-1oFKMbfSRXfEhuFlfWzKjCYfx65lpATiBLUpC8584OQ9Y+72BpfPqFBO89ljq8i4447qQc51gJ7iw07i32E6Cw==
+"@millicast/sdk@^0.1.39":
+  version "0.1.39"
+  resolved "https://registry.yarnpkg.com/@millicast/sdk/-/sdk-0.1.39.tgz#53021a022db161a09dfc41eea0717f6027da1c8e"
+  integrity sha512-+sqGzKTBeY0wQZxPa1+9iLLDOCyMiK9GeApIjQsMe7nILTKu9kmUZarpTPagCqCWqDz61f5LK9RPblHzu7Kjfw==
   dependencies:
     "@types/node" "^18.11.10"
     Base64 "^1.1.0"
@@ -6769,10 +6769,10 @@ react-native-vector-icons@^9.2.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-webrtc@^106.0.0:
-  version "106.0.1"
-  resolved "https://registry.npmjs.org/react-native-webrtc/-/react-native-webrtc-106.0.1.tgz"
-  integrity sha512-0l911lDIqj7jKMvxwQEF6mQt6CMnmOZjgwyifNT28w3XY4p+0Tm/mg5S0UqjbFzcUWeI5w2q/Xk7zn0mcbEhPg==
+react-native-webrtc@^111.0.0:
+  version "111.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-111.0.0.tgz#60a44d32207e4dce7b038d2056a3760fc5e21861"
+  integrity sha512-eCvjPiU28cT85K8TBV7geAA92+uCldhmJ6F+3CMtAAG7U4AOQzxYOI5HC3h9Lt2zfTwsUzg3tyamqWf00PWndA==
   dependencies:
     adm-zip "0.5.9"
     base64-js "1.5.1"
