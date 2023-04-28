@@ -2,7 +2,7 @@
 
 - [Millicast React Native Sample App](#millicast-react-native-sample-app)
   - [Add Your Credentials](#add-your-credentials)
-  - [Connecting a Device](#connecting-a-real-device)
+  - [Connecting a Device](#connecting-a-device)
   - [Setting Up the Project in Android](#setting-up-the-project-in-android)
     - [Setting Up an Emulator with Android Studio](#setting-up-an-emulator-with-android-studio)
     - [Setting Up the Camera](#setting-up-the-camera)
@@ -102,13 +102,44 @@ To install all the required dependencies, run the following command:
 yarn
 ```
 
-To test the sample app once the `.env` file is set up, run the following command in the root folder:
+To test the sample app in **android**, once the `.env` file is set up, run the following command in the root folder:
 
 ```
-yarn run
+yarn run android
 ```
 
-You will be prompted to launch the app on Android or iOS.
+To test the sample app in **ios**, once the `.env` file is set up, and you already have cocoapods and Xcode installed, run the following commands in the root folder:
+
+```
+yarn build:ios
+yarn run ios
+```
+
+**If you have an error message related to hermes-engine, you can try the following command to solve the problem:**
+ ```
+ cd ios
+ pod update hermes-engine --no-repo-update
+ ```
+And then, got back to the root folder and run **yarn run ios** again.
+
+If you have to install cocoapods, a recommended approach is following these instructions:
+```
+brew install chruby
+brew install ruby-install
+
+ruby-install ruby 3.1.3
+```
+Then you have to update your ~/.zshrc or ~/.bashrc with the following lines:
+```
+source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+chruby ruby-3.1.3
+```
+Finally:
+```
+sudo gem install cocoapods
+```
+
 
 Once in the app you will be prompted with the home page allowing you to choose between the Publisher and Subscriber (Viewer) apps.
 
