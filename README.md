@@ -143,7 +143,7 @@ sudo gem install cocoapods
 
 Once in the app you will be prompted with the home page allowing you to choose between the Publisher and Subscriber (Viewer) apps.
 
-<img src="assets/home.png" alt="drawing" width="500"/>
+<img src="assets/home-screen.png" alt="drawing" width="500"/>
 
 ## Publisher App
 
