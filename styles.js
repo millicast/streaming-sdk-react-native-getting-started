@@ -51,6 +51,7 @@ var myStyles = StyleSheet.create({
         ...StyleSheet.absoluteFill
     },
     screenContainer: {
+        width: width,
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
@@ -89,12 +90,6 @@ var myStyles = StyleSheet.create({
         right: '2%',
         justifyContent: 'space-between',
         alignItems: 'center',
-        /*
-        backgroundColor: "white",
-        opacity: 0.5,
-        borderRadius: 10,
-        padding: 10,
-        */
     },
     bottomBarTimePlaying: {
         width: '100%',

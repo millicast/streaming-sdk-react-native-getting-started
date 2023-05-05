@@ -1,12 +1,10 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { View, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import { RTCView } from 'react-native-webrtc';
-import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
+import * as utils from './service/utils.js'
 
 import Viewer from './Viewer'
 import Publisher from './Publisher'
@@ -17,9 +15,12 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Publisher App')} style={myStyles.buttonDesign}>
-        <Text style={myStyles.buttonText}>PUBLISHER</Text>
-      </TouchableOpacity>
+      {!utils.isTV() ?
+        <TouchableOpacity onPress={() => navigation.navigate('Publisher App')} style={myStyles.buttonDesign}>
+          <Text style={myStyles.buttonText}>PUBLISHER</Text>
+        </TouchableOpacity>
+        : null
+      }
       <TouchableOpacity onPress={() => navigation.navigate('Subscriber App')} style={myStyles.buttonDesign}>
         <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
       </TouchableOpacity>
@@ -31,10 +32,12 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
+    <NavigationContainer style={myStyles.screenContainer}>
+      <Stack.Navigator style={myStyles.screenContainer}>
         <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
-        <Stack.Screen name="Publisher App" component={Publisher} />
+        {!utils.isTV() ?
+          <Stack.Screen name="Publisher App" component={Publisher} />
+          : null}
         <Stack.Screen name="Subscriber App" component={Viewer} />
       </Stack.Navigator>
     </NavigationContainer>
