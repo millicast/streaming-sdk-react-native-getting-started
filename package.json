@@ -27,6 +27,7 @@
     "react-dom": "18.0.0",
     "react-native": "0.70.6",
     "react-native-codegen": "^0.71.3",
+    "react-native-device-info": "^10.6.0",
     "react-native-dotenv": "^3.4.6",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-gesture-handler": "~2.5.0",
