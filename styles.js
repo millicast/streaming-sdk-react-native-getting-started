@@ -32,11 +32,9 @@ var myStyles = StyleSheet.create({
         padding: "2%",
         fontSize: 20,
         marginTop: '8%',
-        height: 35,
     },
     buttonDesign: {
         width: '60%',
-        height: '10%',
         alignItems: 'center'
     },
     buttonMultiview: {
@@ -51,7 +49,6 @@ var myStyles = StyleSheet.create({
         ...StyleSheet.absoluteFill
     },
     screenContainer: {
-        width: width,
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
