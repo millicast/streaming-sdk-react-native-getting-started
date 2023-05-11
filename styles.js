@@ -32,11 +32,9 @@ var myStyles = StyleSheet.create({
         padding: "2%",
         fontSize: 20,
         marginTop: '8%',
-        height: 35,
     },
     buttonDesign: {
         width: '60%',
-        height: '10%',
         alignItems: 'center'
     },
     buttonMultiview: {
@@ -89,12 +87,6 @@ var myStyles = StyleSheet.create({
         right: '2%',
         justifyContent: 'space-between',
         alignItems: 'center',
-        /*
-        backgroundColor: "white",
-        opacity: 0.5,
-        borderRadius: 10,
-        padding: 10,
-        */
     },
     bottomBarTimePlaying: {
         width: '100%',
