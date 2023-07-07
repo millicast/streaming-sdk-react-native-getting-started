@@ -48,7 +48,7 @@ class MillicastWidget extends React.Component {
     // Create a new instance
     // Set track event handler to receive streams from Publisher.
     view.on('track', async (event) => {
-      const mediaStream = event.streams[0] ? event.streams[0] : null
+      const mediaStream = event.streams[0] ?? null
       if (!mediaStream) return null
       const streams = [...this.state.streams]
       if (event.track.kind == 'audio') {
@@ -149,11 +149,7 @@ class MillicastWidget extends React.Component {
       })
     }
     let isPaused = !this.state.playing;
-    if (isPaused) {
-      this.changeStateOfMediaTracks(this.state.streams, isPaused);
-    } else {
-      this.changeStateOfMediaTracks(this.state.streams, isPaused)
-    }
+    this.changeStateOfMediaTracks(this.state.streams, isPaused);
   }
 
   changeStateOfAudioTracks(streams, value) {
@@ -171,11 +167,7 @@ class MillicastWidget extends React.Component {
 
   muteAudio = async () => {
     let isPaused = this.state.muted;
-    if (!isPaused) {
-      this.changeStateOfAudioTracks(this.state.streams, isPaused);
-    } else {
-      this.changeStateOfAudioTracks(this.state.streams, isPaused);
-    }
+    this.changeStateOfAudioTracks(this.state.streams, isPaused);
     isPaused = !isPaused;
   }
 
@@ -223,15 +215,12 @@ class MillicastWidget extends React.Component {
     return (
       <>
         {
-          this.state.multiView == true ?
+          this.state.multiView ?
             this.state.streams.map((stream) => {
               return (
                 <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
                   <View>
-                    {this.state.sourceIds.map((sourceId, index) => {
-                      return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
-                    })
-                    }
+                  <Button title={stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[stream.videoMid-1])} onPress={() => this.project(this.state.sourceIds[stream.videoMid-1], stream.videoMid)} />
                   </View>
                   <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
                 </View>
