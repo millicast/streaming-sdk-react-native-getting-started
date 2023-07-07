@@ -1,7 +1,8 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { Text, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as utils from './service/utils.js'
@@ -9,20 +10,21 @@ import * as utils from './service/utils.js'
 import Viewer from './Viewer'
 import Publisher from './Publisher'
 
-import myStyles from './styles.js'
+import styles from './styles.js'
 
 function HomeScreen({ navigation }) {
   return (
-    <SafeAreaView style={myStyles.screenContainer}>
-      <Text style={myStyles.title}>SAMPLE APP</Text>
+    <SafeAreaView style={styles.screenContainer}>
+      <StatusBar style="auto" />
+      <Text style={styles.title}>Sample App</Text>
       {!utils.isTV() ?
-        <TouchableOpacity onPress={() => navigation.navigate('Publisher App')} style={myStyles.buttonDesign}>
-          <Text style={myStyles.buttonText}>PUBLISHER</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Publisher App')} style={styles.buttonDesign}>
+          <Text style={styles.buttonText}>PUBLISHER</Text>
         </TouchableOpacity>
         : null
       }
-      <TouchableOpacity onPress={() => navigation.navigate('Subscriber App')} style={myStyles.buttonDesign}>
-        <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Subscriber App')} style={styles.buttonDesign}>
+        <Text style={styles.buttonText}>SUBSCRIBER</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -32,15 +34,33 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer style={myStyles.screenContainer}>
-      <Stack.Navigator style={myStyles.screenContainer}>
-        <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{
+        headerMode: 'screen',
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#14141A',
+        },
+        headerTitleAlign: 'center',
+        contentStyle: {
+          borderTopColor: '#34343B',
+          borderTopWidth: 1,
+        },
+      }}>
+        <Stack.Screen name="Home"
+          component={HomeScreen}
+          options={{
+            headerTitle: () => (
+              <Image source={require('./assets/img/Dolby_icon_DD.png')} style={{ width: 24, height: 24 }} />
+            ),
+          }}
+        />
         {!utils.isTV() ?
           <Stack.Screen name="Publisher App" component={Publisher} />
           : null}
         <Stack.Screen name="Subscriber App" component={Viewer} />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 }
 

@@ -300,7 +300,7 @@ export default function App(props) {
 
 const styles = StyleSheet.create({
     body: {
-        backgroundColor: Colors.white,
+        backgroundColor: '#14141A',
         padding: 0,
         margin: 0,
         ...StyleSheet.absoluteFill

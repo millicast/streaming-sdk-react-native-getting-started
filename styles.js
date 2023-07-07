@@ -1,9 +1,8 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const { width, height } = Dimensions.get('window');
 
-var myStyles = StyleSheet.create({
+const theme = StyleSheet.create({
     video: {
         flex: 1,
         position: 'relative',
@@ -23,18 +22,21 @@ var myStyles = StyleSheet.create({
         justifyContent: 'center'
     },
     buttonText: {
-        backgroundColor: '#7f00b2',
+        backgroundColor: '#A3F',
         color: '#FFF',
-        width: "70%",
-        borderRadius: 10,
+        width: "100%",
+        borderRadius: 6,
         textAlign: 'center',
-        fontWeight: '600',
-        padding: "2%",
+        fontWeight: '700',
+        paddingTop: 12,
+        paddingBottom: 12,
         fontSize: 20,
         marginTop: '8%',
+        fontFamily: 'Montserrat-Black',
+        lineHeight: 24,
     },
     buttonDesign: {
-        width: '60%',
+        width: '85%',
         alignItems: 'center'
     },
     buttonMultiview: {
@@ -45,14 +47,13 @@ var myStyles = StyleSheet.create({
         marginBottom: '0%'
     },
     container: {
-        backgroundColor: Colors.white,
         ...StyleSheet.absoluteFill
     },
     screenContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: '#FFF'
+        backgroundColor: '#14141A'
     },
     screenMediaContainer: {
         flex: 1,
@@ -62,9 +63,9 @@ var myStyles = StyleSheet.create({
     },
     title: {
         height: '20%',
-        color: "#7f00b2",
-        fontWeight: 'bold',
-        fontSize: 20
+        color: "white",
+        fontWeight: '700',
+        fontSize: 30
     },
     bottomMultimediaContainer: {
         width: width,
@@ -113,4 +114,4 @@ var myStyles = StyleSheet.create({
     }
 })
 
-module.exports = myStyles;
+module.exports = theme;

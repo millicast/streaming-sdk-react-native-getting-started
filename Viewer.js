@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Button, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
 import { Ionicons } from 'react-native-vector-icons';
@@ -273,18 +272,16 @@ class MillicastWidget extends React.Component {
 
 export default function App() {
   return (
-    <>
-      <SafeAreaView style={stylesContainer.container}>
-        <StatusBar style="auto" />
-        <MillicastWidget streamName={streamName} accountID={accountId} />
-      </SafeAreaView>
-    </>
+    <SafeAreaView style={stylesContainer.container}>
+      <StatusBar style="auto" />
+      <MillicastWidget streamName={streamName} accountID={accountId} />
+    </SafeAreaView>
   );
 }
 
 const stylesContainer = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
-    ...StyleSheet.absoluteFill
+    ...StyleSheet.absoluteFill,
+    backgroundColor: '#14141A',
   },
 });
