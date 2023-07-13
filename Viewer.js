@@ -24,7 +24,8 @@ class MillicastWidget extends React.Component {
       muted: false,
       millicastView: null,
       setMedia: true,
-      userCount: 0
+      userCount: 0,
+      selectedSource: null,
     }
 
     this.styles = myStyles
@@ -201,6 +202,7 @@ class MillicastWidget extends React.Component {
           this.addRemoteTrack(sourceId)
         }
       }))
+      this.setState({ streams: [this.state.streams[0]] })
     } else {
       this.setState({
         streams: [...[this.state.streams[0]]]
@@ -216,19 +218,37 @@ class MillicastWidget extends React.Component {
       <>
         {
           this.state.multiView ?
-            this.state.streams.map((stream) => {
+            // multiview
+            this.state.streams.map((stream, index) => {
               return (
-                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+                <View key={stream.videoMid}
+                  style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
                   <View>
-                  <Button title={stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[stream.videoMid-1])} onPress={() => this.project(this.state.sourceIds[stream.videoMid-1], stream.videoMid)} />
+                    <Button
+                      title={stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}
+                      onPress={() => {
+                        this.setState({ selectedSource: stream.stream.toURL() })
+                        this.setState({ multiView: !this.state.multiView })
+                        console.log(this.state.sourceIds, 'ppppppp')
+                      }} />
                   </View>
-                  <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
+                  <RTCView
+                    key={stream.stream.toURL() + stream.videoMid}
+                    streamURL={stream.stream.toURL()}
+                    style={this.styles.video}
+                    objectFit='contain' />
                 </View>
               )
             })
             :
-            this.state.streams[0] ?
-              < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
+            // main/selected source
+            this.state.streams[0]
+              ?
+              < RTCView key={this.state.selectedSource ?? 'main'}
+                streamURL={this.state.selectedSource ?? this.state.streams[0].stream.toURL()}
+                style={this.styles.video}
+                objectFit='contain' />
+              : null
         }
 
         <View style={myStyles.topViewerCount}>
