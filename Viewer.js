@@ -229,7 +229,6 @@ class MillicastWidget extends React.Component {
                       onPress={() => {
                         this.setState({ selectedSource: stream.stream.toURL() })
                         this.setState({ multiView: !this.state.multiView })
-                        console.log(this.state.sourceIds, 'ppppppp')
                       }} />
                   </View>
                   <RTCView
