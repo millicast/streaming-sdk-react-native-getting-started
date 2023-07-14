@@ -1,44 +1,38 @@
 {
-  "name": "rn-webrtc-app",
-  "version": "0.1.0",
+  "name": "TestApp",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "start": "expo start --dev-client",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
-    "web": "expo start --web"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
   },
-  "main": "./index.js",
   "dependencies": {
-    "@babel/preset-env": "^7.20.2",
-    "@babel/runtime": "^7.20.7",
-    "@expo/prebuild-config": "^5.0.7",
     "@millicast/sdk": "^0.1.39",
-    "@react-native-community/masked-view": "^0.1.11",
-    "@react-navigation/native": "^6.0.13",
-    "@react-navigation/native-stack": "^6.9.1",
-    "expo": "^46.0.16",
-    "expo-modules-autolinking": "^1.0.0",
-    "expo-splash-screen": "^0.17.5",
-    "expo-status-bar": "~1.4.0",
-    "generator-rn-toolbox": "^3.14.0",
-    "jscodeshift": "^0.14.0",
-    "react": "18.1.0",
-    "react-dom": "18.0.0",
-    "react-native": "0.70.6",
-    "react-native-codegen": "^0.71.3",
-    "react-native-device-info": "^10.6.0",
-    "react-native-dotenv": "^3.4.6",
-    "react-native-dropdown-select-list": "^2.0.4",
-    "react-native-gesture-handler": "~2.5.0",
-    "react-native-reanimated": "~2.9.1",
-    "react-native-safe-area-context": "4.3.1",
-    "react-native-screens": "~3.15.0",
-    "react-native-vector-icons": "^9.2.0",
-    "react-native-webrtc": "^111.0.0"
+    "@react-navigation/native": "^6.1.6",
+    "@react-navigation/native-stack": "^6.9.12",
+    "@types/react-native": "^0.63.17",
+    "react": "18.0.0",
+    "react-native": "npm:react-native-tvos@0.69.8-2",
+    "react-native-codegen": "^0.70.6",
+    "react-native-safe-area-context": "^4.5.3", 
+    "react-native-screen": "^1.0.1",
+    "react-native-screens": "^3.20.0",
+    "react-native-webrtc": "file:../react-native-webrtc"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.32.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.70.3",
+    "react-test-renderer": "18.0.0"
   },
-  "private": true
+  "jest": {
+    "preset": "react-native"
+  }
 }

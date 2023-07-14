@@ -1,14 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, SafeAreaView, Text, TouchableOpacity } from 'react-native';
+// import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, Button, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+// import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
-import { Ionicons } from 'react-native-vector-icons';
+// import { Ionicons } from 'react-native-vector-icons';
 
-const streamName = process.env.MILLICAST_STREAM_NAME;
-const accountId = process.env.MILLICAST_ACCOUNT_ID;
+import { Logger as MillicastLogger } from '@millicast/sdk'
+
+const streamName = '...'
+const accountId = '...'
+
+window.Logger = MillicastLogger
+
+Logger.setLevel(MillicastLogger.DEBUG);
 
 class MillicastWidget extends React.Component {
 
@@ -44,11 +50,11 @@ class MillicastWidget extends React.Component {
       streamName: streamName,
       streamAccountId: accountID
     })
-    let view = new MillicastView(streamName, tokenGenerator, null);
     // Create a new instance
+    let view = new MillicastView(streamName, tokenGenerator, null);
     // Set track event handler to receive streams from Publisher.
     view.on('track', async (event) => {
-      const mediaStream = event.streams[0] ?? null
+      const mediaStream = event.streams[0] ? event.streams[0] : null
       if (!mediaStream) return null
       const streams = [...this.state.streams]
       if (event.track.kind == 'audio') {
@@ -96,12 +102,12 @@ class MillicastWidget extends React.Component {
       });
       await view.connect({ events: ["active", "inactive", "vad", "layers", "viewercount"] })
 
-      view.on('broadcastEvent', (event) => {
-        const { name, data } = event
-        if (name === 'viewercount') {
-          this.setState({ userCount: data.viewercount })
-        }
-      })
+      // view.on('broadcastEvent', (event) => {
+      //   const { name, data } = event
+      //   if (name === 'viewercount') {
+      //     this.setState({ userCount: data.viewercount })
+      //   }
+      // })
 
       this.setState({
         millicastView: view
@@ -143,13 +149,19 @@ class MillicastWidget extends React.Component {
 
   playPauseVideo = async () => {
     if (this.state.setMedia) {
+      console.log('Stream Name:', streamName);
+
       this.subscribe(streamName, accountId);
       this.setState({
         setMedia: false
       })
     }
     let isPaused = !this.state.playing;
-    this.changeStateOfMediaTracks(this.state.streams, isPaused);
+    if (isPaused) {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused);
+    } else {
+      this.changeStateOfMediaTracks(this.state.streams, isPaused)
+    }
   }
 
   changeStateOfAudioTracks(streams, value) {
@@ -167,7 +179,11 @@ class MillicastWidget extends React.Component {
 
   muteAudio = async () => {
     let isPaused = this.state.muted;
-    this.changeStateOfAudioTracks(this.state.streams, isPaused);
+    if (!isPaused) {
+      this.changeStateOfAudioTracks(this.state.streams, isPaused);
+    } else {
+      this.changeStateOfAudioTracks(this.state.streams, isPaused);
+    }
     isPaused = !isPaused;
   }
 
@@ -215,22 +231,33 @@ class MillicastWidget extends React.Component {
     return (
       <>
         {
-          this.state.multiView ?
-            this.state.streams.map((stream) => {
-              return (
-                <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
-                  <View>
-                  <Button title={stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[stream.videoMid-1])} onPress={() => this.project(this.state.sourceIds[stream.videoMid-1], stream.videoMid)} />
-                  </View>
-                  <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
-                </View>
-              )
-            })
-            :
+          // this.state.multiView == true ?
+          //   this.state.streams.map((stream) => {
+          //     return (
+          //       <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+          //         <View>
+          //           {this.state.sourceIds.map((sourceId, index) => {
+          //             return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
+          //           })
+          //           }
+          //         </View>
+          //         <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
+          //       </View>
+          //     )
+          //   })
+          //   :
             this.state.streams[0] ?
-              < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : null
+              < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : <Text>"Error: No video reached."</Text>
         }
+{ <View style={myStyles.bottomMultimediaContainer}>
+    <View style={myStyles.bottomIconWrapper}>
+      <TouchableOpacity hasTVPreferredFocus tvParallaxProperties={{ magnification: 1.2 }}  onPress={this.playPauseVideo} >
+              <Text>Play</Text>
+      </TouchableOpacity>
+    </View>
+</View>
 
+/* 
         <View style={myStyles.topViewerCount}>
           <Ionicons name="ios-person" size={30} color="#7f00b2" />
           <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`}</Text>
@@ -254,7 +281,7 @@ class MillicastWidget extends React.Component {
             })
             }
           </View>
-        </View>
+        </View> */}
       </>
     );
   }
@@ -264,7 +291,7 @@ export default function App() {
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        <StatusBar style="auto" />
+        {/* <StatusBar style="auto" /> */}
         <MillicastWidget streamName={streamName} accountID={accountId} />
       </SafeAreaView>
     </>
@@ -273,7 +300,7 @@ export default function App() {
 
 const stylesContainer = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    // backgroundColor: Colors.white,
     ...StyleSheet.absoluteFill
   },
 });
