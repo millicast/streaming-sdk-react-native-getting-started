@@ -9,8 +9,8 @@ import myStyles from './styles.js'
 
 import { Logger as MillicastLogger } from '@millicast/sdk'
 
-const streamName = '...'
-const accountId = '...'
+const streamName = process.env.MILLICAST_STREAM_NAME
+const accountId = process.env.MILLICAST_ACCOUNT_ID
 
 window.Logger = MillicastLogger
 
