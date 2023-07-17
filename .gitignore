@@ -64,3 +64,4 @@ buck-out/
 /ios/libWebRTC/
 
 /vendor/bundle/
+.env
