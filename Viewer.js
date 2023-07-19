@@ -1,5 +1,5 @@
 // import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, View, FlatList, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -9,8 +9,8 @@ import myStyles from './styles.js'
 
 import { Logger as MillicastLogger } from '@millicast/sdk'
 
-const streamName = process.env.MILLICAST_STREAM_NAME
-const accountId = process.env.MILLICAST_ACCOUNT_ID
+var streamName = '...'
+var accountId = '...'
 
 window.Logger = MillicastLogger
 
@@ -238,19 +238,28 @@ class MillicastWidget extends React.Component {
             this.state.streams.map((stream, index) => {
               return (
                 <View key={stream.videoMid}
-                  style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+                  style={{
+                    flexDirection: 'row',
+                    // padding: '5%',
+                    // justifyContent: 'space-around',
+                    flex: 1,
+                    // alignSelf: 'stretch',
+                    // flexWrap: 'wrap'
+                  }}>
                   <View>
-                    <Button
-                      title={stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}
+                    <TouchableOpacity
+                      hasTVPreferredFocus
                       onPress={() => {
                         this.setState({ selectedSource: stream.stream.toURL() })
                         this.setState({ multiView: !this.state.multiView })
-                      }} />
+                      }}>
+                      <Text style={{ color: 'black' }}>{stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}</Text>
+                    </TouchableOpacity>
                   </View>
                   <RTCView
                     key={stream.stream.toURL() + stream.videoMid}
                     streamURL={stream.stream.toURL()}
-                    style={this.styles.video}
+                    style={{ flex: 1, position: 'relative' }}
                     objectFit='contain' />
                 </View>
               )
@@ -264,17 +273,20 @@ class MillicastWidget extends React.Component {
                 style={this.styles.video}
                 objectFit='contain' />
               :
-              <Text>Error: No video reached.</Text>
+              <Text style={{ color: 'black' }}>Press the 'play' button, or the 'multiview' button.</Text>
         }
         {<View style={myStyles.bottomMultimediaContainer}>
           <View style={myStyles.bottomIconWrapper}>
-            <TouchableOpacity hasTVPreferredFocus tvParallaxProperties={{ magnification: 1.2 }} onPress={this.playPauseVideo} >
-              <Text>Play</Text>
+            <TouchableOpacity
+              hasTVPreferredFocus
+              tvParallaxProperties={{ magnification: 1.2 }}
+              onPress={this.playPauseVideo} >
+              <Text style={{ color: 'black' }}>Play</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.multiView} >
+              <Text style={{ color: 'black' }}>Multiview</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={this.multiView} >
-            <Text>multiview</Text>
-          </TouchableOpacity>
         </View>
 
 /* 
