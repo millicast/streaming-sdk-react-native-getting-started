@@ -30,7 +30,8 @@ class MillicastWidget extends React.Component {
       muted: false,
       millicastView: null,
       setMedia: true,
-      userCount: 0
+      userCount: 0,
+      selectedSource: null
     }
 
     this.styles = myStyles
@@ -217,6 +218,7 @@ class MillicastWidget extends React.Component {
           this.addRemoteTrack(sourceId)
         }
       }))
+      this.setState({ streams: [this.state.streams[0]] })
     } else {
       this.setState({
         streams: [...[this.state.streams[0]]]
@@ -231,31 +233,49 @@ class MillicastWidget extends React.Component {
     return (
       <>
         {
-          // this.state.multiView == true ?
-          //   this.state.streams.map((stream) => {
-          //     return (
-          //       <View key={stream.videoMid} style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
-          //         <View>
-          //           {this.state.sourceIds.map((sourceId, index) => {
-          //             return (<Button key={sourceId + index} title={sourceId} onPress={() => this.project(sourceId, stream.videoMid)} />)
-          //           })
-          //           }
-          //         </View>
-          //         <RTCView key={stream.stream.toURL() + stream.videoMid} streamURL={stream.stream.toURL()} style={this.styles.video} objectFit='contain' />
-          //       </View>
-          //     )
-          //   })
-          //   :
-            this.state.streams[0] ?
-              < RTCView key={'main'} streamURL={this.state.streams[0].stream.toURL()} style={this.styles.video} objectFit='contain' /> : <Text>"Error: No video reached."</Text>
+          this.state.multiView ?
+            // multiview
+            this.state.streams.map((stream, index) => {
+              return (
+                <View key={stream.videoMid}
+                  style={{ flexDirection: 'row', padding: 50, alignContent: 'center' }}>
+                  <View>
+                    <Button
+                      title={stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}
+                      onPress={() => {
+                        this.setState({ selectedSource: stream.stream.toURL() })
+                        this.setState({ multiView: !this.state.multiView })
+                      }} />
+                  </View>
+                  <RTCView
+                    key={stream.stream.toURL() + stream.videoMid}
+                    streamURL={stream.stream.toURL()}
+                    style={this.styles.video}
+                    objectFit='contain' />
+                </View>
+              )
+            })
+            :
+            // main/selected source
+            this.state.streams[0]
+              ?
+              < RTCView key={this.state.selectedSource ?? 'main'}
+                streamURL={this.state.selectedSource ?? this.state.streams[0].stream.toURL()}
+                style={this.styles.video}
+                objectFit='contain' />
+              :
+              <Text>Error: No video reached.</Text>
         }
-{ <View style={myStyles.bottomMultimediaContainer}>
-    <View style={myStyles.bottomIconWrapper}>
-      <TouchableOpacity hasTVPreferredFocus tvParallaxProperties={{ magnification: 1.2 }}  onPress={this.playPauseVideo} >
+        {<View style={myStyles.bottomMultimediaContainer}>
+          <View style={myStyles.bottomIconWrapper}>
+            <TouchableOpacity hasTVPreferredFocus tvParallaxProperties={{ magnification: 1.2 }} onPress={this.playPauseVideo} >
               <Text>Play</Text>
-      </TouchableOpacity>
-    </View>
-</View>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={this.multiView} >
+            <Text>multiview</Text>
+          </TouchableOpacity>
+        </View>
 
 /* 
         <View style={myStyles.topViewerCount}>
