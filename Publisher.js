@@ -2,14 +2,12 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    // StatusBar,
     Text,
     TouchableOpacity,
 } from 'react-native';
-// import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React from 'react';
 import { mediaDevices, RTCView } from 'react-native-webrtc';
-import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
+// import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 
 // Import the required classes
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
@@ -18,6 +16,9 @@ import myStyles from './styles.js'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // import PublisherSettings from './PublisherSettings'
+
+var MILLICAST_STREAM_NAME = '...'
+var MILLICAST_PUBLISHING_TOKEN = '...'
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -238,11 +239,11 @@ class MillicastWidget extends React.Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={this.toggleCamera} >
+                        {/* <TouchableOpacity onPress={this.toggleCamera} >
                             <Text>
                                 {!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         <TouchableOpacity onPress={this.handleClickMute} >
                             <Text>
@@ -256,7 +257,7 @@ class MillicastWidget extends React.Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {
+                        {/* <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {
                             codec: this.state.codec,
                             bitrate: this.state.bitrate,
                             setCodec: this.setCodec.bind(this),
@@ -266,7 +267,7 @@ class MillicastWidget extends React.Component {
                             <Text>
                                 <Ionicons name="md-settings" size={30} color="#7f00b2" />
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
 
