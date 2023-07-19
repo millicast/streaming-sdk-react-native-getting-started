@@ -12,10 +12,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Viewer from './Viewer'
+import Publisher from './Publisher'
 
 import myStyles from './styles.js'
 import { Platform } from "react-native"
-import { isVoidTypeAnnotation } from '@babel/types';
 
 function HomeScreen({ navigation }) {
   return (
@@ -48,6 +48,7 @@ function App() {
       <Stack.Navigator style={myStyles.screenContainer}>
         <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
         <Stack.Screen name="Subscriber App" component={Viewer} />
+        <Stack.Screen name="Publisher App" component={Publisher} />
       </Stack.Navigator>
     </NavigationContainer>
   );
