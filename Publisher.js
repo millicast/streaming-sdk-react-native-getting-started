@@ -7,18 +7,15 @@ import {
 } from 'react-native';
 import React from 'react';
 import { mediaDevices, RTCView } from 'react-native-webrtc';
-// import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env'
 
 // Import the required classes
 import { Director, Publish } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
-// import { Ionicons } from 'react-native-vector-icons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN } from '@env';
 
-// import PublisherSettings from './PublisherSettings'
-
-var MILLICAST_STREAM_NAME = '...'
-var MILLICAST_PUBLISHING_TOKEN = '...'
+var streamName = MILLICAST_STREAM_NAME
+var publishToken = MILLICAST_PUBLISHING_TOKEN
 
 class MillicastWidget extends React.Component {
     constructor(props) {
@@ -281,7 +278,7 @@ function PublisherMain(props) {
         <>
             {/* <StatusBar barStyle="dark-content" /> */}
             <SafeAreaView style={styles.body}>
-                <MillicastWidget streamName={MILLICAST_STREAM_NAME} token={MILLICAST_PUBLISHING_TOKEN} {...props} />
+                <MillicastWidget streamName={streamName} token={publishToken} {...props} />
             </SafeAreaView>
         </>
     )

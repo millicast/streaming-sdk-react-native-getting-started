@@ -1,16 +1,14 @@
-// import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, FlatList, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
-// import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
 import myStyles from './styles.js'
-// import { Ionicons } from 'react-native-vector-icons';
 
 import { Logger as MillicastLogger } from '@millicast/sdk'
+import { MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID } from '@env';
 
-var streamName = '...'
-var accountId = '...'
+var streamName = MILLICAST_STREAM_NAME
+var accountId = MILLICAST_ACCOUNT_ID
 
 window.Logger = MillicastLogger
 
@@ -323,8 +321,10 @@ export default function App() {
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        {/* <StatusBar style="auto" /> */}
-        <MillicastWidget streamName={streamName} accountID={accountId} />
+        <MillicastWidget
+          streamName={streamName}
+          accountID={accountId}
+        />
       </SafeAreaView>
     </>
   );
