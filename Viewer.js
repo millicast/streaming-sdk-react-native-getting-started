@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, FlatList, Text, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
@@ -7,8 +7,11 @@ import myStyles from './styles.js'
 import { Logger as MillicastLogger } from '@millicast/sdk'
 import { MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID } from '@env';
 
-var streamName = MILLICAST_STREAM_NAME
-var accountId = MILLICAST_ACCOUNT_ID
+const streamName = MILLICAST_STREAM_NAME
+const accountId = MILLICAST_ACCOUNT_ID
+
+const widthScreen = Dimensions.get('screen').width
+const heightScreen = Dimensions.get('screen').height
 
 window.Logger = MillicastLogger
 
@@ -233,40 +236,42 @@ class MillicastWidget extends React.Component {
         {
           this.state.multiView ?
             // multiview
-            this.state.streams.map((stream, index) => {
-              return (
-                <View key={stream.videoMid}
-                  style={{
-                    flexDirection: 'row',
-                    // padding: '5%',
-                    // justifyContent: 'space-around',
-                    flex: 1,
-                    // alignSelf: 'stretch',
-                    // flexWrap: 'wrap'
-                  }}>
-                  <View>
-                    <TouchableOpacity
-                      hasTVPreferredFocus
-                      onPress={() => {
-                        this.setState({ selectedSource: stream.stream.toURL() })
-                        this.setState({ multiView: !this.state.multiView })
-                      }}>
-                      <Text style={{ color: 'black' }}>{stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}</Text>
-                    </TouchableOpacity>
-                  </View>
+            <FlatList
+              data={this.state.streams}
+              style={{
+                textAlign: 'center'
+              }}
+              numColumns={2}
+              keyExtractor={item => {
+                item.stream.videoMid
+                console.log(item.stream.videoMid)
+              }}
+              renderItem={({ item, index }) => (
+                <View>
+                  <TouchableOpacity
+                    hasTVPreferredFocus
+                    onPress={() => {
+                      this.setState({ selectedSource: item.stream.toURL() })
+                      this.setState({ multiView: !this.state.multiView })
+                    }}>
+                    <Text style={{ color: 'black' }}>
+                      {item.stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}
+                    </Text>
+                  </TouchableOpacity>
                   <RTCView
-                    key={stream.stream.toURL() + stream.videoMid}
-                    streamURL={stream.stream.toURL()}
-                    style={{ flex: 1, position: 'relative' }}
-                    objectFit='contain' />
+                    key={item.stream.toURL() + item.stream.videoMid}
+                    streamURL={item.stream.toURL()}
+                    style={{ width: widthScreen * 0.45, height: heightScreen * 0.4 }}
+                  />
                 </View>
-              )
-            })
+              )}
+            />
             :
             // main/selected source
             this.state.streams[0]
               ?
-              < RTCView key={this.state.selectedSource ?? 'main'}
+              <RTCView
+                key={this.state.selectedSource ?? 'main'}
                 streamURL={this.state.selectedSource ?? this.state.streams[0].stream.toURL()}
                 style={this.styles.video}
                 objectFit='contain' />
