@@ -44,8 +44,19 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer style={myStyles.screenContainer}>
-      <Stack.Navigator style={myStyles.screenContainer}>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{
+        headerMode: 'screen',
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#14141A',
+        },
+        headerTitleAlign: 'center',
+        contentStyle: {
+          borderTopColor: '#34343B',
+          borderTopWidth: 1,
+        },
+      }}>
         <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
         <Stack.Screen name="Subscriber App" component={Viewer} />
         <Stack.Screen name="Publisher App" component={Publisher} />

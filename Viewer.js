@@ -1,4 +1,13 @@
-import { StyleSheet, View, FlatList, Text, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Dimensions,
+  Platform
+} from 'react-native';
 import React from 'react';
 import { RTCView } from 'react-native-webrtc';
 import { Director, View as MillicastView } from '@millicast/sdk/dist/millicast.debug.umd'
@@ -12,6 +21,8 @@ const accountId = MILLICAST_ACCOUNT_ID
 
 const widthScreen = Dimensions.get('screen').width
 const heightScreen = Dimensions.get('screen').height
+
+const amountCols = Platform.isTV ? 2 : 1
 
 window.Logger = MillicastLogger
 
@@ -241,7 +252,7 @@ class MillicastWidget extends React.Component {
               style={{
                 textAlign: 'center'
               }}
-              numColumns={2}
+              numColumns={amountCols}
               keyExtractor={(_, index) => String(index)}
               renderItem={({ item, index }) => (
                 <View>
@@ -258,7 +269,10 @@ class MillicastWidget extends React.Component {
                   <RTCView
                     key={item.stream.toURL() + item.stream.videoMid}
                     streamURL={item.stream.toURL()}
-                    style={{ width: widthScreen * 0.45, height: heightScreen * 0.4 }}
+                    style={{
+                      width: widthScreen * (0.99 / amountCols),
+                      aspectRatio: 1
+                    }}
                   />
                 </View>
               )}
