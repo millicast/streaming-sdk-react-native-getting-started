@@ -242,10 +242,7 @@ class MillicastWidget extends React.Component {
                 textAlign: 'center'
               }}
               numColumns={2}
-              keyExtractor={item => {
-                item.stream.videoMid
-                console.log(item.stream.videoMid)
-              }}
+              keyExtractor={(_, index) => String(index)}
               renderItem={({ item, index }) => (
                 <View>
                   <TouchableOpacity
