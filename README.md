@@ -1,4 +1,6 @@
-## React Native tvOS Sample App
+## React Native TV Sample App
+
+### tvOS
 
 - It is required to have WebRTC.framework m112 build for tvOS. Place your build directory inside the ios folder.
 
@@ -35,3 +37,15 @@ In Header Search Paths, insert the following line:
 Select TestApp-tvOS project and use a tvOS simulator with tvOS 16.
 
 Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+
+### Android TV
+
+You should have an Android TV Simulator in Android Studio.
+
+Clone this repository and move to tvapp branch.
+Execute `yarn` to install dependencies.
+
+Inside android directory, create a file called local.properties and add the path to the sdk directory as follows:
+`sdk.dir = /../Android/sdk`
+
+Open and run de Android TV simulator and then execute the application from the terminal with `yarn run android`.
