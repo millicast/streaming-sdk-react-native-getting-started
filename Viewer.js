@@ -247,36 +247,58 @@ class MillicastWidget extends React.Component {
         {
           this.state.multiView ?
             // multiview
-            <FlatList
-              data={this.state.streams}
-              style={{
-                textAlign: 'center'
-              }}
-              numColumns={amountCols}
-              keyExtractor={(_, index) => String(index)}
-              renderItem={({ item, index }) => (
-                <View>
-                  <TouchableOpacity
-                    hasTVPreferredFocus
-                    onPress={() => {
-                      this.setState({ selectedSource: item.stream.toURL() })
-                      this.setState({ multiView: !this.state.multiView })
+            <View style={{
+              alignContent: 'center',
+              marginBottom: 50
+            }}>
+              <FlatList
+                data={this.state.streams}
+                style={{
+                  textAlign: 'center'
+                }}
+                numColumns={amountCols}
+                keyExtractor={(_, index) => String(index)}
+                renderItem={({ item, index }) => (
+                  <View style={[{ marginTop: -90, marginBottom: -100 },
+                  index % 2 == 0 ?
+                    { marginLeft: 10, marginRight: 5 } :
+                    { marginLeft: 5, marginRight: 10 }]}>
+                    <View style={{
+                      position: 'absolute',
+                      left: 8,
+                      bottom: 108,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      zIndex: 1,
+                      padding: 5,
+                      borderRadius: 2,
+                      backgroundColor: 'rgba(0,0,0,.288)',
                     }}>
-                    <Text style={{ color: 'black' }}>
-                      {item.stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}
-                    </Text>
-                  </TouchableOpacity>
-                  <RTCView
-                    key={item.stream.toURL() + item.stream.videoMid}
-                    streamURL={item.stream.toURL()}
-                    style={{
-                      width: widthScreen * (0.99 / amountCols),
-                      aspectRatio: 1
-                    }}
-                  />
-                </View>
-              )}
-            />
+                      <TouchableOpacity
+                        hasTVPreferredFocus
+                        onPress={() => {
+                          this.setState({ selectedSource: item.stream.toURL() })
+                          this.setState({ multiView: !this.state.multiView })
+                        }}>
+                        <Text style={{ color: 'white' }}>
+                          {item.stream.videoMid === '0' ? 'Main' : String(this.state.sourceIds[index])}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <RTCView
+                      key={item.stream.toURL() + item.stream.videoMid}
+                      streamURL={item.stream.toURL()}
+                      style={{
+                        width: '70%',
+                        flex: 1,
+                        aspectRatio: 1,
+                        borderRadius: 30,
+                      }}
+                    />
+                  </View>
+                )}
+              />
+            </View>
             :
             // main/selected source
             this.state.streams[0]
@@ -285,9 +307,10 @@ class MillicastWidget extends React.Component {
                 key={this.state.selectedSource ?? 'main'}
                 streamURL={this.state.selectedSource ?? this.state.streams[0].stream.toURL()}
                 style={this.styles.video}
-                objectFit='contain' />
+                objectFit='contain'
+              />
               :
-              <Text style={{ color: 'black' }}>Press the 'play' button, or the 'multiview' button.</Text>
+              <Text style={{ color: 'white' }}>Press the 'play' button, or the 'multiview' button.</Text>
         }
         {<View style={myStyles.bottomMultimediaContainer}>
           <View style={myStyles.bottomIconWrapper}>
@@ -348,7 +371,7 @@ export default function App() {
 
 const stylesContainer = StyleSheet.create({
   container: {
-    // backgroundColor: Colors.white,
+    backgroundColor: '#14141A',
     ...StyleSheet.absoluteFill
   },
 });
