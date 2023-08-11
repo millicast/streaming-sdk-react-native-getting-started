@@ -2,47 +2,63 @@
 
 In this document we describe how to run the application on mobile (Android and iOS) and TV (Android and tvOS).
 
-## Apple
+## How to run the app
+### Apple
 
-### tvOS
+#### tvOS
 
 - It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
 
-Clone this repository and move to `tvapp` branch.
-Execute `yarn` to install dependencies.
-Then execute ``cd ios && pod install``.
+Follow the following steps:
 
-Create `.env` inside the root folder with the following credentials:
+1. Clone this repository and move to `tvapp` branch.
+2. To install the dependencies, run:
+```
+yarn
+```
+3. Then execute:
+```
+cd ios && pod install
+```
 
-`MILLICAST_STREAM_NAME=`
+Create an `.env` inside the root folder with the following credentials:
 
-`MILLICAST_ACCOUNT_ID=`
+```
+MILLICAST_STREAM_NAME=
+MILLICAST_ACCOUNT_ID=
+MILLICAST_PUBLISHING_TOKEN=
+```
 
-`MILLICAST_PUBLISHING_TOKEN=`
+##### Xcode settings
 
-#### Xcode settings
+1. Open Xcode.
+1. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
+1. Select `TestApp project`, then `TestApp-tvOS` target.
+1. Go to `General -> Frameworks, Libraries, and Embedded Content` and add WebRTC.framework m112 build for tvOS.
+Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binary With Libraries`.
+1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
-Open Xcode, select **Open a project from a file** and select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`
+In `Frameworks Search Paths`, insert the following line: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
+```
 
-Select TestApp project, then TestApp-tvOS target.
+In `Header Search Paths`, insert the following lines: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
+```
 
-Go to **General -> Frameworks, Libraries, and Embedded Content** and add WebRTC.framework m112 build for tvOS.
-Also, add the framework in **Build Phases -> Embed Frameworks** and on **Link Binary With Libraries**.
-
-Then select Pods Xcode project and go to Build Settings -> Search Paths.
-
-In Frameworks Search Paths, insert the following line: 
-* $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
-
-In Header Search Paths, insert the following line: 
-* $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
-* $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
-
-Select TestApp-tvOS project and use a tvOS simulator with tvOS 16.
+1. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
 
 Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
-## Android
+#### iOS
+
+
+
+### Android
 
 1. Clone this repository and move to `tvapp` branch.
 2. To install dependencies, run:
@@ -55,18 +71,22 @@ sdk.dir = /../Android/sdk
 ```
 This varies from OS to OS, so make sure to put the right path.
 
-1. If you want to run it on an emulator, make sure to install one from Android Studio. To do this go to: Android Studio -> More Actions -> Virtual Device Manager -> Create device. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
+1. If you want to run it on an emulator, make sure to have installed one on Android Studio. To do this go to: Android Studio -> More Actions -> Virtual Device Manager -> Create device. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
 
 2. Open and run the simulator and then execute the application from the terminal:
 ```
 yarn run android
 ```
 
+You should have an Android TV/mobile simulator on Android Studio.
 
-### Android TV
+## Supported platforms
 
-You should have an Android TV simulator on Android Studio.
+The application in meant to run on mobile (Android and iOS) and TV (Android and tvOS).
 
-### Android mobile
+So far, we have tested the app on the following emulators, having good results in all of them:
 
-You should have an Android mobile simulator on Android Studio.
+- **Android TV:** Android TV (1080p) API 33
+- **Android mobile:** Pixel 6 Pro API 33
+- **Apple TV:** Apple TV 4K (3rd generation) (at 1080p)
+- **Apple mobile:** iPhone 13 Pro Max
