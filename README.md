@@ -66,7 +66,7 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC
 Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binary With Libraries`.
 1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
-![Adding WebRTC local reference in Pods target](assets/Images/WebRTC-References-Pods.png)
+![Adding WebRTC local reference in Pods target](assets/WebRTC-References-Pods.png)
 
 - In `Frameworks Search Paths`, insert the following line: 
 ```
@@ -80,9 +80,9 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Heade
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
 ``` -->
 
-6. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
+1. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
 
-7. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+2. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
 
 ### Android
@@ -129,5 +129,5 @@ So far, we have tested the app on the following emulators, having good results i
 
 If you have the following error message on Xcode:
 
-![WebRTC local reference not found](assets/Images/WebRTC-ReferenceNotFoundError.png)
+![WebRTC local reference not found](assets/WebRTC-ReferenceNotFoundError.png)
 
