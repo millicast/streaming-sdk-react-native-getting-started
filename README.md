@@ -9,14 +9,14 @@ In this document we describe how to run the application on mobile (Android and i
 
 - It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
 
-Follow the following steps:
+Follow the these steps:
 
-1. Clone this repository and move to `tvapp` branch.
+1. Clone this repository and check out to `tvapp` branch.
 2. To install the dependencies, run:
 ```
 yarn
 ```
-3. Then execute:
+3. Then, execute:
 ```
 cd ios && pod install
 ```
@@ -34,7 +34,7 @@ MILLICAST_PUBLISHING_TOKEN=
 1. Open Xcode.
 1. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
 1. Select `TestApp project`, then `TestApp-tvOS` target.
-1. Go to `General -> Frameworks, Libraries, and Embedded Content` and add WebRTC.framework m112 build for tvOS.
+1. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for tvOS.
 Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binary With Libraries`.
 1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
@@ -71,7 +71,7 @@ sdk.dir = /../Android/sdk
 ```
 This varies from OS to OS, so make sure to put the right path.
 
-1. If you want to run it on an emulator, make sure to have installed one on Android Studio. To do this go to: Android Studio -> More Actions -> Virtual Device Manager -> Create device. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
+1. If you want to run it on an emulator, make sure to have installed one on Android Studio. To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
 
 2. Open and run the simulator and then execute the application from the terminal:
 ```
@@ -90,3 +90,8 @@ So far, we have tested the app on the following emulators, having good results i
 - **Android mobile:** Pixel 6 Pro API 33
 - **Apple TV:** Apple TV 4K (3rd generation) (at 1080p)
 - **Apple mobile:** iPhone 13 Pro Max
+
+## Known issues
+
+- It's known that the application may crash from time to time for unknown reasons.
+- For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
