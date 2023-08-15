@@ -32,7 +32,7 @@ const theme = StyleSheet.create({
         paddingBottom: 12,
         fontSize: 20,
         marginTop: '8%',
-        fontFamily: 'Montserrat-Black',
+        // fontFamily: 'Montserrat-Black',
         lineHeight: 24,
     },
     buttonDesign: {
@@ -70,12 +70,12 @@ const theme = StyleSheet.create({
     bottomMultimediaContainer: {
         width: width,
         alignItems: 'center',
-        paddingVertical: 10,
-        borderColor: '#ADADAD',
+        paddingVertical: 15,
+        borderTopColor: '#34343B',
         borderWidth: 1,
         position: 'absolute',
         bottom: 0,
-        backgroundColor: '#C0C0C0'
+        backgroundColor: '#14141A',
     },
     bottomIconWrapper: {
         flexDirection: 'row',

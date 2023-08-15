@@ -276,12 +276,23 @@ class MillicastWidget extends React.Component {
               keyExtractor={(_, index) => String(index)}
               renderItem={({item, index}) => (
                 <View
-                  style={[
-                    {marginTop: -90, marginBottom: -100},
-                    index % 2 == 0
-                      ? {marginLeft: 10, marginRight: 5}
-                      : {marginLeft: 5, marginRight: 10},
-                  ]}>
+                  style={
+                    amountCols === 2
+                      ? [
+                          {marginTop: -90, marginBottom: -100},
+                          index % 2 == 0
+                            ? {marginLeft: 10, marginRight: 5}
+                            : {marginLeft: 5, marginRight: 10},
+                        ]
+                      : [
+                          {
+                            marginTop: -75,
+                            marginBottom: -85,
+                            marginLeft: '2.5%',
+                            marginRight: '2.5%',
+                          },
+                        ]
+                  }>
                   <View
                     style={{
                       position: 'absolute',
@@ -311,7 +322,7 @@ class MillicastWidget extends React.Component {
                     key={item.stream.toURL() + item.stream.videoMid}
                     streamURL={item.stream.toURL()}
                     style={{
-                      width: '70%',
+                      width: amountCols === 2 ? '70%' : '100%',
                       flex: 1,
                       aspectRatio: 1,
                       borderRadius: 30,
@@ -332,9 +343,11 @@ class MillicastWidget extends React.Component {
             objectFit="contain"
           />
         ) : (
-          <Text style={{color: 'white'}}>
-            Press the 'play' button, or the 'multiview' button.
-          </Text>
+          <View style={{padding: '5%'}}>
+            <Text style={{color: 'white'}}>
+              Press the 'play' button, or the 'multiview' button.
+            </Text>
+          </View>
         )}
         {
           <View style={myStyles.bottomMultimediaContainer}>
@@ -343,13 +356,15 @@ class MillicastWidget extends React.Component {
                 hasTVPreferredFocus
                 tvParallaxProperties={{magnification: 1.2}}
                 onPress={this.playPauseVideo}>
-                <Text style={{color: 'black'}}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableOpacity>
               {this.state.playing ? (
                 <TouchableOpacity onPress={this.multiView}>
-                  <Text style={{color: 'black'}}>Multiview</Text>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    Multiview
+                  </Text>
                 </TouchableOpacity>
               ) : null}
             </View>
