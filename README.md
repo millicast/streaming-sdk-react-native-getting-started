@@ -1,22 +1,18 @@
 # React Native TV Sample App
 
-In this document we describe how to run the application on mobile (Android and iOS) and TV (Android and tvOS).
+In this document we describe how to run the application on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
 
 ## How to run the app
 ### Apple
 
-#### tvOS
-
-- It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
-
-Follow the these steps:
+The following steps are common for all Apple devices.
 
 1. Clone this repository and check out to `tvapp` branch.
-2. To install the dependencies, run:
+2. Install the dependencies:
 ```
 yarn
 ```
-3. Then, execute:
+1. Then, execute:
 ```
 cd ios && pod install
 ```
@@ -29,6 +25,15 @@ MILLICAST_ACCOUNT_ID=
 MILLICAST_PUBLISHING_TOKEN=
 ```
 
+#### iOS
+
+1. Open Xcode.
+1. 
+
+#### tvOS
+
+- It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
+
 ##### Xcode settings
 
 1. Open Xcode.
@@ -38,27 +43,26 @@ MILLICAST_PUBLISHING_TOKEN=
 Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binary With Libraries`.
 1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
-In `Frameworks Search Paths`, insert the following line: 
+- In `Frameworks Search Paths`, insert the following line: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
 ```
 
-In `Header Search Paths`, insert the following lines: 
+- In `Header Search Paths`, insert the following lines: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
 ```
 
-1. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
+6. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
 
-Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
-
-#### iOS
-
+7. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
 
 ### Android
+
+The following steps are common for all Android devices.
 
 1. Clone this repository and move to `tvapp` branch.
 2. To install dependencies, run:
