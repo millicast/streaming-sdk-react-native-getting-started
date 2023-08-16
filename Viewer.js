@@ -345,7 +345,7 @@ class MillicastWidget extends React.Component {
         ) : (
           <View style={{padding: '5%'}}>
             <Text style={{color: 'white'}}>
-              Press the 'play' button, or the 'multiview' button.
+              Press the 'play' button to start watching.
             </Text>
           </View>
         )}
