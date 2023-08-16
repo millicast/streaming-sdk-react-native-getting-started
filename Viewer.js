@@ -22,9 +22,6 @@ import {MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID} from '@env';
 const streamName = MILLICAST_STREAM_NAME;
 const accountId = MILLICAST_ACCOUNT_ID;
 
-const widthScreen = Dimensions.get('screen').width;
-const heightScreen = Dimensions.get('screen').height;
-
 const amountCols = Platform.isTV ? 2 : 1;
 
 window.Logger = MillicastLogger;
