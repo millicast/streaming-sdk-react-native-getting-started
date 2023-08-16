@@ -360,7 +360,7 @@ class MillicastWidget extends React.Component {
               {this.state.playing ? (
                 <TouchableOpacity onPress={this.multiView}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    Multiview
+                    {this.state.multiView ? 'Go back' : 'Multiview'}
                   </Text>
                 </TouchableOpacity>
               ) : null}
