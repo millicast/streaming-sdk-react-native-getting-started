@@ -26,6 +26,7 @@ const theme = StyleSheet.create({
         color: '#FFF',
         width: "100%",
         borderRadius: 6,
+        overflow: 'hidden',
         textAlign: 'center',
         fontWeight: '700',
         paddingTop: 12,
