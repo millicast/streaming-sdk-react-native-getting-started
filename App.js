@@ -7,28 +7,27 @@
  */
 
 import * as React from 'react';
-import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import Viewer from './Viewer'
-import Publisher from './Publisher'
+import Viewer from './Viewer';
+import Publisher from './Publisher';
 
-import myStyles from './styles.js'
-import { Platform } from "react-native"
+import myStyles from './styles.js';
+import {Platform} from 'react-native';
 
-function HomeScreen({ navigation }) {
+function HomeScreen({navigation}) {
   return (
     <SafeAreaView style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
-      {!Platform.isTV ?
+      {!Platform.isTV ? (
         <TouchableOpacity
           onPress={() => navigation.navigate('Publisher App')}
           style={myStyles.buttonDesign}>
           <Text style={myStyles.buttonText}>PUBLISHER</Text>
         </TouchableOpacity>
-        : null
-      }
+      ) : null}
 
       <TouchableOpacity
         hasTVPreferredFocus
@@ -44,8 +43,22 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer style={myStyles.screenContainer}>
-      <Stack.Navigator style={myStyles.screenContainer}>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerMode: 'screen',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#14141A',
+          },
+          headerTitleAlign: 'center',
+          contentStyle: {
+            borderTopColor: '#34343B',
+            borderTopWidth: 1,
+          },
+          // hide the header bar for tvOS due to incompatibility of the library
+          headerShown: !(Platform.OS === 'ios' && Platform.isTV),
+        }}>
         <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
         <Stack.Screen name="Subscriber App" component={Viewer} />
         <Stack.Screen name="Publisher App" component={Publisher} />
