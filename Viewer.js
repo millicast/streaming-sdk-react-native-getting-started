@@ -181,11 +181,7 @@ class MillicastWidget extends React.Component {
       });
     }
     let isPaused = !this.state.playing;
-    if (isPaused) {
-      this.changeStateOfMediaTracks(this.state.streams, isPaused);
-    } else {
-      this.changeStateOfMediaTracks(this.state.streams, isPaused);
-    }
+    this.changeStateOfMediaTracks(this.state.streams, isPaused);
   };
 
   changeStateOfAudioTracks(streams, value) {
