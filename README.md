@@ -26,7 +26,9 @@ MILLICAST_ACCOUNT_ID=
 MILLICAST_PUBLISHING_TOKEN=
 ```
 
-5. Download WebRTC M112 build from https://dolby.box.com/s/dh6hww4ksvnju768kbsu7guuxrc3ot2k
+<!-- 5. Download WebRTC M112 build from https://dolby.box.com/s/dh6hww4ksvnju768kbsu7guuxrc3ot2k -->
+5. It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
+
 6. Unzip libWebRTC and move it inside the `ios` folder from this project.
 #### iOS
 
@@ -55,8 +57,6 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC
 
 #### tvOS
 
-<!-- - It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder. -->
-
 ##### Xcode settings
 
 1. Open Xcode.
@@ -74,11 +74,11 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
 ```
 
-<!-- - In `Header Search Paths`, insert the following lines: 
+- In `Header Search Paths`, insert the following lines: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Headers
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
-``` -->
+```
 
 1. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
 
@@ -86,6 +86,8 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.frame
 
 
 ### Android
+
+It is required to have Java SDK 11.
 
 The following steps are common for all Android devices.
 
@@ -125,9 +127,21 @@ So far, we have tested the app on the following emulators, having good results i
 - It's known that the application may crash from time to time for unknown reasons.
 - For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
 
-## Trupleshooting
+## Truobleshooting
 
-If you have the following error message on Xcode:
+### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
 
 ![WebRTC local reference not found](assets/WebRTC-ReferenceNotFoundError.png)
 
+The Pods target has an incorrect Framework Path configured in Search Paths inside the Build Settings page. 
+
+### No Bundle URL present
+
+![No Bundle URL present](assets/NoBundleURLFoundError.png) 
+
+You should stop the running instances of the application and from Xcode menu go to Product -> Clean build folder.
+
+Also you can go to Xcode -> Settings -> Locations
+Click on the arrow next to Derived Data path and this will open on Finder Derived Data folder, you can delete the cached files.
+
+If the error persists, you should check your localhost port and make sure that the app is using port 8081.

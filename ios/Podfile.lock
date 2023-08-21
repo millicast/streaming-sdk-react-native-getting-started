@@ -326,7 +326,7 @@ PODS:
     - React-jsi (= 0.69.8-2)
     - React-logger (= 0.69.8-2)
     - React-perflogger (= 0.69.8-2)
-  - RNScreens (3.22.1):
+  - RNScreens (3.24.0):
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.0)
@@ -527,7 +527,7 @@ SPEC CHECKSUMS:
   React-RCTText: 5b2bf33683003b03450135a54f830836324e3aa6
   React-runtimeexecutor: 92e1600ad33818e45fcf1831e2fdd6451a4d3a47
   ReactCommon: e3818869621c119aea08bd5ce8ed0b8c64abeafe
-  RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
+  RNScreens: b21dc57dfa2b710c30ec600786a3fc223b1b92e7
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 486daad4f5db121eb2e831e2aae8ad994011573f
   YogaKit: 1e22bf2228b3a5ac8cc88965153061ae92c494b5
