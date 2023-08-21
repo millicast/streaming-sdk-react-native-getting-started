@@ -1,27 +1,38 @@
-// In App.js in a new project
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
 
 import * as React from 'react';
-import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as utils from './service/utils.js'
+import {Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import Viewer from './Viewer'
-import Publisher from './Publisher'
+import Viewer from './Viewer';
+import Publisher from './Publisher';
 
-import myStyles from './styles.js'
+import myStyles from './styles.js';
+import {Platform} from 'react-native';
 
-function HomeScreen({ navigation }) {
+function HomeScreen({navigation}) {
   return (
     <SafeAreaView style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
-      {!utils.isTV() ?
-        <TouchableOpacity onPress={() => navigation.navigate('Publisher App')} style={myStyles.buttonDesign}>
+      {!Platform.isTV ? (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Publisher App')}
+          style={myStyles.buttonDesign}>
           <Text style={myStyles.buttonText}>PUBLISHER</Text>
         </TouchableOpacity>
-        : null
-      }
-      <TouchableOpacity onPress={() => navigation.navigate('Subscriber App')} style={myStyles.buttonDesign}>
+      ) : null}
+
+      <TouchableOpacity
+        hasTVPreferredFocus
+        onPress={() => navigation.navigate('Subscriber App')}
+        style={myStyles.buttonDesign}>
         <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -32,13 +43,25 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer style={myStyles.screenContainer}>
-      <Stack.Navigator style={myStyles.screenContainer}>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerMode: 'screen',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#14141A',
+          },
+          headerTitleAlign: 'center',
+          contentStyle: {
+            borderTopColor: '#34343B',
+            borderTopWidth: 1,
+          },
+          // hide the header bar for tvOS due to incompatibility of the library
+          headerShown: !(Platform.OS === 'ios' && Platform.isTV),
+        }}>
         <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
-        {!utils.isTV() ?
-          <Stack.Screen name="Publisher App" component={Publisher} />
-          : null}
         <Stack.Screen name="Subscriber App" component={Viewer} />
+        <Stack.Screen name="Publisher App" component={Publisher} />
       </Stack.Navigator>
     </NavigationContainer>
   );

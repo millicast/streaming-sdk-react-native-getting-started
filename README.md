@@ -1,168 +1,162 @@
-## Table of Contents
+# React Native TV Sample App
 
-- [Millicast React Native Sample App](#millicast-react-native-sample-app)
-  - [Add Your Credentials](#add-your-credentials)
-  - [Connecting a Device](#connecting-a-device)
-  - [Setting Up the Project in Android](#setting-up-the-project-in-android)
-    - [Setting Up an Emulator with Android Studio](#setting-up-an-emulator-with-android-studio)
-    - [Setting Up the Camera](#setting-up-the-camera)
-    - [Setting Up the Microphone](#setting-up-the-microphone)
-  - [Setting up Emulator for iOS](#setting-up-emulator-for-ios)
-  - [Usage](#usage)
-  - [Publisher App](#publisher-app)
-    - [Publisher Settings](#publisher-settings)
-  - [Subscriber App](#subscriber-app)
-  - [Troubleshooting](#troubleshooting)
-  
+In this document we describe how to run the application on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
 
-# Millicast React Native Sample App
+## How to run the app
+### Apple
 
-This is a sample app that showcases the integration between the Millicast SDK for JavaScript and React Native.
+The following steps are common for all Apple devices.
 
-## Add Your Credentials
-
-Add a `.env` file in the current path. You can find the following example in `.env.sample` file:
-
+1. Clone this repository and check out to `tvapp` branch.
+2. Install the dependencies:
 ```
-MILLICAST_STREAM_NAME=yourStreamName
-MILLICAST_ACCOUNT_ID=yourAccountId
-MILLICAST_PUBLISHING_TOKEN=yourPublishingToken
+yarn
+```
+3. Then, execute:
+```
+cd ios && pod install
 ```
 
-You will need to find or create a new stream name with a token in your Dolby.io dashboard. You can do that following this [link](https://docs.dolby.io/streaming-apis/docs/managing-your-tokens).
-
-You need to set up an emulator or connect a device in order to run the app.
-
-## Connecting a Device
-
-For **Android**:
-
-1. Put your Android device in debug mode by following this [tutorial](https://developer.android.com/studio/debug/dev-options).
-2. Connect the device to your PC.
-3. Using your specific IDE, run the app in the detected device.
-
-For **iOS**:
-
-1. Plug in your iPhone, sign in with your iCloud account in XCode.
-2. Change the device in your IDE.
-4. Build and run the app in the detected device.
-
-
-## Setting Up the Project in Android
-
-In case you want to run the app on Android, be sure to create a file `/android/local.properties` with the following content:
-```
-sdk.dir = PATH_ANDROID_SDK
-```
-Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
-
-
-### Setting Up an Emulator with Android Studio
-
-Following the guide above, you should already have your emulator up and running.
-
-From the Android Studio welcome page:
-1. Select the `More actions` drop-down menu.
-2. Select `Virtual Device Manager`.
-
-As shown in the image below:
-
-<img src="assets/virtualEmulator.png" alt="drawing" width="500"/>
-
-
-Be sure to give access to your computer camera and microphone in order to be able to use it for testing, otherwise the emulator will create a sample video simulating the camera usage.
-
-### Setting Up the Camera
-
-To give your Android emulator access to your camera, go to Android Studio and edit your desired emulator.
-
-<img src="assets/setCameraAndroidStudio.png" alt="drawing" width="500"/>
-
-### Setting Up the Microphone
-
-To give your Android emulator access to your microphone, start your emulator and open the emulator options. Then enable `Virtual headset plug inserted` and `Virtual microphone uses host audio input`.
-
-<img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
-
-## Setting up Emulator for iOS
-
-If you want to test the Publish feature in iOS you will need an actual Apple device, as the Apple emulator does not allow access to the camera.
-
-## Usage
-
-In order to run the example app, it is necessary to have Yarn installed. You can install Yarn by running the following command:
+Create an `.env` inside the root folder with the following credentials:
 
 ```
 npm install --global yarn
 ```
 
-Now you are ready to use Yarn in the command line.
+<!-- 5. Download WebRTC M112 build from https://dolby.box.com/s/dh6hww4ksvnju768kbsu7guuxrc3ot2k -->
+5. It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
 
-To install all the required dependencies, run the following command:
+6. Unzip libWebRTC and move it inside the `ios` folder from this project.
+#### iOS
+
+1. Open Xcode.
+2. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
+3. Select `TestApp project`, then `TestApp` target.
+4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for iOS.
+Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Binary With Libraries`, if not, add it.
+1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
+
+- In `Frameworks Search Paths`, insert the following line: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
+```
+
+<!-- - In `Header Search Paths`, insert the following lines: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework/Headers
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC.framework/Headers
+``` -->
+
+1. Select `TestApp` project and use an iOS simulator with iOS 16.
+
+2. Run the project, you should see the simulator with the app home page with a buttom to publish or subscribe to a stream.
+
+![iOS Home Page](assets/iOSHomePage.png)
+
+#### tvOS
+
+##### Xcode settings
+
+1. Open Xcode.
+1. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
+1. Select `TestApp project`, then `TestApp-tvOS` target.
+1. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for tvOS.
+Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binary With Libraries`.
+1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
+
+![Adding WebRTC local reference in Pods target](assets/WebRTC-References-Pods.png)
+
+- In `Frameworks Search Paths`, insert the following line: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
+```
+
+- In `Header Search Paths`, insert the following lines: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Headers
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
+```
+
+1. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
+
+2. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+
+![tvOS Home Page](assets/tvOSHomePage.png)
+
+![tvOS Viewer](assets/tvOSViewer.png)
+
+### Android
+
+It is required to have Java SDK 11.
+
+The following steps are common for all Android devices.
+
+1. Clone this repository and move to `tvapp` branch.
+2. To install dependencies, run:
 ```
 yarn
 ```
+1. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
+```
+sdk.dir = /../Android/sdk
+```
+This varies from OS to OS, so make sure to put the right path.
 
-To test the sample app in **android**, once the `.env` file is set up, run the following command in the root folder:
+1. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
 
+2. Open and run the simulator and then execute the application from the terminal:
 ```
 yarn run android
 ```
 
-To test the sample app in **ios**, once the `.env` file is set up, and you already have cocoapods and Xcode installed, run the following commands in the root folder:
-
-```
-yarn build:ios
-yarn run ios
-```
-
-**If you have an error message related to hermes-engine, you can try the following command to solve the problem:**
- ```
- cd ios
- pod update hermes-engine --no-repo-update
- ```
-And then, got back to the root folder and run **yarn run ios** again.
-
-If you have to install cocoapods, a recommended approach is following these instructions:
-```
-brew install chruby
-brew install ruby-install
-
-ruby-install ruby 3.1.3
-```
-Then you have to update your ~/.zshrc or ~/.bashrc with the following lines:
-```
-source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-source /opt/homebrew/opt/chruby/share/chruby/auto.sh
-chruby ruby-3.1.3
-```
-Finally:
-```
-sudo gem install cocoapods
-```
+You should have an Android TV/mobile simulator on Android Studio.
 
 
-Once in the app you will be prompted with the home page allowing you to choose between the Publisher and Subscriber (Viewer) apps.
+<div style="display: flex; flex-direction: row;">
+  <img src="assets/AndroidHomePage.png" alt="Android Home Page" style="max-width: 58%; max-height: 50%;" />
+  <img src="assets/AndroidMultiview.png" alt="Android Multiview" style="max-width: 70%; max-height: 100%" />
+</div>
 
-<img src="assets/home-screen.png" alt="drawing" width="500"/>
 
-## Publisher App
+![Android Multiview](assets/AndroidTVMultiview.png)
 
-In the **Publisher App**, you can play/pause, switch camera, mute/unmute and turn the camera on/off, allowing you to keep the viewer user count.
+## Supported platforms
 
-<img src="assets/publisher.png" alt="drawing" width="500"/>
+The application in meant to run on mobile (Android and iOS) and TV (Android and tvOS).
 
-### Publisher Settings
+So far, we have tested the app on the following emulators, having good results in all of them:
 
-Publisher settings allow you to set the codec (only before the streaming is started) and change the bitrate (only after the streaming is started). By default, the bitrate is set to the maximum possible.
+- **Android TV:** Android TV (1080p) API 33 Tiramisu
+- **Android mobile:** Pixel 6 Pro API 33 Tiramisu
+- **Apple TV:** Apple TV 4K (3rd generation) (at 1080p)
+- **Apple mobile:** iPhone 13 Pro Max
 
-## Subscriber App
+## Known issues
 
-In the **Subscriber App**, you can play/pause, mute/unmute, and have access to the multiview functionality.
+- It's known that the application may crash from time to time for unknown reasons.
+- For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
 
-<img src="assets/viewerScreen.png" alt="drawing" width="500"/>
+## Truobleshooting
 
-## Troubleshooting
+### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
 
-- The app may experiment some issues with Samsung phones.
-- The H264 may not to reproduce correctly in either Android or iOS emulators.
+![WebRTC local reference not found](assets/WebRTC-ReferenceNotFoundError.png)
+
+The Pods target has an incorrect Framework Path configured in Search Paths inside the Build Settings page. 
+
+### No Bundle URL present
+
+![No Bundle URL present](assets/NoBundleURLFoundError.png) 
+
+You should stop the running instances of the application and from Xcode menu go to Product -> Clean build folder.
+
+Also you can go to Xcode -> Settings -> Locations
+Click on the arrow next to Derived Data path and this will open on Finder Derived Data folder, you can delete the cached files.
+
+If the error persists, you should check your localhost port and make sure that the app is using port 8081.
+
+### Considerations
+
+It is used a specific version of react-native because of the need for compatibility between react-native-tvos and react-native-webrtc.
