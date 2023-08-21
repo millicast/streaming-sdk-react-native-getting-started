@@ -53,7 +53,9 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC
 
 1. Select `TestApp` project and use an iOS simulator with iOS 16.
 
-2. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+2. Run the project, you should see the simulator with the app home page with a buttom to publish or subscribe to a stream.
+
+![iOS Home Page](assets/iOSHomePage.png)
 
 #### tvOS
 
@@ -84,6 +86,9 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.frame
 
 2. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
+![tvOS Home Page](assets/tvOSHomePage.png)
+
+![tvOS Viewer](assets/tvOSViewer.png)
 
 ### Android
 
@@ -102,7 +107,7 @@ sdk.dir = /../Android/sdk
 ```
 This varies from OS to OS, so make sure to put the right path.
 
-1. If you want to run it on an emulator, make sure to have installed one on Android Studio. To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
+1. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
 
 2. Open and run the simulator and then execute the application from the terminal:
 ```
@@ -110,6 +115,15 @@ yarn run android
 ```
 
 You should have an Android TV/mobile simulator on Android Studio.
+
+
+<div style="display: flex; flex-direction: row;">
+  <img src="assets/AndroidHomePage.png" alt="Android Home Page" style="max-width: 58%; max-height: 50%;" />
+  <img src="assets/AndroidMultiview.png" alt="Android Multiview" style="max-width: 70%; max-height: 100%" />
+</div>
+
+
+![Android Multiview](assets/AndroidTVMultiview.png)
 
 ## Supported platforms
 
@@ -145,3 +159,7 @@ Also you can go to Xcode -> Settings -> Locations
 Click on the arrow next to Derived Data path and this will open on Finder Derived Data folder, you can delete the cached files.
 
 If the error persists, you should check your localhost port and make sure that the app is using port 8081.
+
+### Considerations
+
+It is used a specific version of react-native because of the need for compatibility between react-native-tvos and react-native-webrtc.
