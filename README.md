@@ -20,9 +20,7 @@ cd ios && pod install
 Create an `.env` inside the root folder with the following credentials:
 
 ```
-MILLICAST_STREAM_NAME=
-MILLICAST_ACCOUNT_ID=
-MILLICAST_PUBLISHING_TOKEN=
+npm install --global yarn
 ```
 
 <!-- 5. Download WebRTC M112 build from https://dolby.box.com/s/dh6hww4ksvnju768kbsu7guuxrc3ot2k -->
