@@ -8,12 +8,11 @@ In this document we describe how to run the application on mobile (Android and i
 The following steps are common for all Apple devices.
 
 1. Clone this repository and check out to `tvapp` branch.
-1. Clone this forked repository https://github.com/montanaeli/react-native-webrtc on the same directory path where you cloned streaming-sdk-react-native.
-1. Install the dependencies:
+2. Install the dependencies:
 ```
 yarn
 ```
-4. Then, execute:
+3. Then, execute:
 ```
 cd ios && pod install
 ```
