@@ -2,6 +2,14 @@
 
 In this document we describe how to run the application on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
 
+## Environment Set Up
+
+We recommend using `yarn`, if you don't have it installed execute: `npm install --global yarn`.
+
+For **iOS** and **tvOS** Git Large File Storage is needed, install it with `brew install git-lfs`.
+
+For **Android** platforms you will need `Java SDK 11` and Android Studio installed.
+
 ## How to run the app
 ### Apple
 
@@ -17,16 +25,19 @@ yarn
 cd ios && pod install
 ```
 
-Create an `.env` inside the root folder with the following credentials:
+Create an `.env` inside the root folder with the following, complete the credentials:
 
 ```
-npm install --global yarn
+MILLICAST_STREAM_NAME=
+MILLICAST_ACCOUNT_ID=
+MILLICAST_PUBLISHING_TOKEN=
 ```
 
-<!-- 5. Download WebRTC M112 build from https://dolby.box.com/s/dh6hww4ksvnju768kbsu7guuxrc3ot2k -->
-5. It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
+1. It is required to have `WebRTC.framework` M112 build for tvOS. There is a `libWebRTC.zip` file inside the `ios` folder. This uses [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage), so it is needed to be installed. 
 
-6. Unzip libWebRTC and move it inside the `ios` folder from this project.
+2. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+
+3. Unzip libWebRTC inside the `ios` folder from this project.
 #### iOS
 
 1. Open Xcode.
@@ -42,11 +53,11 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
 ```
 
-<!-- - In `Header Search Paths`, insert the following lines: 
+- In `Header Search Paths`, insert the following lines: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework/Headers
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC.framework/Headers
-``` -->
+```
 
 1. Select `TestApp` project and use an iOS simulator with iOS 16.
 
@@ -82,6 +93,8 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.frame
 1. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
 
 2. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+
+To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to Window -> Show Apple TV Remote and use it.
 
 ![tvOS Home Page](assets/tvOSHomePage.png)
 
@@ -119,7 +132,6 @@ You should have an Android TV/mobile simulator on Android Studio.
   <img src="assets/AndroidMultiview.png" alt="Android Multiview" style="max-width: 70%; max-height: 100%" />
 </div>
 
-
 ![Android Multiview](assets/AndroidTVMultiview.png)
 
 ## Supported platforms
@@ -130,8 +142,10 @@ So far, we have tested the app on the following emulators, having good results i
 
 - **Android TV:** Android TV (1080p) API 33 Tiramisu
 - **Android mobile:** Pixel 6 Pro API 33 Tiramisu
-- **Apple TV:** Apple TV 4K (3rd generation) (at 1080p)
-- **Apple mobile:** iPhone 13 Pro Max
+- **Apple TV:** Apple TV 4K (3rd generation) (at 1080p) tvOS 16.0 and above
+- **Apple mobile:** iPhone 13 Pro Max iOS 16.4
+- **Xcode** version 14.3.1
+- **Android Studio** Dolphin 2021.3.1 patch 1
 
 ## Known issues
 
@@ -159,4 +173,4 @@ If the error persists, you should check your localhost port and make sure that t
 
 ### Considerations
 
-It is used a specific version of react-native because of the need for compatibility between react-native-tvos and react-native-webrtc.
+It is used a specific version of React Native because of the need for compatibility between react-native-tvos and react-native-webrtc.
