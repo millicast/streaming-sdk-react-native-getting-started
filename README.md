@@ -23,10 +23,11 @@ Create an `.env` inside the root folder with the following credentials:
 npm install --global yarn
 ```
 
-<!-- 5. Download WebRTC M112 build from https://dolby.box.com/s/dh6hww4ksvnju768kbsu7guuxrc3ot2k -->
-5. It is required to have `WebRTC.framework` M112 build for tvOS. Place your build directory inside the `ios` folder.
+5. It is required to have `WebRTC.framework` M112 build for tvOS. There is a `libWebRTC.zip` file inside the `ios` folder. This uses [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage), so it is needed to be installed.
 
-6. Unzip libWebRTC and move it inside the `ios` folder from this project.
+6. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+
+7. Unzip libWebRTC inside the `ios` folder from this project.
 #### iOS
 
 1. Open Xcode.
@@ -34,7 +35,7 @@ npm install --global yarn
 3. Select `TestApp project`, then `TestApp` target.
 4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for iOS.
 Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Binary With Libraries`, if not, add it.
-1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
+5. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
 - In `Frameworks Search Paths`, insert the following line: 
 ```
