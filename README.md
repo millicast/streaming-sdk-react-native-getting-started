@@ -5,6 +5,8 @@ In this document we describe how to run the application on mobile (Android and i
 ## How to run the app
 ### Apple
 
+We recommend using yarn, if you don't have it installed execute: `npm install --global yarn`.
+
 The following steps are common for all Apple devices.
 
 1. Clone this repository and check out to `tvapp` branch.
@@ -17,17 +19,19 @@ yarn
 cd ios && pod install
 ```
 
-Create an `.env` inside the root folder with the following credentials:
+Create an `.env` inside the root folder with the following, complete the credentials:
 
 ```
-npm install --global yarn
+MILLICAST_STREAM_NAME=
+MILLICAST_ACCOUNT_ID=
+MILLICAST_PUBLISHING_TOKEN=
 ```
 
-5. It is required to have `WebRTC.framework` M112 build for tvOS. There is a `libWebRTC.zip` file inside the `ios` folder. This uses [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage), so it is needed to be installed.
+1. It is required to have `WebRTC.framework` M112 build for tvOS. There is a `libWebRTC.zip` file inside the `ios` folder. This uses [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage), so it is needed to be installed. You can install it using `brew install git-lfs`.
 
-6. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+2. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
-7. Unzip libWebRTC inside the `ios` folder from this project.
+3. Unzip libWebRTC inside the `ios` folder from this project.
 #### iOS
 
 1. Open Xcode.
@@ -35,7 +39,7 @@ npm install --global yarn
 3. Select `TestApp project`, then `TestApp` target.
 4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for iOS.
 Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Binary With Libraries`, if not, add it.
-5. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
+1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
 - In `Frameworks Search Paths`, insert the following line: 
 ```
