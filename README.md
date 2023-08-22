@@ -171,6 +171,20 @@ Click on the arrow next to Derived Data path and this will open on Finder Derive
 
 If the error persists, you should check your localhost port and make sure that the app is using port 8081.
 
+To fix this error shown when `pod install` is executed
+
+```
+[!] The platform of the target `TestApp-tvOS` (tvOS 16.0) is not compatible with `JitsiWebRTC (111.0.2)`, which does not support `tvOS`.
+```
+
+You should go to `node_modules -> react-native-webrtc -> react-native-webrtc.podspec` and comment this line:
+
+```
+s.dependency          'JitsiWebRTC', '~> 111.0.0'
+```
+
+Because we are using a local depepency of WebRTC that supports tvOS.
+
 ### Considerations
 
 It is used a specific version of React Native because of the need for compatibility between react-native-tvos and react-native-webrtc.
