@@ -1,8 +1,26 @@
-# React Native TV Sample App
+# React Native Sample App
 
-In this document we describe how to run the application on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
+<div style="display: flex; align-items: center; justify-content: center;">
+    <img src="./assets/AndroidHomePage.png" style="width: auto; height: 150px; margin: 0 10px;" />
+    <img src="./assets/iPhoneViewer.png" style="width: auto; height: 150px; margin: 0 10px;" />
+    <img src="./assets/tvOSHomePage.png" style="width: auto; height: 150px; margin: 0 10px;" />
+    <img src="./assets/AndroidTVMultiview.png" style="width: auto; height: 150px; margin: 0 10px;" />
+</div>
 
-## Supported platforms
+
+## Overview
+In this document we describe how to run a sample application for publishing and subscribing to a stream using Dolby credentials on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
+
+| Use Case | Publish | Subscribe | Multiview | Tech Stack| 
+| -------- | -------- | --------- | --------- | --------- |
+| Android mobile |   &#x2713; |  &#x2713; |  &#x2713; | Java 11 SDK, Android Studio, Android emulator.
+| Android TV |   &#x2717; |  &#x2713; |  &#x2713; | Java 11 SDK, Android Studio, Android TV emulator.
+| iPhone |   &#x2713; |  &#x2713; |  &#x2713; | Xcode, WebRTC build for iOS.
+| tvOS |   &#x2717; |  &#x2713; |  &#x2713; | Xcode, WebRTC build for tvOS.
+
+
+
+## Requirements and supported platforms
 
 The application in meant to run on mobile (Android and iOS) and TV (Android and tvOS).
 
@@ -15,7 +33,7 @@ So far, we have tested the app on the following emulators, having good results i
 - **Xcode** version 14.3.1
 - **Android Studio** Dolphin 2021.3.1 patch 1
 
-## Environment Set Up
+### Environment Set Up
 
 - We recommend using `yarn`, if you don't have it installed execute: `npm install --global yarn`.
 
@@ -31,7 +49,28 @@ MILLICAST_ACCOUNT_ID=yourAccountId
 MILLICAST_PUBLISH_TOKEN=yourPublishToken
 ```
 
-## How to run the app
+## Getting Started
+
+To get started with building this app, you will need a Dolby.io account.
+
+### Pre-requisistes
+
+- Dolby account.
+- [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed.
+- It is required to have Java SDK 11.
+- Yarn installed
+- Xcode 14
+- Android Studio Dolphin
+- iOS 16
+- tvOS 16
+- Android API 33
+
+#### How to get a Dolby.io account
+To setup your [Dolby io](Dolby.io) account, go to the [Dolby io](Dolby.io) dashboard and complete the form. After confirming your email address, you will be logged in.
+If you did not receive a verification email, check your Spam or Junk email folders.
+
+## How to build and run the React Native Sample App
+
 ### Apple
 
 The following steps are common for all Apple devices.
@@ -46,11 +85,11 @@ yarn
 cd ios && pod install
 ```
 
-4. It is required to have `WebRTC.framework` M112 build for tvOS. There is a `libWebRTC.zip` file inside the `ios` folder. This uses [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage), so it is needed to be installed. 
+1. It is required to have `WebRTC.framework` M112 builds. You can find it in `libWebRTC.zip` inside the `ios` folder.
 
-5. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+2. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
-6. Unzip libWebRTC inside the `ios` folder from this project.
+3. Unzip libWebRTC inside the `ios` folder from this project.
 #### iOS
 
 1. Open Xcode.
@@ -58,7 +97,7 @@ cd ios && pod install
 3. Select `TestApp project`, then `TestApp` target.
 4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for iOS.
 Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Binary With Libraries`, if not, add it.
-5. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
+1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
 - In `Frameworks Search Paths`, insert the following line: 
 ```
@@ -75,8 +114,6 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC
 6. Select `TestApp` project and use an iOS simulator with iOS 16.
 
 7. Run the project, you should see the simulator with the app home page with a buttom to publish or subscribe to a stream.
-
-![iOS Home Page](assets/iOSHomePage.png)
 
 #### tvOS
 
@@ -109,13 +146,7 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.frame
 
 To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to Window -> Show Apple TV Remote and use it.
 
-![tvOS Home Page](assets/tvOSHomePage.png)
-
-![tvOS Viewer](assets/tvOSViewer.png)
-
 ### Android
-
-It is required to have Java SDK 11.
 
 The following steps are common for all Android devices.
 
@@ -138,14 +169,6 @@ yarn run android
 ```
 
 You should have an Android TV/mobile simulator on Android Studio.
-
-
-<div style="display: flex; flex-direction: row;">
-  <img src="assets/AndroidHomePage.png" alt="Android Home Page" style="max-width: 58%; max-height: 50%;" />
-  <img src="assets/AndroidMultiview.png" alt="Android Multiview" style="max-width: 70%; max-height: 100%" />
-</div>
-
-![Android Multiview](assets/AndroidTVMultiview.png)
 
 ## Known issues
 
@@ -185,7 +208,7 @@ s.dependency          'JitsiWebRTC', '~> 111.0.0'
 
 Because we are using a local depepency of WebRTC that supports tvOS.
 
-### Considerations
+## Compatibility/Requirements
 
 It is used a specific version of React Native because of the need for compatibility between react-native-tvos and react-native-webrtc.
 
