@@ -175,7 +175,7 @@ You should have an Android TV/mobile simulator on Android Studio.
 - It's known that the application may crash from time to time for unknown reasons.
 - For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
 
-## Truobleshooting
+## Troubleshooting
 
 ### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
 
