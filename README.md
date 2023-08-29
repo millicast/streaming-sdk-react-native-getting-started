@@ -66,7 +66,7 @@ To get started with building this app, you will need a Dolby.io account.
 - Android API 33
 
 #### How to get a Dolby.io account
-To setup your [Dolby io](Dolby.io) account, go to the [Dolby io](Dolby.io) dashboard and complete the form. After confirming your email address, you will be logged in.
+To setup your [Dolby.IO](https://dolby.io/) account, go to the [Dolby.IO](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
 If you did not receive a verification email, check your Spam or Junk email folders.
 
 ## How to build and run the React Native Sample App
