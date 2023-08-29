@@ -119,13 +119,6 @@ class MillicastWidget extends React.Component {
         events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
       });
 
-      // view.on('broadcastEvent', (event) => {
-      //   const { name, data } = event
-      //   if (name === 'viewercount') {
-      //     this.setState({ userCount: data.viewercount })
-      //   }
-      // })
-
       this.setState({
         millicastView: view,
       });
@@ -362,32 +355,6 @@ class MillicastWidget extends React.Component {
               ) : null}
             </View>
           </View>
-
-          /* 
-        <View style={myStyles.topViewerCount}>
-          <Ionicons name="ios-person" size={30} color="#7f00b2" />
-          <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`}</Text>
-        </View>
-
-        <View style={myStyles.bottomMultimediaContainer}>
-          <View style={myStyles.bottomIconWrapper}>
-            <TouchableOpacity onPress={this.playPauseVideo} >
-              <Text>{!this.state.playing ? <Ionicons name="play" size={30} color="#7f00b2" /> : <Ionicons name="pause" size={30} color="#7f00b2" />}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.muteAudio} >
-              <Text >{!this.state.muted ? <Ionicons name="md-volume-high" size={30} color="#7f00b2" /> : <Ionicons name="md-volume-mute" size={30} color="#7f00b2" />}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.multiView} >
-              <Text>{this.state.multiView ? <Ionicons name="chevron-back" size={30} color="#7f00b2" /> : <Ionicons name="md-images" size={30} color="#7f00b2" />}</Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            {this.state.activeLayers.map(layer => {
-              return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)
-            })
-            }
-          </View>
-        </View> */
         }
       </>
     );
