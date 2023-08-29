@@ -222,7 +222,6 @@ class MillicastWidget extends React.Component {
         ) : null}
 
         <View style={myStyles.topViewerCount}>
-          {/* <Ionicons name="ios-person" size={30} color="#7f00b2" /> */}
           <Text style={myStyles.textShadow}>{`${this.state.userCount}`}</Text>
         </View>
 
@@ -237,12 +236,6 @@ class MillicastWidget extends React.Component {
                 {!this.state.playing ? 'Play' : 'Pause'}
               </Text>
             </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={this.toggleCamera} >
-                            <Text>
-                                {!!this.state.playing && <Ionicons name="md-camera-reverse" size={30} color="#7f00b2" />}
-                            </Text>
-                        </TouchableOpacity> */}
 
             <TouchableOpacity onPress={this.handleClickMute}>
               <Text>
@@ -265,18 +258,6 @@ class MillicastWidget extends React.Component {
                   ))}
               </Text>
             </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={() => navigation.navigate('Publisher Settings', {
-                            codec: this.state.codec,
-                            bitrate: this.state.bitrate,
-                            setCodec: this.setCodec.bind(this),
-                            isPlaying: this.state.playing,
-                            setBitrate: this.setBitrate.bind(this)
-                        })} >
-                            <Text>
-                                <Ionicons name="md-settings" size={30} color="#7f00b2" />
-                            </Text>
-                        </TouchableOpacity> */}
           </View>
         </View>
       </SafeAreaView>
@@ -287,7 +268,6 @@ class MillicastWidget extends React.Component {
 function PublisherMain(props) {
   return (
     <>
-      {/* <StatusBar barStyle="dark-content" /> */}
       <SafeAreaView style={styles.body}>
         <MillicastWidget
           streamName={streamName}
@@ -309,7 +289,6 @@ export default function App(props) {
         component={PublisherMain}
         {...props}
       />
-      {/* <PublisherStack.Screen name="Publisher Settings" component={PublisherSettings} {...props} /> */}
     </PublisherStack.Navigator>
   );
 }
@@ -325,7 +304,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    // backgroundColor: Colors.lighter,
     position: 'absolute',
     bottom: 0,
     left: 0,
