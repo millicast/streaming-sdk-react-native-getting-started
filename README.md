@@ -22,7 +22,7 @@ In this document we describe how to run a sample application for publishing and 
 
 ## Requirements and supported platforms
 
-The application in meant to run on mobile (Android and iOS) and TV (Android and tvOS).
+The application is meant to run on mobile (Android and iOS) and TV (Android and tvOS).
 
 So far, we have tested the app on the following emulators, having good results in all of them:
 
