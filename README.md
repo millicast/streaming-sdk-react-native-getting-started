@@ -85,9 +85,9 @@ yarn
 cd ios && pod install
 ```
 
-1. It is required to have `WebRTC.framework` M112 builds. You can find it in `libWebRTC.zip` inside the `ios` folder.
+4. It is required to have `WebRTC.framework` M112 builds. You can find it in `libWebRTC.zip` inside the `ios` folder.
 
-2. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+5. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
 3. Unzip libWebRTC inside the `ios` folder from this project.
 #### iOS
