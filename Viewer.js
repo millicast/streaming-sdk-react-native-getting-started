@@ -3,10 +3,9 @@ import {
   View,
   FlatList,
   Text,
-  TouchableOpacity,
   SafeAreaView,
-  Dimensions,
   Platform,
+  TouchableHighlight,
 } from 'react-native';
 import React from 'react';
 import {RTCView} from 'react-native-webrtc';
@@ -291,8 +290,10 @@ class MillicastWidget extends React.Component {
                       borderRadius: 2,
                       backgroundColor: 'rgba(0,0,0,.288)',
                     }}>
-                    <TouchableOpacity
+                    <TouchableHighlight
                       hasTVPreferredFocus
+                      tvParallaxProperties={{magnification: 1.5}}
+                      underlayColor="#AA33FF"
                       onPress={() => {
                         this.setState({selectedSource: item.stream.toURL()});
                         this.setState({multiView: !this.state.multiView});
@@ -302,7 +303,7 @@ class MillicastWidget extends React.Component {
                           ? 'Main'
                           : String(this.state.sourceIds[index])}
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableHighlight>
                   </View>
                   <RTCView
                     key={item.stream.toURL() + item.stream.videoMid}
@@ -338,20 +339,25 @@ class MillicastWidget extends React.Component {
         {
           <View style={myStyles.bottomMultimediaContainer}>
             <View style={myStyles.bottomIconWrapper}>
-              <TouchableOpacity
+              <TouchableHighlight
                 hasTVPreferredFocus
-                tvParallaxProperties={{magnification: 1.2}}
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
                 onPress={this.playPauseVideo}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
-              </TouchableOpacity>
+              </TouchableHighlight>
               {this.state.playing ? (
-                <TouchableOpacity onPress={this.multiView}>
+                <TouchableHighlight
+                  hasTVPreferredFocus
+                  tvParallaxProperties={{magnification: 1.5}}
+                  underlayColor="#AA33FF"
+                  onPress={this.multiView}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
                     {this.state.multiView ? 'Go back' : 'Multiview'}
                   </Text>
-                </TouchableOpacity>
+                </TouchableHighlight>
               ) : null}
             </View>
           </View>

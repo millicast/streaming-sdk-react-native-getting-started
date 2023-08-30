@@ -33,7 +33,6 @@ const theme = StyleSheet.create({
     paddingBottom: 12,
     fontSize: 20,
     marginTop: '8%',
-    // fontFamily: 'Montserrat-Black',
     lineHeight: 24,
   },
   buttonDesign: {
