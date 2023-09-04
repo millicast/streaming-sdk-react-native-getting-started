@@ -35,9 +35,16 @@ So far, we have tested the app on the following emulators, having good results i
 
 ### Environment Set Up
 
-- We recommend using `yarn`, if you don't have it installed execute: `npm install --global yarn`.
+- We recommend using `yarn`, if you don't have it installed execute:
+```
+npm install --global yarn
+```
 
-- For **iOS** and **tvOS** Git Large File Storage is needed, install it with `brew install git-lfs`.
+- For **iOS** and **tvOS** Git Large File Storage is needed, install it with
+```
+brew install git-lfs
+```
+
 
 - For **Android** platforms you will need `Java SDK 11` and Android Studio installed.
 
@@ -85,11 +92,11 @@ yarn
 cd ios && pod install
 ```
 
-4. It is required to have `WebRTC.framework` M112 builds. You can find it in `libWebRTC.zip` inside the `ios` folder.
+1. It is required to have `WebRTC.framework` M112 builds. You can find it in `ios/libWebRTC.zip`.
 
-5. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+2. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
-3. Unzip libWebRTC inside the `ios` folder from this project.
+3. Unzip `libWebRTC` inside the `ios` folder from this project.
 #### iOS
 
 1. Open Xcode.
@@ -113,7 +120,7 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC
 
 6. Select `TestApp` project and use an iOS simulator with iOS 16.
 
-7. Run the project, you should see the simulator with the app home page with a buttom to publish or subscribe to a stream.
+7. Run the project, you should see the simulator with the app home page with a button to publish or subscribe to a stream.
 
 #### tvOS
 
@@ -144,7 +151,7 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.frame
 
 7. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
-To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to Window -> Show Apple TV Remote and use it.
+To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to `Window -> Show Apple TV Remote` and use it.
 
 ### Android
 
@@ -155,10 +162,12 @@ The following steps are common for all Android devices.
 ```
 yarn
 ```
-3. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
+
+1. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
 ```
 sdk.dir = /../Android/sdk
 ```
+
 This varies from OS to OS, so make sure to put the right path.
 
 4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
@@ -187,14 +196,13 @@ The Pods target has an incorrect Framework Path configured in Search Paths insid
 
 ![No Bundle URL present](assets/NoBundleURLFoundError.png) 
 
-You should stop the running instances of the application and from Xcode menu go to Product -> Clean build folder.
+You should stop the running instances of the application and from Xcode menu go to `Product -> Clean build folder`.
 
-Also you can go to Xcode -> Settings -> Locations
-Click on the arrow next to Derived Data path and this will open on Finder Derived Data folder, you can delete the cached files.
+Also you can go to `Xcode -> Settings -> Locations`. Click on the arrow next to `Derived Data` path and this will open on Finder `Derived Data` folder, you can delete the cached files.
 
-If the error persists, you should check your localhost port and make sure that the app is using port 8081.
+If the error persists, you should check your localhost port and make sure that the app is using port 8081, and for this purpose, that port should be available.
 
-To fix this error shown when `pod install` is executed
+To fix this error shown when `pod install` is executed:
 
 ```
 [!] The platform of the target `TestApp-tvOS` (tvOS 16.0) is not compatible with `JitsiWebRTC (111.0.2)`, which does not support `tvOS`.
@@ -206,11 +214,11 @@ You should go to `node_modules -> react-native-webrtc -> react-native-webrtc.pod
 s.dependency          'JitsiWebRTC', '~> 111.0.0'
 ```
 
-Because we are using a local depepency of WebRTC that supports tvOS.
+Because we are using a local dependency of WebRTC that supports tvOS.
 
 ## Compatibility/Requirements
 
-It is used a specific version of React Native because of the need for compatibility between react-native-tvos and react-native-webrtc.
+It is used a specific version of React Native because of the need for compatibility between `react-native-tvos` and `react-native-webrtc`.
 
 ## License
 Please refer to [LICENSE](https://github.com/millicast/streaming-sdk-react-native-getting-started/blob/main/LICENSE) file.
