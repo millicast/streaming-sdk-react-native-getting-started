@@ -182,7 +182,7 @@ The following steps are common for all Android devices.
 yarn
 ```
 
-1. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
+3. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
 ```
 sdk.dir = /../Android/sdk
 ```
