@@ -135,6 +135,8 @@ Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binar
 
 ![Adding WebRTC local reference in Pods target](assets/WebRTC-References-Pods.png)
 
+###### For Simulator only (*):
+
 - In `Frameworks Search Paths`, insert the following line: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64_x86_64-simulator
@@ -147,11 +149,28 @@ $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Heade
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
 ```
 
+###### For Real Device only (*):
+
+- In `Frameworks Search Paths`, insert the following line: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64
+```
+
+- In `Header Search Paths`, insert the following lines: 
+```
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Headers
+```
+
+
 6. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
 
 7. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
 To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to `Window -> Show Apple TV Remote` and use it.
+
+#### Remarks
+(*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
+
 
 ### Android
 
