@@ -62,9 +62,9 @@ To get started with building this app, you will need a Dolby.io account.
 
 ### Pre-requisistes
 
-- Dolby account.
-- [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed.
-- It is required to have Java SDK 11.
+- Dolby account
+- [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed
+- It is required to have Java SDK 11
 - Yarn installed
 - Xcode 14
 - Android Studio Dolphin
@@ -111,13 +111,15 @@ Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Bi
 - In `Frameworks Search Paths`, insert the following line: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64-simulator
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-x64-simulator
 ```
 
 - In `Header Search Paths`, insert the following lines: 
 ```
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework/Headers
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64_x86_64-simulator/WebRTC.framework/Headers
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64-simulator/WebRTC.framework/Headers
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-x64-simulator/WebRTC.framework/Headers
 ```
 
 6. Select `TestApp` project and use an iOS simulator with iOS 16.
@@ -173,7 +175,7 @@ To navigate use the arrow keys and enter button. Also, on the Simulator window y
 #### Remarks
 (*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
 
-<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, differents builds are required for intel based (`x86`) and M1 based (`arm64`).
+<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, differents builds are required for intel based (`x64`, `x86`) and M1 based (`arm64`).
 
 
 ### Android
