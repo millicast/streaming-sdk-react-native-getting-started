@@ -92,11 +92,13 @@ yarn
 cd ios && pod install
 ```
 
-1. It is required to have `WebRTC.framework` M112 builds. You can find it in `ios/libWebRTC.zip`.
+4. It is required to have `WebRTC.framework` M112 builds. You can find it in `ios/libWebRTC.zip`.
 
-2. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+5. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
-3. Unzip `libWebRTC` inside the `ios` folder from this project.
+6. Unzip `libWebRTC` inside the `ios` folder from this project. See [remark (**)](remark-**).
+
+
 #### iOS
 
 1. Open Xcode.
@@ -104,7 +106,7 @@ cd ios && pod install
 3. Select `TestApp project`, then `TestApp` target.
 4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for iOS.
 Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Binary With Libraries`, if not, add it.
-1. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
+5. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
 
 - In `Frameworks Search Paths`, insert the following line: 
 ```
@@ -139,13 +141,13 @@ Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binar
 
 - In `Frameworks Search Paths`, insert the following line: 
 ```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64_x86_64-simulator
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-x64-simulator
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
 ```
 
 - In `Header Search Paths`, insert the following lines: 
 ```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Headers
+$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-x64-simulator/WebRTC.framework/Headers
 $(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
 ```
 
@@ -170,6 +172,8 @@ To navigate use the arrow keys and enter button. Also, on the Simulator window y
 
 #### Remarks
 (*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
+
+<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, differents builds are required for intel based (`x86`) and M1 based (`arm64`).
 
 
 ### Android
