@@ -3,10 +3,9 @@ import {
   View,
   FlatList,
   Text,
-  TouchableOpacity,
   SafeAreaView,
-  Dimensions,
   Platform,
+  TouchableHighlight,
 } from 'react-native';
 import React from 'react';
 import {RTCView} from 'react-native-webrtc';
@@ -118,13 +117,6 @@ class MillicastWidget extends React.Component {
       await view.connect({
         events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
       });
-
-      // view.on('broadcastEvent', (event) => {
-      //   const { name, data } = event
-      //   if (name === 'viewercount') {
-      //     this.setState({ userCount: data.viewercount })
-      //   }
-      // })
 
       this.setState({
         millicastView: view,
@@ -298,8 +290,10 @@ class MillicastWidget extends React.Component {
                       borderRadius: 2,
                       backgroundColor: 'rgba(0,0,0,.288)',
                     }}>
-                    <TouchableOpacity
+                    <TouchableHighlight
                       hasTVPreferredFocus
+                      tvParallaxProperties={{magnification: 1.5}}
+                      underlayColor="#AA33FF"
                       onPress={() => {
                         this.setState({selectedSource: item.stream.toURL()});
                         this.setState({multiView: !this.state.multiView});
@@ -309,7 +303,7 @@ class MillicastWidget extends React.Component {
                           ? 'Main'
                           : String(this.state.sourceIds[index])}
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableHighlight>
                   </View>
                   <RTCView
                     key={item.stream.toURL() + item.stream.videoMid}
@@ -345,49 +339,28 @@ class MillicastWidget extends React.Component {
         {
           <View style={myStyles.bottomMultimediaContainer}>
             <View style={myStyles.bottomIconWrapper}>
-              <TouchableOpacity
+              <TouchableHighlight
                 hasTVPreferredFocus
-                tvParallaxProperties={{magnification: 1.2}}
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
                 onPress={this.playPauseVideo}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
-              </TouchableOpacity>
+              </TouchableHighlight>
               {this.state.playing ? (
-                <TouchableOpacity onPress={this.multiView}>
+                <TouchableHighlight
+                  hasTVPreferredFocus
+                  tvParallaxProperties={{magnification: 1.5}}
+                  underlayColor="#AA33FF"
+                  onPress={this.multiView}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
                     {this.state.multiView ? 'Go back' : 'Multiview'}
                   </Text>
-                </TouchableOpacity>
+                </TouchableHighlight>
               ) : null}
             </View>
           </View>
-
-          /* 
-        <View style={myStyles.topViewerCount}>
-          <Ionicons name="ios-person" size={30} color="#7f00b2" />
-          <Text style={{ fontWeight: 'bold' }}>{`${this.state.userCount}`}</Text>
-        </View>
-
-        <View style={myStyles.bottomMultimediaContainer}>
-          <View style={myStyles.bottomIconWrapper}>
-            <TouchableOpacity onPress={this.playPauseVideo} >
-              <Text>{!this.state.playing ? <Ionicons name="play" size={30} color="#7f00b2" /> : <Ionicons name="pause" size={30} color="#7f00b2" />}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.muteAudio} >
-              <Text >{!this.state.muted ? <Ionicons name="md-volume-high" size={30} color="#7f00b2" /> : <Ionicons name="md-volume-mute" size={30} color="#7f00b2" />}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.multiView} >
-              <Text>{this.state.multiView ? <Ionicons name="chevron-back" size={30} color="#7f00b2" /> : <Ionicons name="md-images" size={30} color="#7f00b2" />}</Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            {this.state.activeLayers.map(layer => {
-              return (<Button sytle={{ justifyContent: 'flex-start' }} key={layer.id} title={layer.bitrate.toString()} onPress={() => this.select(layer.id)} />)
-            })
-            }
-          </View>
-        </View> */
         }
       </>
     );
