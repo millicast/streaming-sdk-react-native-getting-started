@@ -96,7 +96,7 @@ cd ios && pod install
 
 5. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
-6. Unzip `libWebRTC` inside the `ios` folder from this project. See [remark (**)](remark-**).
+6. Unzip `libWebRTC` inside the `ios` folder from this project. See [remark (**)](#remark-**).
 
 
 #### iOS
