@@ -239,7 +239,7 @@ You should go to `node_modules -> react-native-webrtc -> react-native-webrtc.pod
 s.dependency          'JitsiWebRTC', '~> 111.0.0'
 ```
 
-Because we are using a local dependency of WebRTC that supports tvOS.
+Due we are using a local dependency of WebRTC that supports tvOS.
 
 ## Compatibility/Requirements
 
