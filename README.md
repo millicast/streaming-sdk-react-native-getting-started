@@ -76,6 +76,43 @@ To get started with building this app, you will need a Dolby.io account.
 To setup your [Dolby.IO](https://dolby.io/) account, go to the [Dolby.IO](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
 If you did not receive a verification email, check your Spam or Junk email folders.
 
+#### Setting Up the Project in Android
+
+In case you want to run the app on Android, be sure to create a file `/android/local.properties` with the following content:
+```
+sdk.dir = PATH_ANDROID_SDK
+```
+Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
+
+
+##### Setting Up an Emulator with Android Studio
+
+Following the guide above, you should already have your emulator up and running.
+
+From the Android Studio welcome page:
+1. Select the `More actions` drop-down menu.
+2. Select `Virtual Device Manager`.
+
+As shown in the image below:
+
+<img src="assets/virtualEmulator.png" alt="drawing" width="500"/>
+
+
+Be sure to give access to your computer camera and microphone in order to be able to use it for testing, otherwise the emulator will create a sample video simulating the camera usage.
+
+##### Setting Up the Camera
+
+To give your Android emulator access to your camera, go to Android Studio and edit your desired emulator.
+
+<img src="assets/setCameraAndroidStudio.png" alt="drawing" width="500"/>
+
+##### Setting Up the Microphone
+
+To give your Android emulator access to your microphone, start your emulator and open the emulator options. Then enable `Virtual headset plug inserted` and `Virtual microphone uses host audio input`.
+
+<img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
+
+
 ## How to build and run the React Native Sample App
 
 ### Apple
