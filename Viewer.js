@@ -190,9 +190,9 @@ class MillicastWidget extends React.Component {
   }
 
   muteAudio = async () => {
-    let isPaused = this.state.muted;
+    const isPaused = this.state.muted;
     this.changeStateOfAudioTracks(this.state.streams, isPaused);
-    isPaused = !isPaused;
+    this.setState({muted: !isPaused});
   };
 
   project = async (sourceId, videoMid, audioMid) => {
@@ -349,15 +349,26 @@ class MillicastWidget extends React.Component {
                 </Text>
               </TouchableHighlight>
               {this.state.playing ? (
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={this.multiView}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {this.state.multiView ? 'Go back' : 'Multiview'}
-                  </Text>
-                </TouchableHighlight>
+                <>
+                  <TouchableHighlight
+                    hasTVPreferredFocus
+                    tvParallaxProperties={{magnification: 1.5}}
+                    underlayColor="#AA33FF"
+                    onPress={this.muteAudio}>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      {this.state.muted ? 'Mute' : 'Unmute'}
+                    </Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    hasTVPreferredFocus
+                    tvParallaxProperties={{magnification: 1.5}}
+                    underlayColor="#AA33FF"
+                    onPress={this.multiView}>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      {this.state.multiView ? 'Go back' : 'Multiview'}
+                    </Text>
+                  </TouchableHighlight>
+                </>
               ) : null}
             </View>
           </View>
