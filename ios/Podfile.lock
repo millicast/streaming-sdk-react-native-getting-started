@@ -266,7 +266,7 @@ PODS:
     - glog
   - react-native-safe-area-context (4.7.2):
     - React-Core
-  - react-native-webrtc (111.0.3):
+  - react-native-webrtc (111.0.1):
     - React-Core
   - React-perflogger (0.69.8-2)
   - React-RCTAnimation (0.69.8-2):
@@ -329,7 +329,7 @@ PODS:
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
-  - SocketRocket (0.6.0)
+  - SocketRocket (0.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga
@@ -516,7 +516,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1560aa917ee101aa7db67b0ea0c7fcf23f1cd969
   React-logger: e30a213559d779b696231615a145ddb29d18c742
   react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
-  react-native-webrtc: df2a9b7d9762e7f71c1412f48de34a89a4c4c19b
+  react-native-webrtc: ca0f8d55a2cddaf1ea98dd4253e2d8590f1c1b3d
   React-perflogger: 6c01400e9d679980209c5debe4438eafd7e656b0
   React-RCTAnimation: 00220b81e0f8bc61cc1283544fc78d4f5cc8f857
   React-RCTBlob: a23e9da46cd0523a130b4658a22ffa758c459cc4
@@ -528,10 +528,10 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 92e1600ad33818e45fcf1831e2fdd6451a4d3a47
   ReactCommon: e3818869621c119aea08bd5ce8ed0b8c64abeafe
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
-  SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 486daad4f5db121eb2e831e2aae8ad994011573f
   YogaKit: 1e22bf2228b3a5ac8cc88965153061ae92c494b5
 
-PODFILE CHECKSUM: fa59f73f99d4170e0ea05128a6c5b9b0699a67d5
+PODFILE CHECKSUM: 0e2d1240a203f374e3e47be160fd15bc75d45068
 
 COCOAPODS: 1.12.1
