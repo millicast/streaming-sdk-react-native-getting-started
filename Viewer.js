@@ -383,15 +383,6 @@ class MillicastWidget extends React.Component {
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
-              {/* <TouchableHighlight
-                hasTVPreferredFocus
-                tvParallaxProperties={{magnification: 1.5}}
-                underlayColor="#AA33FF"
-                onPress={this.muteAudio}>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>
-                  {this.state.muted ? 'Mute' : 'Unmute'}
-                </Text>
-              </TouchableHighlight> */}
               {this.state.playing ? (
                 <TouchableHighlight
                   hasTVPreferredFocus
