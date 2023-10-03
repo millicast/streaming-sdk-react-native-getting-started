@@ -79,6 +79,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  */
 
 project.ext.react = [
+    bundleInDebug: true,
     enableHermes: false,  // clean and rebuild if changing
 ]
 
