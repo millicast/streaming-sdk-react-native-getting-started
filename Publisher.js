@@ -14,8 +14,8 @@ import myStyles from './styles.js';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN} from '@env';
 
-var streamName = MILLICAST_STREAM_NAME;
-var publishToken = MILLICAST_PUBLISHING_TOKEN;
+const streamName = MILLICAST_STREAM_NAME;
+const publishToken = MILLICAST_PUBLISHING_TOKEN;
 
 class MillicastWidget extends React.Component {
   constructor(props) {

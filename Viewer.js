@@ -108,7 +108,7 @@ class MillicastWidget extends React.Component {
             break;
           case 'layers':
             this.setState({
-              activeLayers: data.medias['0'].active,
+              activeLayers: data.medias['0']?.active,
             });
             //Updated layer information for each simulcast/svc video track
             break;
