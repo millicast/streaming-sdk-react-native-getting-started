@@ -262,7 +262,9 @@ class MillicastWidget extends React.Component {
               renderItem={({item, index}) => (
                 <View
                   style={
-                    amountCols === 2
+                    Platform.isTV && Platform.OS === 'ios'
+                      ? {}
+                      : amountCols === 2
                       ? [
                           {marginTop: -90, marginBottom: -100},
                           index % 2 == 0
@@ -278,43 +280,76 @@ class MillicastWidget extends React.Component {
                           },
                         ]
                   }>
-                  <View
-                    style={{
-                      position: 'absolute',
-                      left: 8,
-                      bottom: 108,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      zIndex: 1,
-                      padding: 5,
-                      borderRadius: 2,
-                      backgroundColor: 'rgba(0,0,0,.288)',
-                    }}>
-                    <TouchableHighlight
-                      hasTVPreferredFocus
-                      tvParallaxProperties={{magnification: 1.5}}
-                      underlayColor="#AA33FF"
-                      onPress={() => {
-                        this.setState({selectedSource: item.stream.toURL()});
-                        this.setState({multiView: !this.state.multiView});
-                      }}>
-                      <Text style={{color: 'white'}}>
-                        {item.stream.videoMid === '0'
-                          ? 'Main'
-                          : String(this.state.sourceIds[index])}
-                      </Text>
-                    </TouchableHighlight>
-                  </View>
-                  <RTCView
-                    key={item.stream.toURL() + item.stream.videoMid}
-                    streamURL={item.stream.toURL()}
-                    style={{
-                      width: amountCols === 2 ? '70%' : '100%',
-                      flex: 1,
-                      aspectRatio: 1,
-                      borderRadius: 30,
-                    }}
-                  />
+                  {Platform.isTV && Platform.OS === 'ios' ? (
+                    <>
+                      <RTCView
+                        key={item.stream.toURL() + item.stream.videoMid}
+                        streamURL={item.stream.toURL()}
+                        style={{
+                          width: amountCols === 2 ? '70%' : '100%',
+                          flex: 1,
+                          aspectRatio: 1,
+                          borderRadius: 30,
+                        }}
+                      />
+                      <TouchableHighlight
+                        hasTVPreferredFocus
+                        style={{padding: 10, bottom: 150, borderRadius: 6}}
+                        underlayColor="#AA33FF"
+                        onPress={() => {
+                          this.setState({selectedSource: item.stream.toURL()});
+                          this.setState({multiView: !this.state.multiView});
+                        }}>
+                        <Text style={{color: 'white'}}>
+                          {item.stream.videoMid === '0'
+                            ? 'Main'
+                            : String(this.state.sourceIds[index])}
+                        </Text>
+                      </TouchableHighlight>
+                    </>
+                  ) : (
+                    <>
+                      <View
+                        style={{
+                          position: 'absolute',
+                          left: 8,
+                          bottom: 108,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          zIndex: 1,
+                          padding: 5,
+                          borderRadius: 2,
+                          backgroundColor: 'rgba(0,0,0,.288)',
+                        }}>
+                        <TouchableHighlight
+                          hasTVPreferredFocus
+                          tvParallaxProperties={{magnification: 1.5}}
+                          underlayColor="#AA33FF"
+                          onPress={() => {
+                            this.setState({
+                              selectedSource: item.stream.toURL(),
+                            });
+                            this.setState({multiView: !this.state.multiView});
+                          }}>
+                          <Text style={{color: 'white'}}>
+                            {item.stream.videoMid === '0'
+                              ? 'Main'
+                              : String(this.state.sourceIds[index])}
+                          </Text>
+                        </TouchableHighlight>
+                      </View>
+                      <RTCView
+                        key={item.stream.toURL() + item.stream.videoMid}
+                        streamURL={item.stream.toURL()}
+                        style={{
+                          width: amountCols === 2 ? '70%' : '100%',
+                          flex: 1,
+                          aspectRatio: 1,
+                          borderRadius: 30,
+                        }}
+                      />
+                    </>
+                  )}
                 </View>
               )}
             />
