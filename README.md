@@ -60,7 +60,7 @@ MILLICAST_PUBLISH_TOKEN=yourPublishToken
 
 To get started with building this app, you will need a Dolby.io account.
 
-### Pre-requisistes
+### Pre-requisites
 
 - Dolby account
 - [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed
@@ -73,7 +73,7 @@ To get started with building this app, you will need a Dolby.io account.
 - Android API 33
 
 #### How to get a Dolby.io account
-To setup your [Dolby.IO](https://dolby.io/) account, go to the [Dolby.IO](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
+To set up your [Dolby.io](https://dolby.io/) account, go to the [Dolby.io](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
 If you did not receive a verification email, check your Spam or Junk email folders.
 
 #### Setting Up the Project in Android
@@ -212,7 +212,7 @@ To navigate use the arrow keys and enter button. Also, on the Simulator window y
 #### Remarks
 (*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
 
-<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, differents builds are required for intel based (`x64`, `x86`) and M1 based (`arm64`).
+<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, different builds are required for intel-based (`x64`, `x86`) and M1 based (`arm64`).
 
 
 ### Android
@@ -225,14 +225,14 @@ The following steps are common for all Android devices.
 yarn
 ```
 
-3. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
+3. Inside the `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like this:
 ```
 sdk.dir = /../Android/sdk
 ```
 
 This varies from OS to OS, so make sure to put the right path.
 
-4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
+4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on a real Android device, just plug it in through USB. Make sure you have already upgraded the device to 'developer mode'.
 
 5. Open and run the simulator and then execute the application from the terminal:
 ```
@@ -276,7 +276,7 @@ You should go to `node_modules -> react-native-webrtc -> react-native-webrtc.pod
 s.dependency          'JitsiWebRTC', '~> 111.0.0'
 ```
 
-Due we are using a local dependency of WebRTC that supports tvOS.
+We are using a local dependency of WebRTC that supports tvOS.
 
 ## Compatibility/Requirements
 
