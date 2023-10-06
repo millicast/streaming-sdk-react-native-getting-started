@@ -30,7 +30,7 @@ So far, we have tested the app on the following emulators, having good results i
 - **Android mobile:** Pixel 6 Pro API 33 Tiramisu
 - **Apple TV:** Apple TV 4K (3rd generation) (at 1080p) tvOS 16.0 and above
 - **Apple mobile:** iPhone 13 Pro Max iOS 16.4
-- **Xcode** version 14.3.1
+- **Xcode** version 15.0
 - **Android Studio** Dolphin 2021.3.1 patch 1
 
 ### Environment Set Up
@@ -51,11 +51,21 @@ brew install git-lfs
 - Add a `.env` file in current path. You can find the following example in `.env.sample`:
 ```sh
 # Make a .env file with the following vars
-MILLICAST_STREAM_NAME=yourStreamName
-MILLICAST_ACCOUNT_ID=yourAccountId
-MILLICAST_PUBLISH_TOKEN=yourPublishToken
+REACT_APP_MILLICAST_STREAM_NAME_VIEWER=yourStreamNameForViewer
+REACT_APP_MILLICAST_STREAM_NAME_PUBLISHER=yourStreamNameForPublishing
+REACT_APP_MILLICAST_ACCOUNT_ID=yourAccountId
+REACT_APP_MILLICAST_PUBLISHING_TOKEN=yourPublishToken
 ```
 
+#### In case `.env` file needs to be changed, some steps should be taken into account:
+
+1. First change any variable needed and save the `.env` file.
+2. Then, make any minimal change to the `App.js` file and save it (a whitespace should be enough).
+3. Reload the app running in Metro typing `r key` in the keyboard.
+
+> **Note 1:** This is an open issue in [react-native-dotenv](https://github.com/goatandsheep/react-native-dotenv/issues/422) repository. This is one of the workarounds that works.
+
+> **Note 2:** A previously made change will probably keep the cached environment variables. If no new changes can be made, close Metro and re-run the app.
 ## Getting Started
 
 To get started with building this app, you will need a Dolby.io account.

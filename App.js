@@ -18,12 +18,17 @@ import myStyles from './styles.js';
 import {Platform} from 'react-native';
 
 function HomeScreen({navigation}) {
+  const streamNameViewer = process.env.REACT_APP_MILLICAST_STREAM_NAME_VIEWER;
+  const streamNamePublisher = process.env.REACT_APP_MILLICAST_STREAM_NAME_PUBLISHER;
+  const accountId = process.env.REACT_APP_MILLICAST_ACCOUNT_ID;
+  const publishingToken = process.env.REACT_APP_MILLICAST_PUBLISHING_TOKEN;
+
   return (
     <SafeAreaView style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
       {!Platform.isTV ? (
         <TouchableOpacity
-          onPress={() => navigation.navigate('Publisher App')}
+          onPress={() => navigation.navigate('Publisher App', {streamName: streamNamePublisher, publishingToken: publishingToken})}
           style={myStyles.buttonDesign}>
           <Text style={myStyles.buttonText}>PUBLISHER</Text>
         </TouchableOpacity>
@@ -31,7 +36,7 @@ function HomeScreen({navigation}) {
 
       <TouchableOpacity
         hasTVPreferredFocus
-        onPress={() => navigation.navigate('Subscriber App')}
+        onPress={() => navigation.navigate('Subscriber App', {streamName: streamNameViewer, accountId: accountId})}
         style={myStyles.buttonDesign}>
         <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
       </TouchableOpacity>
