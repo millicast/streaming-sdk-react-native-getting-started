@@ -12,10 +12,6 @@ import {mediaDevices, RTCView} from 'react-native-webrtc';
 import {Director, Publish} from '@millicast/sdk/dist/millicast.debug.umd';
 import myStyles from './styles.js';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {MILLICAST_STREAM_NAME, MILLICAST_PUBLISHING_TOKEN} from '@env';
-
-const streamName = MILLICAST_STREAM_NAME;
-const publishToken = MILLICAST_PUBLISHING_TOKEN;
 
 class MillicastWidget extends React.Component {
   constructor(props) {
@@ -270,9 +266,9 @@ function PublisherMain(props) {
     <>
       <SafeAreaView style={styles.body}>
         <MillicastWidget
-          streamName={streamName}
-          token={publishToken}
-          {...props}
+          streamName={props.route.params.streamName}
+          token={props.route.params.publishingToken}
+          {...props.route.params}
         />
       </SafeAreaView>
     </>
@@ -287,7 +283,7 @@ export default function App(props) {
       <PublisherStack.Screen
         name="Publisher Main"
         component={PublisherMain}
-        {...props}
+        initialParams={props.route.params}
       />
     </PublisherStack.Navigator>
   );

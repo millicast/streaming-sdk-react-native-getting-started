@@ -16,10 +16,6 @@ import {
 import myStyles from './styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
-import {MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID} from '@env';
-
-const streamName = MILLICAST_STREAM_NAME;
-const accountId = MILLICAST_ACCOUNT_ID;
 
 const amountCols = Platform.isTV ? 2 : 1;
 
@@ -56,11 +52,11 @@ class MillicastWidget extends React.Component {
     }
   }
 
-  async subscribe(streamName, accountID) {
+  async subscribe(streamName, accountId) {
     const tokenGenerator = () =>
       Director.getSubscriber({
         streamName: streamName,
-        streamAccountId: accountID,
+        streamAccountId: accountId,
       });
     // Create a new instance
     let view = new MillicastView(streamName, tokenGenerator, null);
@@ -165,9 +161,9 @@ class MillicastWidget extends React.Component {
 
   playPauseVideo = async () => {
     if (this.state.setMedia) {
-      console.log('Stream Name:', streamName);
+      console.log('Stream Name:', this.props.streamName);
 
-      this.subscribe(streamName, accountId);
+      this.subscribe(this.props.streamName, this.props.accountId);
       this.setState({
         setMedia: false,
       });
@@ -402,11 +398,11 @@ class MillicastWidget extends React.Component {
   }
 }
 
-export default function App() {
+export default function App({navigation, route}) {
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget streamName={streamName} accountID={accountId} />
+        <MillicastWidget streamName={route.params.streamName} accountId={route.params.accountId}  />
       </SafeAreaView>
     </>
   );
