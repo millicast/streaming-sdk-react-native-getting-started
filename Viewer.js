@@ -28,7 +28,7 @@ class MillicastWidget extends React.Component {
     super(props);
 
     this.state = {
-      streams: [],
+      streams: {},
       sourceIds: ['main'],
       activeLayers: [],
       multiView: false,
@@ -64,20 +64,21 @@ class MillicastWidget extends React.Component {
     view.on('track', async event => {
       const mediaStream = event.streams[0] ? event.streams[0] : null;
       if (!mediaStream) return null;
-      const streams = [...this.state.streams];
+      const streams = {...this.state.streams};
       if (event.track.kind == 'audio') {
         await Promise.all(
-          streams.map(stream => {
-            if (stream.stream.toURL() == event.streams[0].toURL()) {
-              stream.audioMid = event.transceiver.mid;
+          Object.keys(streams).map(key => {
+            if (streams[key]?.stream.toURL() == event.streams[0].toURL()) {
+              streams[key].audioMid = event.transceiver.mid;
             }
           }),
         );
       } else {
-        streams.push({stream: mediaStream, videoMid: event.transceiver.mid});
+        const sourceId = this.state.sourceIds[0]
+        streams[sourceId] = {stream: mediaStream, videoMid: event.transceiver.mid};
       }
       this.setState({
-        streams: [...streams],
+        streams: {...streams},
       });
     });
 
@@ -140,17 +141,21 @@ class MillicastWidget extends React.Component {
         trackId: 'video',
       },
     ]);
-    this.setState({
-      streams: [
-        ...this.state.streams,
-        {stream: mediaStream, videoMid: mediaId},
-      ],
-    });
+    const streams = this.state.streams
+    streams[sourceId] = {stream: mediaStream, videoMid: mediaId}
+    this.setState({ streams: streams });
   };
 
+  removeRemoteTrack = async sourceId => {
+    await this.state.millicastView.unproject(sourceId)
+    const streams = this.state.streams
+    delete streams[sourceId]
+    this.setState({ streams: streams })
+  }
+
   changeStateOfMediaTracks(streams, value) {
-    streams.map(s =>
-      s.stream.getTracks().forEach(videoTrack => {
+    Object.keys(streams).map(key =>
+      streams[key].stream.getTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
       }),
     );
@@ -173,8 +178,8 @@ class MillicastWidget extends React.Component {
   };
 
   changeStateOfAudioTracks(streams, value) {
-    streams.map(s =>
-      s.stream.getTracks().forEach(track => {
+    Object.keys(streams).map(key =>
+      streams[key].stream.getTracks().forEach(track => {
         if (track.kind == 'audio') {
           track.enabled = value;
         }
@@ -206,7 +211,7 @@ class MillicastWidget extends React.Component {
       this.state.millicastView.project(sourceId, [
         {
           media: 'audio',
-          mediaId: this.state.streams[0].audioMid,
+          mediaId: this.state.streams.audioMid,
           trackId: 'audio',
         },
       ]);
@@ -227,11 +232,14 @@ class MillicastWidget extends React.Component {
           }
         }),
       );
-      this.setState({streams: [this.state.streams[0]]});
     } else {
-      this.setState({
-        streams: [...[this.state.streams[0]]],
-      });
+      await Promise.all(
+        Object.keys(this.state.streams).map(key => {
+          if (this.state.streams[key] !== 'main') {
+            this.removeRemoteTrack(key)
+          }
+        })
+      );
     }
     this.setState({
       multiView: !this.state.multiView,
@@ -249,7 +257,7 @@ class MillicastWidget extends React.Component {
               marginBottom: 50,
             }}>
             <FlatList
-              data={this.state.streams}
+              data={Object.keys(this.state.streams).map(key => this.state.streams[key])}
               style={{
                 textAlign: 'center',
               }}
@@ -351,11 +359,11 @@ class MillicastWidget extends React.Component {
             />
           </View>
         ) : // main/selected source
-        this.state.streams[0] ? (
+        this.state.streams[this.state.sourceIds[0]] ? (
           <RTCView
             key={this.state.selectedSource ?? 'main'}
             streamURL={
-              this.state.selectedSource ?? this.state.streams[0].stream.toURL()
+              this.state.selectedSource ?? this.state.streams[this.state.sourceIds[0]].stream.toURL()
             }
             style={this.styles.video}
             objectFit="contain"
