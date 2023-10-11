@@ -258,6 +258,11 @@ You should have an Android TV/mobile simulator on Android Studio.
 
 ## Troubleshooting
 
+### Framework not found WebRTC
+Check inside the TestApp or TestApp-tvOS project (depending on which platform do you want to run the application) go to `General -> Framework, Libraries, and Embedded Content` and look for WebRTC.framework. You should to confirm that you are using the proper framework for the platform and it should be with `Embed && Sign` option.
+
+If you are still having the error, maybe is because the project has an old link to another platform framework, go to `Build Settings -> Search Paths` and inside `Frameworks Search Paths` remove the path of the other framework platform. Do the same thing for `Header Search Paths` and leave only the path to the correct WebRTC framework where do you want to run the application.
+
 ### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
 
 ![WebRTC local reference not found](assets/WebRTC-ReferenceNotFoundError.png)
