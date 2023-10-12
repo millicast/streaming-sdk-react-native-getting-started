@@ -32,6 +32,7 @@ class MillicastWidget extends React.Component {
       sourceIds: ['main'],
       activeLayers: [],
       multiView: false,
+      connected:false,
       playing: false,
       muted: false,
       millicastView: null,
@@ -116,6 +117,7 @@ class MillicastWidget extends React.Component {
 
       this.setState({
         millicastView: view,
+        connected: true,
       });
     } catch (e) {
       console.error('Connection failed. Reason:', e);
@@ -342,7 +344,11 @@ class MillicastWidget extends React.Component {
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
                   underlayColor="#AA33FF"
-                  onPress={this.multiView}>
+                  onPress={() => {
+                    if (this.state.connected) {
+                      this.multiView();
+                    }
+                  }}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
                     {this.state.multiView ? 'Go back' : 'Multiview'}
                   </Text>
