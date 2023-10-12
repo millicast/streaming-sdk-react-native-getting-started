@@ -222,6 +222,8 @@ To navigate use the arrow keys and enter button. Also, on the Simulator window y
 #### Remarks
 (*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
 
+<img src="assets/Remove-old-reference-WebRTC.png" alt="drawing" width="500"/>
+
 <span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, different builds are required for intel-based (`x64`, `x86`) and M1 based (`arm64`).
 
 
