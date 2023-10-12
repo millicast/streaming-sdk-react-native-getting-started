@@ -16,10 +16,6 @@ import {
 import myStyles from './styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
-import {MILLICAST_STREAM_NAME, MILLICAST_ACCOUNT_ID} from '@env';
-
-const streamName = MILLICAST_STREAM_NAME;
-const accountId = MILLICAST_ACCOUNT_ID;
 
 const amountCols = Platform.isTV ? 2 : 1;
 
@@ -56,11 +52,11 @@ class MillicastWidget extends React.Component {
     }
   }
 
-  async subscribe(streamName, accountID) {
+  async subscribe(streamName, accountId) {
     const tokenGenerator = () =>
       Director.getSubscriber({
         streamName: streamName,
-        streamAccountId: accountID,
+        streamAccountId: accountId,
       });
     // Create a new instance
     let view = new MillicastView(streamName, tokenGenerator, null);
@@ -108,7 +104,7 @@ class MillicastWidget extends React.Component {
             break;
           case 'layers':
             this.setState({
-              activeLayers: data.medias['0'].active,
+              activeLayers: data.medias['0']?.active,
             });
             //Updated layer information for each simulcast/svc video track
             break;
@@ -165,9 +161,9 @@ class MillicastWidget extends React.Component {
 
   playPauseVideo = async () => {
     if (this.state.setMedia) {
-      console.log('Stream Name:', streamName);
+      console.log('Stream Name:', this.props.streamName);
 
-      this.subscribe(streamName, accountId);
+      this.subscribe(this.props.streamName, this.props.accountId);
       this.setState({
         setMedia: false,
       });
@@ -262,7 +258,9 @@ class MillicastWidget extends React.Component {
               renderItem={({item, index}) => (
                 <View
                   style={
-                    amountCols === 2
+                    Platform.isTV && Platform.OS === 'ios'
+                      ? {}
+                      : amountCols === 2
                       ? [
                           {marginTop: -90, marginBottom: -100},
                           index % 2 == 0
@@ -278,43 +276,34 @@ class MillicastWidget extends React.Component {
                           },
                         ]
                   }>
-                  <View
-                    style={{
-                      position: 'absolute',
-                      left: 8,
-                      bottom: 108,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      zIndex: 1,
-                      padding: 5,
-                      borderRadius: 2,
-                      backgroundColor: 'rgba(0,0,0,.288)',
-                    }}>
-                    <TouchableHighlight
-                      hasTVPreferredFocus
-                      tvParallaxProperties={{magnification: 1.5}}
-                      underlayColor="#AA33FF"
-                      onPress={() => {
-                        this.setState({selectedSource: item.stream.toURL()});
-                        this.setState({multiView: !this.state.multiView});
-                      }}>
-                      <Text style={{color: 'white'}}>
-                        {item.stream.videoMid === '0'
-                          ? 'Main'
-                          : String(this.state.sourceIds[index])}
-                      </Text>
-                    </TouchableHighlight>
-                  </View>
-                  <RTCView
-                    key={item.stream.toURL() + item.stream.videoMid}
-                    streamURL={item.stream.toURL()}
-                    style={{
-                      width: amountCols === 2 ? '70%' : '100%',
-                      flex: 1,
-                      aspectRatio: 1,
-                      borderRadius: 30,
-                    }}
-                  />
+                  {
+                    <>
+                      <RTCView
+                        key={item.stream.toURL() + item.stream.videoMid}
+                        streamURL={item.stream.toURL()}
+                        style={{
+                          width: amountCols === 2 ? '70%' : '100%',
+                          flex: 1,
+                          aspectRatio: 1,
+                          borderRadius: 30,
+                        }}
+                      />
+                      <TouchableHighlight
+                        hasTVPreferredFocus
+                        style={{padding: 10, bottom: 150, borderRadius: 6}}
+                        underlayColor="#AA33FF"
+                        onPress={() => {
+                          this.setState({selectedSource: item.stream.toURL()});
+                          this.setState({multiView: !this.state.multiView});
+                        }}>
+                        <Text style={{color: 'white'}}>
+                          {item.stream.videoMid === '0'
+                            ? 'Main'
+                            : String(this.state.sourceIds[index])}
+                        </Text>
+                      </TouchableHighlight>
+                    </>
+                  }
                 </View>
               )}
             />
@@ -367,11 +356,11 @@ class MillicastWidget extends React.Component {
   }
 }
 
-export default function App() {
+export default function App({navigation, route}) {
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget streamName={streamName} accountID={accountId} />
+        <MillicastWidget streamName={route.params.streamName} accountId={route.params.accountId}  />
       </SafeAreaView>
     </>
   );

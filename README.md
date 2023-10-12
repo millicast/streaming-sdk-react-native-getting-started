@@ -30,7 +30,7 @@ So far, we have tested the app on the following emulators, having good results i
 - **Android mobile:** Pixel 6 Pro API 33 Tiramisu
 - **Apple TV:** Apple TV 4K (3rd generation) (at 1080p) tvOS 16.0 and above
 - **Apple mobile:** iPhone 13 Pro Max iOS 16.4
-- **Xcode** version 14.3.1
+- **Xcode** version 15.0
 - **Android Studio** Dolphin 2021.3.1 patch 1
 
 ### Environment Set Up
@@ -51,16 +51,26 @@ brew install git-lfs
 - Add a `.env` file in current path. You can find the following example in `.env.sample`:
 ```sh
 # Make a .env file with the following vars
-MILLICAST_STREAM_NAME=yourStreamName
-MILLICAST_ACCOUNT_ID=yourAccountId
-MILLICAST_PUBLISH_TOKEN=yourPublishToken
+REACT_APP_MILLICAST_STREAM_NAME_VIEWER=yourStreamNameForViewer
+REACT_APP_MILLICAST_STREAM_NAME_PUBLISHER=yourStreamNameForPublishing
+REACT_APP_MILLICAST_ACCOUNT_ID=yourAccountId
+REACT_APP_MILLICAST_PUBLISHING_TOKEN=yourPublishToken
 ```
 
+#### In case `.env` file needs to be changed, some steps should be taken into account:
+
+1. First change any variable needed and save the `.env` file.
+2. Then, make any minimal change to the `App.js` file and save it (a whitespace should be enough).
+3. Reload the app running in Metro typing `r key` in the keyboard.
+
+> **Note 1:** This is an open issue in [react-native-dotenv](https://github.com/goatandsheep/react-native-dotenv/issues/422) repository. This is one of the workarounds that works.
+
+> **Note 2:** A previously made change will probably keep the cached environment variables. If no new changes can be made, close Metro and re-run the app.
 ## Getting Started
 
 To get started with building this app, you will need a Dolby.io account.
 
-### Pre-requisistes
+### Pre-requisites
 
 - Dolby account
 - [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed
@@ -73,7 +83,7 @@ To get started with building this app, you will need a Dolby.io account.
 - Android API 33
 
 #### How to get a Dolby.io account
-To setup your [Dolby.IO](https://dolby.io/) account, go to the [Dolby.IO](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
+To set up your [Dolby.io](https://dolby.io/) account, go to the [Dolby.io](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
 If you did not receive a verification email, check your Spam or Junk email folders.
 
 #### Setting Up the Project in Android
@@ -212,7 +222,9 @@ To navigate use the arrow keys and enter button. Also, on the Simulator window y
 #### Remarks
 (*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
 
-<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, differents builds are required for intel based (`x64`, `x86`) and M1 based (`arm64`).
+<img src="assets/Remove-old-reference-WebRTC.png" alt="drawing" width="500"/>
+
+<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, different builds are required for intel-based (`x64`, `x86`) and M1 based (`arm64`).
 
 
 ### Android
@@ -225,14 +237,14 @@ The following steps are common for all Android devices.
 yarn
 ```
 
-3. Inside `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like:
+3. Inside the `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like this:
 ```
 sdk.dir = /../Android/sdk
 ```
 
 This varies from OS to OS, so make sure to put the right path.
 
-4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on an real android device, just plug it in through USB. Make you sure you have already upgraded the device to 'developer mode'.
+4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on a real Android device, just plug it in through USB. Make sure you have already upgraded the device to 'developer mode'.
 
 5. Open and run the simulator and then execute the application from the terminal:
 ```
@@ -247,6 +259,11 @@ You should have an Android TV/mobile simulator on Android Studio.
 - For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
 
 ## Troubleshooting
+
+### Framework not found WebRTC
+Check inside the TestApp or TestApp-tvOS project (depending on which platform do you want to run the application) go to `General -> Framework, Libraries, and Embedded Content` and look for WebRTC.framework. You should to confirm that you are using the proper framework for the platform and it should be with `Embed && Sign` option.
+
+If you are still having the error, maybe is because the project has an old link to another platform framework, go to `Build Settings -> Search Paths` and inside `Frameworks Search Paths` remove the path of the other framework platform. Do the same thing for `Header Search Paths` and leave only the path to the correct WebRTC framework where do you want to run the application.
 
 ### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
 
@@ -276,7 +293,7 @@ You should go to `node_modules -> react-native-webrtc -> react-native-webrtc.pod
 s.dependency          'JitsiWebRTC', '~> 111.0.0'
 ```
 
-Due we are using a local dependency of WebRTC that supports tvOS.
+We are using a local dependency of WebRTC that supports tvOS.
 
 ## Compatibility/Requirements
 
