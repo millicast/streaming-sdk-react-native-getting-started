@@ -10,7 +10,7 @@ import {mediaDevices, RTCView} from 'react-native-webrtc';
 
 // Import the required classes
 import {Director, Publish} from '@millicast/sdk/dist/millicast.debug.umd';
-import myStyles from './styles.js';
+import myStyles from './styles/styles.js';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 class MillicastWidget extends React.Component {
@@ -278,6 +278,9 @@ function PublisherMain(props) {
 const PublisherStack = createNativeStackNavigator();
 
 export default function App(props) {
+  const count = useSelector(state => state.count);
+  const dispatch = useDispatch();
+
   return (
     <PublisherStack.Navigator screenOptions={{headerShown: false}}>
       <PublisherStack.Screen

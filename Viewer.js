@@ -13,9 +13,10 @@ import {
   Director,
   View as MillicastView,
 } from '@millicast/sdk/dist/millicast.debug.umd';
-import myStyles from './styles.js';
+import myStyles from './styles/styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
+import {useSelector, useDispatch} from 'react-redux';
 
 const amountCols = Platform.isTV ? 2 : 1;
 
@@ -399,10 +400,16 @@ class MillicastWidget extends React.Component {
 }
 
 export default function App({navigation, route}) {
+  const count = useSelector(state => state.count);
+  const dispatch = useDispatch();
+
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget streamName={route.params.streamName} accountId={route.params.accountId}  />
+        <MillicastWidget
+          streamName={route.params.streamName}
+          accountId={route.params.accountId}
+        />
       </SafeAreaView>
     </>
   );
