@@ -1,18 +1,18 @@
 const initialState = {
-    count: 0,
+    count1: 0,
   };
   
   const publisherReducer = (state = initialState, action) => {
     switch (action.type) {
-      case 'INCREMENT':
+      case 'INCREMENT1':
         return {
           ...state,
-          count: state.count + 1,
+          count1: state.count1 + 1,
         };
-      case 'DECREMENT':
+      case 'DECREMENT1':
         return {
           ...state,
-          count: state.count - 1,
+          count1: state.count1 - 1,
         };
       default:
         return state;

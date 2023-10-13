@@ -400,7 +400,7 @@ class MillicastWidget extends React.Component {
 }
 
 export default function App({navigation, route}) {
-  const count = useSelector(state => state.count);
+  const count2 = useSelector(state => state.count2);
   const dispatch = useDispatch();
 
   return (

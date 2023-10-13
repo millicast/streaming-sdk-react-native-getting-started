@@ -1,8 +1,6 @@
 import { createStore } from 'redux';
-import viewerReducer from './reducers/viewer';
+import reducer from './reducers/index'
 
-// const initialState = {};
-
-const store = createStore(viewerReducer);
+const store = createStore(reducer)
 
 export default store;

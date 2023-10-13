@@ -1,18 +1,18 @@
 const initialState = {
-  count: 0,
+  count2: 0,
 };
 
 const viewerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'INCREMENT':
+    case 'INCREMENT2':
       return {
         ...state,
-        count: state.count + 1,
+        count2: state.count2 + 1,
       };
-    case 'DECREMENT':
+    case 'DECREMENT2':
       return {
         ...state,
-        count: state.count - 1,
+        count2: state.count2 - 1,
       };
     default:
       return state;
