@@ -1,18 +1,19 @@
 const initialState = {
-    count1: 0,
+    streamName: null,
+    publishingToken: null,
   };
   
   const publisherReducer = (state = initialState, action) => {
     switch (action.type) {
-      case 'INCREMENT1':
+      case 'publisher/setPublishingToken':
         return {
           ...state,
-          count1: state.count1 + 1,
+          publishingToken: action.payload,
         };
-      case 'DECREMENT1':
+      case 'publisher/setStreamName':
         return {
           ...state,
-          count1: state.count1 - 1,
+          streamName: action.payload,
         };
       default:
         return state;

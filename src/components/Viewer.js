@@ -1,10 +1,8 @@
 import {
   StyleSheet,
   View,
-  FlatList,
   Text,
   SafeAreaView,
-  Platform,
   TouchableHighlight,
 } from 'react-native';
 import React from 'react';
@@ -13,15 +11,15 @@ import {
   Director,
   View as MillicastView,
 } from '@millicast/sdk/dist/millicast.debug.umd';
-import myStyles from './styles/styles.js';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import myStyles from '../../styles/styles.js';
+import Multiview from './Multiview';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
-import {useSelector, useDispatch} from 'react-redux';
 
-const amountCols = Platform.isTV ? 2 : 1;
+import {useSelector} from 'react-redux';
 
 window.Logger = MillicastLogger;
-
 Logger.setLevel(MillicastLogger.DEBUG);
 
 class MillicastWidget extends React.Component {
@@ -32,7 +30,6 @@ class MillicastWidget extends React.Component {
       streams: [],
       sourceIds: ['main'],
       activeLayers: [],
-      multiView: false,
       playing: false,
       muted: false,
       millicastView: null,
@@ -242,132 +239,26 @@ class MillicastWidget extends React.Component {
   render() {
     return (
       <>
-        {this.state.multiView ? (
-          // multiview
-          <View
-            style={{
-              alignContent: 'center',
-              marginBottom: 50,
-            }}>
-            <FlatList
-              data={this.state.streams}
-              style={{
-                textAlign: 'center',
-              }}
-              numColumns={amountCols}
-              keyExtractor={(_, index) => String(index)}
-              renderItem={({item, index}) => (
-                <View
-                  style={
-                    Platform.isTV && Platform.OS === 'ios'
-                      ? {}
-                      : amountCols === 2
-                      ? [
-                          {marginTop: -90, marginBottom: -100},
-                          index % 2 == 0
-                            ? {marginLeft: 10, marginRight: 5}
-                            : {marginLeft: 5, marginRight: 10},
-                        ]
-                      : [
-                          {
-                            marginTop: -75,
-                            marginBottom: -85,
-                            marginLeft: '2.5%',
-                            marginRight: '2.5%',
-                          },
-                        ]
-                  }>
-                  {Platform.isTV && Platform.OS === 'ios' ? (
-                    <>
-                      <RTCView
-                        key={item.stream.toURL() + item.stream.videoMid}
-                        streamURL={item.stream.toURL()}
-                        style={{
-                          width: amountCols === 2 ? '70%' : '100%',
-                          flex: 1,
-                          aspectRatio: 1,
-                          borderRadius: 30,
-                        }}
-                      />
-                      <TouchableHighlight
-                        hasTVPreferredFocus
-                        style={{padding: 10, bottom: 150, borderRadius: 6}}
-                        underlayColor="#AA33FF"
-                        onPress={() => {
-                          this.setState({selectedSource: item.stream.toURL()});
-                          this.setState({multiView: !this.state.multiView});
-                        }}>
-                        <Text style={{color: 'white'}}>
-                          {item.stream.videoMid === '0'
-                            ? 'Main'
-                            : String(this.state.sourceIds[index])}
-                        </Text>
-                      </TouchableHighlight>
-                    </>
-                  ) : (
-                    <>
-                      <View
-                        style={{
-                          position: 'absolute',
-                          left: 8,
-                          bottom: 108,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          zIndex: 1,
-                          padding: 5,
-                          borderRadius: 2,
-                          backgroundColor: 'rgba(0,0,0,.288)',
-                        }}>
-                        <TouchableHighlight
-                          hasTVPreferredFocus
-                          tvParallaxProperties={{magnification: 1.5}}
-                          underlayColor="#AA33FF"
-                          onPress={() => {
-                            this.setState({
-                              selectedSource: item.stream.toURL(),
-                            });
-                            this.setState({multiView: !this.state.multiView});
-                          }}>
-                          <Text style={{color: 'white'}}>
-                            {item.stream.videoMid === '0'
-                              ? 'Main'
-                              : String(this.state.sourceIds[index])}
-                          </Text>
-                        </TouchableHighlight>
-                      </View>
-                      <RTCView
-                        key={item.stream.toURL() + item.stream.videoMid}
-                        streamURL={item.stream.toURL()}
-                        style={{
-                          width: amountCols === 2 ? '70%' : '100%',
-                          flex: 1,
-                          aspectRatio: 1,
-                          borderRadius: 30,
-                        }}
-                      />
-                    </>
-                  )}
-                </View>
-              )}
+        {
+          // main/selected source
+          this.state.streams[0] ? (
+            <RTCView
+              key={this.state.selectedSource ?? 'main'}
+              streamURL={
+                this.state.selectedSource ??
+                this.state.streams[0].stream.toURL()
+              }
+              style={this.styles.video}
+              objectFit="contain"
             />
-          </View>
-        ) : // main/selected source
-        this.state.streams[0] ? (
-          <RTCView
-            key={this.state.selectedSource ?? 'main'}
-            streamURL={
-              this.state.selectedSource ?? this.state.streams[0].stream.toURL()
-            }
-            style={this.styles.video}
-            objectFit="contain"
-          />
-        ) : (
-          <View style={{padding: '5%'}}>
-            <Text style={{color: 'white'}}>
-              Press the 'play' button to start watching.
-            </Text>
-          </View>
-        )}
+          ) : (
+            <View style={{padding: '5%'}}>
+              <Text style={{color: 'white'}}>
+                Press the 'play' button to start watching.
+              </Text>
+            </View>
+          )
+        }
         {
           <View style={myStyles.bottomMultimediaContainer}>
             <View style={myStyles.bottomIconWrapper}>
@@ -399,19 +290,27 @@ class MillicastWidget extends React.Component {
   }
 }
 
-export default function App({navigation, route}) {
-  const count2 = useSelector(state => state.count2);
-  const dispatch = useDispatch();
-
+function ViewerMain(props) {
   return (
     <>
-      <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget
-          streamName={route.params.streamName}
-          accountId={route.params.accountId}
-        />
+      <SafeAreaView style={styles.body}>
+        <MillicastWidget streamName={streamName} accountId={accountId} />
       </SafeAreaView>
     </>
+  );
+}
+
+const ViewerStack = createNativeStackNavigator();
+
+export default function App({navigation, route}) {
+  const streamName = useSelector(state => state.viewerReducer.streamName);
+  const accountId = useSelector(state => state.viewerReducer.accountId);
+
+  return (
+    <ViewerStack.Navigator screenOptions={{headerShown: false}}>
+      <ViewerStack.Screen name="Viewer Main" component={ViewerMain} />
+      <ViewerStack.Screen name="Multiview" component={Multiview} />
+    </ViewerStack.Navigator>
   );
 }
 
