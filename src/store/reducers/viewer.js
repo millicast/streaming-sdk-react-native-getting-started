@@ -1,6 +1,7 @@
 const initialState = {
   streamName: null,
-  accountId: null
+  accountId: null,
+  playing: false,
 };
 
 const viewerReducer = (state = initialState, action) => {

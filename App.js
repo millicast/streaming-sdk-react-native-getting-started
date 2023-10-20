@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider} from 'react-redux';
 
-import store from './store';
+import store from './src/store';
 
 import Viewer from './src/components/Viewer';
 import Publisher from './Publisher';

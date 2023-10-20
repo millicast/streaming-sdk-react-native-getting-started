@@ -39,6 +39,8 @@ class MillicastWidget extends React.Component {
     this.styles = myStyles;
   }
 
+  componentWillUnmount() {}
+
   render() {
     return (
       <>
