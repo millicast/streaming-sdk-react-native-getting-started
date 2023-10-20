@@ -295,7 +295,7 @@ function ViewerMain(navigation) {
 
   return (
     <>
-      <SafeAreaView style={myStyles.body}>
+      <SafeAreaView style={stylesContainer.container}>
         <MillicastWidget
           streamName={streamName}
           accountId={accountId}
