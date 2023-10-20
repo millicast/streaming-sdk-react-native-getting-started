@@ -34,7 +34,6 @@ class MillicastWidget extends React.Component {
       muted: false,
       millicastView: null,
       setMedia: true,
-      userCount: 0,
       selectedSource: null,
     };
 
@@ -237,6 +236,8 @@ class MillicastWidget extends React.Component {
   };
 
   render() {
+    const {navigation} = this.props;
+
     return (
       <>
         {
@@ -271,17 +272,15 @@ class MillicastWidget extends React.Component {
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
-              {this.state.playing ? (
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={this.multiView}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {this.state.multiView ? 'Go back' : 'Multiview'}
-                  </Text>
-                </TouchableHighlight>
-              ) : null}
+              <TouchableHighlight
+                hasTVPreferredFocus
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
+                onPress={() => navigation.navigate('Multiview')}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  Multiview
+                </Text>
+              </TouchableHighlight>
             </View>
           </View>
         }
@@ -290,11 +289,18 @@ class MillicastWidget extends React.Component {
   }
 }
 
-function ViewerMain(props) {
+function ViewerMain(navigation) {
+  const streamName = useSelector(state => state.viewerReducer.streamName);
+  const accountId = useSelector(state => state.viewerReducer.accountId);
+
   return (
     <>
-      <SafeAreaView style={styles.body}>
-        <MillicastWidget streamName={streamName} accountId={accountId} />
+      <SafeAreaView style={myStyles.body}>
+        <MillicastWidget
+          streamName={streamName}
+          accountId={accountId}
+          {...navigation}
+        />
       </SafeAreaView>
     </>
   );
@@ -302,10 +308,7 @@ function ViewerMain(props) {
 
 const ViewerStack = createNativeStackNavigator();
 
-export default function App({navigation, route}) {
-  const streamName = useSelector(state => state.viewerReducer.streamName);
-  const accountId = useSelector(state => state.viewerReducer.accountId);
-
+export default function App(props) {
   return (
     <ViewerStack.Navigator screenOptions={{headerShown: false}}>
       <ViewerStack.Screen name="Viewer Main" component={ViewerMain} />

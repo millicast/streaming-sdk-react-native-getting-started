@@ -11,7 +11,7 @@ import {
   Director,
   View as MillicastView,
 } from '@millicast/sdk/dist/millicast.debug.umd';
-import styles from '../../styles/styles.js';
+import myStyles from '../../styles/styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
 
@@ -39,56 +39,10 @@ class MillicastWidget extends React.Component {
     this.styles = myStyles;
   }
 
-
   render() {
     return (
       <>
-        {
-          // main/selected source
-          this.state.streams[0] ? (
-            <RTCView
-              key={this.state.selectedSource ?? 'main'}
-              streamURL={
-                this.state.selectedSource ??
-                this.state.streams[0].stream.toURL()
-              }
-              style={this.styles.video}
-              objectFit="contain"
-            />
-          ) : (
-            <View style={{padding: '5%'}}>
-              <Text style={{color: 'white'}}>
-                Press the 'play' button to start watching.
-              </Text>
-            </View>
-          )
-        }
-        {
-          <View style={myStyles.bottomMultimediaContainer}>
-            <View style={myStyles.bottomIconWrapper}>
-              <TouchableHighlight
-                hasTVPreferredFocus
-                tvParallaxProperties={{magnification: 1.5}}
-                underlayColor="#AA33FF"
-                onPress={this.playPauseVideo}>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>
-                  {this.state.playing ? 'Pause' : 'Play'}
-                </Text>
-              </TouchableHighlight>
-              {this.state.playing ? (
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={this.multiView}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {this.state.multiView ? 'Go back' : 'Multiview'}
-                  </Text>
-                </TouchableHighlight>
-              ) : null}
-            </View>
-          </View>
-        }
+        <Text style={{color: 'white'}}>I'm not broken</Text>
       </>
     );
   }
