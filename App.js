@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import store from './src/store';
 
 import Viewer from './src/components/Viewer';
-import Publisher from './Publisher';
+import Publisher from './src/components/Publisher';
 
 import {useDispatch} from 'react-redux';
 
