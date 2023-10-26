@@ -1,10 +1,18 @@
 import store from '../store';
 
-export const subscribe = async (streamName, accountId) => {
+import {
+    Director,
+    View as MillicastView,
+  } from '@millicast/sdk/dist/millicast.debug.umd';
+  
+const viewerStore = store.getState().viewerReducer;
+
+export const subscribe = async () => {
+    console.log(viewerStore.streamName, 'viewerStore.streamName...subscribe')
   const tokenGenerator = () =>
     Director.getSubscriber({
-      streamName: streamName,
-      streamAccountId: accountId,
+      streamName: viewerStore.streamName,
+      streamAccountId: viewerStore.accountId,
     });
   // Create a new instance
   let view = new MillicastView(streamName, tokenGenerator, null);
@@ -12,7 +20,7 @@ export const subscribe = async (streamName, accountId) => {
   view.on('track', async event => {
     const mediaStream = event.streams[0] ? event.streams[0] : null;
     if (!mediaStream) return null;
-    const streams = [...this.state.streams];
+    const streams = [...viewerStore.streams];
     if (event.track.kind == 'audio') {
       await Promise.all(
         streams.map(stream => {
@@ -24,9 +32,7 @@ export const subscribe = async (streamName, accountId) => {
     } else {
       streams.push({stream: mediaStream, videoMid: event.transceiver.mid});
     }
-    this.setState({
-      streams: [...streams],
-    });
+    store.dispatch({type: 'viewer/setStreams', payload: [...streams]});
   });
 
   //Start connection to viewer
@@ -37,9 +43,9 @@ export const subscribe = async (streamName, accountId) => {
       switch (name) {
         case 'active':
           this.setState({
-            ...(this.state.sourceIds.indexOf(data.sourceId) === -1 &&
+            ...(viewerStore.sourceIds.indexOf(data.sourceId) === -1 &&
               data.sourceId != null && {
-                sourceIds: [...this.state.sourceIds, data.sourceId],
+                sourceIds: [...viewerStore.sourceIds, data.sourceId],
               }),
           });
           //A source has been started on the steam
@@ -71,17 +77,17 @@ export const subscribe = async (streamName, accountId) => {
 };
 
 export const stopStream = async () => {
-  await this.state.millicastView.stop();
+  await viewerStore.millicastView.stop();
   this.setState();
 };
 
 export const addRemoteTrack = async sourceId => {
   const mediaStream = new MediaStream();
-  const transceiver = await this.state.millicastView.addRemoteTrack('video', [
+  const transceiver = await viewerStore.millicastView.addRemoteTrack('video', [
     mediaStream,
   ]);
   const mediaId = transceiver.mid;
-  await this.state.millicastView.project(sourceId, [
+  await viewerStore.millicastView.project(sourceId, [
     {
       media: 'video',
       mediaId,
@@ -89,7 +95,7 @@ export const addRemoteTrack = async sourceId => {
     },
   ]);
   this.setState({
-    streams: [...this.state.streams, {stream: mediaStream, videoMid: mediaId}],
+    streams: [...viewerStore.streams, {stream: mediaStream, videoMid: mediaId}],
   });
 };
 
@@ -105,17 +111,17 @@ export const changeStateOfMediaTracks = (streams, value) => {
 };
 
 export const playPauseVideo = async () => {
-  console.log('me llaman');
-  if (this.state.setMedia) {
-    console.log('Stream Name:', this.props.streamName);
+  if (viewerStore.setMedia) {
+    console.log('viewerStore.setMedia', viewerStore.setMedia)
+    console.log('Stream Name:', viewerStore.streamName);
 
-    this.subscribe(this.props.streamName, this.props.accountId);
+    subscribe(viewerStore.streamName, viewerStore.accountId);
     this.setState({
       setMedia: false,
     });
   }
-  let isPaused = !this.state.playing;
-  this.changeStateOfMediaTracks(this.state.streams, isPaused);
+  const isPaused = !viewerStore.playing;
+  this.changeStateOfMediaTracks(viewerStore.streams, isPaused);
 };
 
 export const changeStateOfAudioTracks = (streams, value) => {
@@ -135,7 +141,7 @@ export const project = async (sourceId, videoMid, audioMid) => {
   if (sourceId == 'main') {
     sourceId = null;
   }
-  this.state.millicastView.project(sourceId, [
+  viewerStore.millicastView.project(sourceId, [
     {
       media: 'video',
       mediaId: videoMid,
@@ -143,10 +149,10 @@ export const project = async (sourceId, videoMid, audioMid) => {
     },
   ]);
   if (audioMid) {
-    this.state.millicastView.project(sourceId, [
+    viewerStore.millicastView.project(sourceId, [
       {
         media: 'audio',
-        mediaId: this.state.streams[0].audioMid,
+        mediaId: viewerStore.streams[0].audioMid,
         trackId: 'audio',
       },
     ]);
@@ -154,12 +160,12 @@ export const project = async (sourceId, videoMid, audioMid) => {
 };
 
 export const select = async id => {
-  this.state.millicastView.select({encodingId: id});
+  viewerStore.millicastView.select({encodingId: id});
 };
 
 export const multiView = async () => {
-  const sourceIds = this.state.sourceIds;
-  if (!this.state.multiView) {
+  const sourceIds = viewerStore.sourceIds;
+  if (!viewerStore.multiView) {
     await Promise.all(
       sourceIds.map(async sourceId => {
         if (sourceId != 'main') {
@@ -167,15 +173,15 @@ export const multiView = async () => {
         }
       }),
     );
-    this.setState({streams: [this.state.streams[0]]});
+    this.setState({streams: [viewerStore.streams[0]]});
   } else {
     this.setState({
-      streams: [...[this.state.streams[0]]],
+      streams: [...[viewerStore.streams[0]]],
     });
   }
   this.setState({
-    multiView: !this.state.multiView,
+    multiView: !viewerStore.multiView,
   });
 };
 
-export const a = 1;
+store.subscribe(playPauseVideo, subscribe)

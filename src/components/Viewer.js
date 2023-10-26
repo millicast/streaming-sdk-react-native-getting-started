@@ -18,7 +18,7 @@ import myStyles from '../../styles/styles.js';
 import * as viewerService from '../service/viewer.js';
 import Multiview from './Multiview';
 
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
@@ -26,42 +26,36 @@ Logger.setLevel(MillicastLogger.DEBUG);
 class MillicastWidget extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      streams: [],
-      sourceIds: ['main'],
-      activeLayers: [],
-      muted: false,
-      millicastView: null,
-      setMedia: true,
-      selectedSource: null,
-    };
-
     this.styles = myStyles;
   }
 
   componentWillUnmount() {
-    if (!this.state.setMedia) {
-      this.stopStream();
-      this.setState({
-        setMedia: true,
-      });
-    }
+    // if (!viewerStore.setMedia) {
+      viewerService.stopStream();
+      // dispatch({type: 'viewer/setStreams', payload: true});
+      // this.setState({
+      //   setMedia: true,
+      // });
+    // }
   }
 
+  
+
   render() {
-    const {navigation} = this.props;
+    const navigation = this.props.navigation;
+    const viewerStore = this.props.viewerStore;
+    console.log(viewerStore, 'coso 1');
 
     return (
       <>
         {
           // main/selected source
-          this.state.streams[0] ? (
+          viewerStore.streams[0] ? (
             <RTCView
-              key={this.state.selectedSource ?? 'main'}
+              key={viewerStore.selectedSource ?? 'main'}
               streamURL={
-                this.state.selectedSource ??
-                this.state.streams[0].stream.toURL()
+                viewerStore.selectedSource ??
+                viewerStore.streams[0].stream.toURL()
               }
               style={this.styles.video}
               objectFit="contain"
@@ -83,7 +77,7 @@ class MillicastWidget extends React.Component {
                 underlayColor="#AA33FF"
                 onPress={viewerService.playPauseVideo}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>
-                  {this.state.playing ? 'Pause' : 'Play'}
+                  {viewerStore.playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
               <TouchableHighlight
@@ -104,16 +98,14 @@ class MillicastWidget extends React.Component {
 }
 
 function ViewerMain(navigation) {
-  const state = useSelector(state => state.viewerReducer);
+  const viewerStore = useSelector(state => state.viewerReducer);
 
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
         <MillicastWidget
-          streamName={state.streamName}
-          accountId={state.accountId}
-          {...navigation}
-          {...state}
+          {...{navigation: navigation, viewerStore: viewerStore}}
+          store="viewerStore"
         />
       </SafeAreaView>
     </>

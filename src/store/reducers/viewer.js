@@ -2,6 +2,12 @@ const initialState = {
   streamName: null,
   accountId: null,
   playing: false,
+  streams: [],
+  sourceIds: ['main'],
+  activeLayers: [],
+  millicastView: null,
+  setMedia: true,
+  selectedSource: null,
 };
 
 const viewerReducer = (state = initialState, action) => {
@@ -15,6 +21,11 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         accountId: action.payload,
+      };
+    case 'viewer/setStreams':
+      return {
+        ...state,
+        streams: action.payload,
       };
     default:
       return state;
