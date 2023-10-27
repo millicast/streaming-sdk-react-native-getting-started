@@ -1,3 +1,4 @@
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -5,17 +6,15 @@ import {
   SafeAreaView,
   TouchableHighlight,
 } from 'react-native';
-import React from 'react';
 import {RTCView} from 'react-native-webrtc';
 import {
   Director,
   View as MillicastView,
-} from '@millicast/sdk/dist/millicast.debug.umd';
-import {Logger as MillicastLogger} from '@millicast/sdk';
+  Logger as MillicastLogger,
+} from '@millicast/sdk';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import myStyles from '../../styles/styles.js';
-import * as viewerService from '../service/viewer.js';
 import Multiview from './Multiview';
 
 import {useSelector, useDispatch} from 'react-redux';
@@ -23,30 +22,98 @@ import {useSelector, useDispatch} from 'react-redux';
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
-class MillicastWidget extends React.Component {
-  constructor(props) {
-    super(props);
-    this.styles = myStyles;
-  }
+function ViewerMain(navigation) {
+  const viewerStore = useSelector(state => state.viewerReducer);
+  const dispatch = useDispatch()
 
-  componentWillUnmount() {
-    // if (!viewerStore.setMedia) {
-      viewerService.stopStream();
-      // dispatch({type: 'viewer/setStreams', payload: true});
-      // this.setState({
-      //   setMedia: true,
-      // });
-    // }
-  }
+  useEffect(() => {
+    // componentWillMount
+    // console.log('VIEWER STORE:', viewerStore);
+    return () => {
+      // componentWillUnmount
+      // if (!viewerStore.setMedia) {
+      //   viewerService.stopStream();
+      //   dispatch({type: 'viewer/setStreams', payload: true});
+      //   this.setState({
+      //     setMedia: true,
+      //   });
+      // }
+    }
+  }, [viewerStore])
 
+  const subscribe = async () => {
+    console.log(viewerStore.streamName, 'viewerStore.streamName...subscribe')
+    const tokenGenerator = () =>
+      Director.getSubscriber({
+        streamName: viewerStore.streamName,
+        streamAccountId: viewerStore.accountId,
+      });
+    // Create a new instance
+    let view = new MillicastView(viewerStore.streamName, tokenGenerator, null);
+    // Set track event handler to receive streams from Publisher.
+    view.on('track', async event => {
+      dispatch({type: 'viewer/onTrackEvent', payload: event});
+    });
+
+    //Start connection to viewer
+    try {
+      view.on('broadcastEvent', async event => {
+        //Get event name and data
+        const {name, data} = event;
+        switch (name) {
+          case 'active':
+            if (viewerStore.sourceIds.indexOf(data.sourceId) === -1 && data.sourceId != null) {
+              dispatch({type: 'viewer/setSourceIds', payload: [...viewerStore.sourceIds, data.sourceId]})
+            }
+            //A source has been started on the steam
+            break;
+          case 'inactive':
+            //A source has been stopped on the steam
+            break;
+          case 'vad':
+            //A new source was multiplexed over the vad tracks
+            break;
+          case 'layers':
+            dispatch({type: 'viewer/setActiveLayers', payload: data.medias['0']?.active})
+            //Updated layer information for each simulcast/svc video track
+            break;
+        }
+      });
+      await view.connect({
+        events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
+      });
+      dispatch({type: 'viewer/setMillicastView', payload: view});
+    } catch (e) {
+      console.error('Connection failed. Reason:', e);
+    }
+  };
+
+  const changeStateOfMediaTracks = (streams, value) => {
+    streams.map(s =>
+      s.stream.getTracks().forEach(videoTrack => {
+        videoTrack.enabled = value;
+      }),
+    );
+    dispatch({type: 'viewer/setStreams', payload: [...streams]});
+    dispatch({type: 'viewer/setPlaying', payload: value});
+  };
+
+  const playPauseVideo = async () => {
+    console.log(viewerStore);
+    if (viewerStore.setMedia) {
+      console.log('viewerStore.setMedia', viewerStore.setMedia)
+      console.log('Stream Name:', viewerStore.streamName);
   
+      await subscribe();
+      dispatch({type: 'viewer/setSetMedia', payload: false});
+    }
+    const isPaused = !viewerStore.playing;
+    changeStateOfMediaTracks(viewerStore.streams, isPaused);
+  };
 
-  render() {
-    const navigation = this.props.navigation;
-    const viewerStore = this.props.viewerStore;
-    console.log(viewerStore, 'coso 1');
-
-    return (
+  return (
+    <>
+      <SafeAreaView style={stylesContainer.container}>
       <>
         {
           // main/selected source
@@ -57,7 +124,7 @@ class MillicastWidget extends React.Component {
                 viewerStore.selectedSource ??
                 viewerStore.streams[0].stream.toURL()
               }
-              style={this.styles.video}
+              style={myStyles.video}
               objectFit="contain"
             />
           ) : (
@@ -75,7 +142,7 @@ class MillicastWidget extends React.Component {
                 hasTVPreferredFocus
                 tvParallaxProperties={{magnification: 1.5}}
                 underlayColor="#AA33FF"
-                onPress={viewerService.playPauseVideo}>
+                onPress={playPauseVideo}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>
                   {viewerStore.playing ? 'Pause' : 'Play'}
                 </Text>
@@ -93,20 +160,6 @@ class MillicastWidget extends React.Component {
           </View>
         }
       </>
-    );
-  }
-}
-
-function ViewerMain(navigation) {
-  const viewerStore = useSelector(state => state.viewerReducer);
-
-  return (
-    <>
-      <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget
-          {...{navigation: navigation, viewerStore: viewerStore}}
-          store="viewerStore"
-        />
       </SafeAreaView>
     </>
   );
