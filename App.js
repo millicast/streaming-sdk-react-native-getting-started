@@ -38,9 +38,7 @@ function HomeScreen({navigation}) {
       <Text style={myStyles.title}>SAMPLE APP</Text>
       {!Platform.isTV ? (
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('Publisher App')
-          }
+          onPress={() => navigation.navigate('Publisher App')}
           style={myStyles.buttonDesign}>
           <Text style={myStyles.buttonText}>PUBLISHER</Text>
         </TouchableOpacity>

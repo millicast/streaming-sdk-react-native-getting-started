@@ -1,18 +1,19 @@
 const initialState = {
-    streamName: null,
-    publishingToken: null,
-    millicastPublish: null,
-    mediaStream: null,
-    stream: null,
-    codec: 'vp8',
-    mirror:true,
-    playingMedia: false, //playing
-    audioEnabled: false,
-    videoEnabled: false,
-    timePlaying: 0, // in seconds
-    userCount: 0,
-    bitrate: 0,
-  };
+  streamName: 'StreamTest',
+  publishingToken: 'a7f38f42d4d60635646a27988fdd1e57089398cd8c92f382f833435d487a346d',
+  millicastPublish: null,
+  mediaStream: null,
+  stream: null,
+  codec: 'vp8',
+  mirror: true,
+  playing: false,
+  audioEnabled: true,
+  videoEnabled: true,
+  timePlaying: 0, // in seconds
+  userCount: 0,
+  bitrate: 0,
+  streamURL: null
+};
 
 const publisherReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -51,10 +52,10 @@ const publisherReducer = (state = initialState, action) => {
         ...state,
         mirror: action.mirror,
       };
-    case 'publisher/playingMedia':
+    case 'publisher/playing':
       return {
         ...state,
-        playing: action.playingMedia,
+        playing: action.playing,
       };
     case 'publisher/audioEnabled':
       return {
@@ -85,9 +86,14 @@ const publisherReducer = (state = initialState, action) => {
       return {
         ...state,
         bitrate: action.bitrate,
-      }
-      default:
-        return state;
+      };
+    case 'publisher/streamURL':
+      return {
+        ...state,
+        streamURL: action.streamURL,
+      };
+    default:
+      return state;
   }
 };
 
