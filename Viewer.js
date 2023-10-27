@@ -239,6 +239,7 @@ class MillicastWidget extends React.Component {
   };
 
   render() {
+    console.log(Platform.Brand, 'Platform.Brand');
     return (
       <>
         {this.state.multiView ? (
@@ -337,7 +338,8 @@ class MillicastWidget extends React.Component {
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
-              {this.state.playing ? (
+              {this.state.playing &&
+              !JSON.stringify(Platform).includes('AFTMM') ? (
                 <TouchableHighlight
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
@@ -360,7 +362,10 @@ export default function App({navigation, route}) {
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget streamName={route.params.streamName} accountId={route.params.accountId}  />
+        <MillicastWidget
+          streamName={route.params.streamName}
+          accountId={route.params.accountId}
+        />
       </SafeAreaView>
     </>
   );
