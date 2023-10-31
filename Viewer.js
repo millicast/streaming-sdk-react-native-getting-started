@@ -16,7 +16,6 @@ import {
 import myStyles from './styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
-import {platform} from 'os';
 
 const amountCols = Platform.isTV ? 2 : 1;
 
