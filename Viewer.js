@@ -339,7 +339,7 @@ class MillicastWidget extends React.Component {
                 </Text>
               </TouchableHighlight>
               {this.state.playing &&
-              !JSON.stringify(Platform).includes('AFTMM') ? (
+              !(Platform.OS == 'android' && Platform.isTV) ? (
                 <TouchableHighlight
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
