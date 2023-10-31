@@ -5,10 +5,9 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {RTCView} from 'react-native-webrtc';
 
-// Import the required classes
 import myStyles from '../../styles/styles.js';
 import {Logger as MillicastLogger} from '@millicast/sdk';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -19,51 +18,59 @@ import {Director, Publish} from '@millicast/sdk/dist/millicast.debug.umd';
 
 import {useDispatch, useSelector} from 'react-redux';
 
-// Validate looger
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
-class MillicastWidget extends React.Component {
-  constructor(props) {
-    super(props);
-    this.styles = myStyles;
-  }
+function MillicastWidget(props) {
+  const [intervalId, setIntervalId] = useState(null);
+  const dispatch = useDispatch();
 
-  componentWillUnmount() {
-    this.stop();
+  useEffect(() => {
+    const startInterval = () => {
+      const newIntervalId = setInterval(() => {
+        if (props.publisherStore.playing) {
+          dispatch({type: 'timePlaying'});
+        }
+      }, 1000);
+      setIntervalId(newIntervalId);
+    };
 
-    clearInterval(this.interval);
-  }
+    startInterval();
 
-  componentDidMount() {
-    this.interval = setInterval(() => {
-      if (this.props.publisherStore.playing) {
-        this.props.dispatch({type: 'timePlaying'});
-      }
-    }, 1000);
-  }
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(this.interval);
+    };
+  }, [props.publisherStore.playing, props.publisherStore]);
 
-  toggleCamera = () => {
+  const toggleCamera = () => {
     this.state.mediaStream.getVideoTracks().forEach(track => {
       track._switchCamera();
     });
     this.setState({mirror: !this.state.mirror});
   };
 
-  start = async () => {
-    if (!this.props.publisherStore.mediaStream) {
+  const setMediaStream = (mediaStream) => ({
+    type: 'publisher/mediaStream',
+    mediaStream,
+  });
+
+  const start = async () => {
+    if (!props.publisherStore.mediaStream) {
       let medias;
       try {
         medias = await mediaDevices.getUserMedia({
-          video: this.props.publisherStore.videoEnabled,
-          audio: this.props.publisherStore.audioEnabled,
+          video: props.publisherStore.videoEnabled,
+          audio: props.publisherStore.audioEnabled,
         });
         // this.setState({mediaStream: medias});
-        this.props.dispatch({type: 'publisher/mediaStream', medias: 'medias'});
+        console.log('medias ', medias);
+        dispatch(setMediaStream(medias));
+        console.log('store: ', props.publisherStore);
 
-        this.publish(
-          this.props.publisherStore.streamName,
-          this.props.publisherStore.token,
+        publish(
+          props.publisherStore.streamName,
+          props.publisherStore.token,
         );
       } catch (e) {
         console.error(e);
@@ -87,48 +94,44 @@ class MillicastWidget extends React.Component {
     }
   };
 
-  setCodec = value => {
+  const setCodec = value => {
     this.setState({
       codec: value,
     });
   };
 
-  setBitrate = async value => {
+  const setBitrate = async value => {
     this.setState({
       bitrate: value,
     });
     await this.millicastPublish.webRTCPeer.updateBitrate(value);
   };
 
-  stop = () => {
-    if (this.props.publisherStore.playing) {
-      this.millicastPublish.stop();
-      if (this.props.publisherStore.mediaStream) {
-        this.props.publisherStore.mediaStream.release();
-        // this.setState({
-        //   mediaStream: null,
-        // });
-        this.props.dispatch({type: 'publisher/mediaStream', mediaStream: null});
+  const stop = () => {
+    if (props.publisherStore.playing) {
+      millicastPublish.stop();
+      if (props.publisherStore.mediaStream) {
+        props.publisherStore.mediaStream.release();
+        props.dispatch({type: 'publisher/mediaStream', mediaStream: null});
       }
-      // this.setState({timePlaying: 0});
-      store.dispatch({type: 'publisher/timePlaying', timePlaying: 0});
+      // store.dispatch({type: 'publisher/timePlaying', timePlaying: 0});
     }
 
-    if (this.millicastPublish) {
-      this.connectionState();
+    if (millicastPublish) {
+      connectionState();
     }
   };
 
-  connectionState = () => {
+  const connectionState = () => {
     // State of the broadcast
-    this.millicastPublish.on('connectionStateChange', event => {
+    millicastPublish.on('connectionStateChange', event => {
       if (
         event === 'connected' ||
         event === 'disconnected' ||
         event === 'closed'
       ) {
         // this.setState({playing: !this.state.playing});
-        this.props.dispatch({
+        props.dispatch({
           type: 'publisher/playing',
           playing: !publisherStore.playing,
         });
@@ -137,76 +140,70 @@ class MillicastWidget extends React.Component {
     });
   };
 
-  publish = async (streamName, token) => {
+  const publish = async (streamName, token) => {
     const tokenGenerator = () =>
       Director.getPublisher({
         token: token,
         streamName: streamName,
       });
-    console.log('maybe connecting');
+
+      const broadcastOptions = {
+        mediaStream: props.publisherStore.mediaStream,
+        codec: props.publisherStore.codec,
+        events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
+      };
 
     // Create a new instance
     let millicastPublish = new Publish(streamName, tokenGenerator);
 
     millicastPublish.connect(broadcastOptions);
-    console.log('maybe connecting');
 
-    // this.setState({
-    //   streamURL: this.state.mediaStream,
-    // });
-    this.props.dispatch({
+    props.dispatch({
       type: 'publisher/streamURL',
-      streamURL: publisherStore.mediaStream,
+      streamURL: props.publisherStore.mediaStream,
     });
-
+    console.log('mediaStream, ', props.publisherStore.mediaStream);
     // Publishing Options
-    const broadcastOptions = {
-      mediaStream: this.props.publisherStore.mediaStream,
-      codec: this.props.publisherStore.codec,
-      events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
-    };
 
     // Start broadcast
     try {
-      await this.millicastPublish.connect(broadcastOptions);
+      await millicastPublish.connect(broadcastOptions);
     } catch (e) {
       console.log('Connection failed, handle error', e);
     }
   };
 
-  handleClickPlay = () => {
-    if (!this.props.publisherStore.playing) {
+  const handleClickPlay = () => {
+    if (!props.publisherStore.playing) {
       console.log('handle click play');
-      this.start();
+      start();
     } else {
       console.log('hello');
-      this.stop();
+      stop();
     }
   };
 
-  handleClickMute = () => {
-    this.props.publisherStore.mediaStream.getAudioTracks().forEach(track => {
+  const handleClickMute = () => {
+    props.publisherStore.mediaStream.getAudioTracks().forEach(track => {
       track.enabled = !track.enabled;
     });
-    // this.setState({audioEnabled: !this.state.audioEnabled});
     store.dispatch({
       type: 'publisher/audioEnabled',
       audioEnabled: !this.props.publisherStore.audioEnabled,
     });
   };
 
-  handleClickDisableVideo = () => {
+  const handleClickDisableVideo = () => {
     publisherStore.mediaStream.getVideoTracks().forEach(track => {
       track.enabled = !track.enabled;
     });
-    // this.setState({videoEnabled: !this.state.videoEnabled});
     store.dispatch({
       type: 'publisher/videoEnabled',
       videoEnabled: !this.props.publisherStore.videoEnabled,
     });
   };
 
-  showTimePlaying = () => {
+  const showTimePlaying = () => {
     let time = this.props.publisherStore.timePlaying;
 
     let seconds = '' + (time % 60);
@@ -226,87 +223,69 @@ class MillicastWidget extends React.Component {
     return hours + ':' + minutes + ':' + seconds;
   };
 
-  render() {
-    const navigation = this.props.navigation;
-    const publisherStore = this.props.publisherStore;
-
-    return (
-      <SafeAreaView style={styles.body}>
-        {publisherStore.mediaStream ? (
-          <RTCView
-            streamURL={publisherStore.mediaStream.toURL()}
-            style={this.styles.video}
-            objectFit="contain"
-            mirror={publisherStore.mirror}
-          />
-        ) : null}
-
-        <View style={myStyles.topViewerCount}>
-          <Text
-            style={myStyles.textShadow}>{`${publisherStore.userCount}`}</Text>
-        </View>
-
-        {/* <Text style={[myStyles.bottomBarTimePlaying, myStyles.textShadow]}>
-          {playing ? `${publisherService.showTimePlaying()}` : ''}
-        </Text> */}
-
-        <View style={myStyles.bottomMultimediaContainer}>
-          <View style={myStyles.bottomIconWrapper}>
-            <TouchableOpacity onPress={this.handleClickPlay}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {!publisherStore.playing ? 'Play' : 'Pause'}
-              </Text>
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={publisherService.handleClickMute}>
-              <Text>
-                {playing &&
-                  (this.state.audioEnabled ? (
-                    <Text> Mic On </Text>
-                  ) : (
-                    <Text> Mic Off </Text>
-                  ))}
-              </Text>
-            </TouchableOpacity> */}
-
-            {/* <TouchableOpacity onPress={publisherService.handleClickDisableVideo}>
-              <Text>
-                {playing &&
-                  (!videoEnabled ? (
-                    <Text> Camera On </Text>
-                  ) : (
-                    <Text> Camera Off </Text>
-                  ))}
-              </Text>
-            </TouchableOpacity> */}
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
-}
-
-function PublisherMain(navigation) {
-  const publisherStore = useSelector(state => state.publisherReducer);
-  const dispatch = useDispatch();
   return (
-    <>
-      <SafeAreaView style={styles.body}>
-        <MillicastWidget
-          {...{navigation: navigation, publisherStore: publisherStore}}
-          //   navigation={navigation}
-          //   publisherStore={publisherStore}
-          //   dispatch={dispatch}
-          //
+    <SafeAreaView style={styles.body}>
+      {props.publisherStore.mediaStream ? (
+        <RTCView
+          streamURL={props.publisherStore.mediaStream.toURL()}
+          style={styles.video} // Define the 'styles.video' style
+          objectFit="contain"
+          mirror={props.publisherStore.mirror}
         />
-      </SafeAreaView>
-    </>
+      ) : null}
+      <View style={myStyles.topViewerCount}>
+        <Text
+          style={
+            myStyles.textShadow
+          }>{`${props.publisherStore.userCount}`}</Text>
+      </View>
+      <View style={myStyles.bottomMultimediaContainer}>
+        <View style={myStyles.bottomIconWrapper}>
+          <TouchableOpacity onPress={handleClickPlay}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>
+              {!props.publisherStore.playing ? 'Play' : 'Pause'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleClickMute}>
+            <Text>
+              {props.publisherStore.playing &&
+                (props.publisherStore.audioEnabled ? (
+                  <Text> Mic On </Text>
+                ) : (
+                  <Text> Mic Off </Text>
+                ))}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleClickDisableVideo}>
+            <Text>
+              {props.publisherStore.playing &&
+                (!props.publisherStore.videoEnabled ? (
+                  <Text> Camera On </Text>
+                ) : (
+                  <Text> Camera Off </Text>
+                ))}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
+export const PublisherMain = ({ navigation }) => {
+  const publisherStore = useSelector(state => state.publisherReducer);
+  const dispatch = useDispatch();
+
+  return (
+    <SafeAreaView style={styles.body}>
+      <MillicastWidget navigation={navigation} publisherStore={publisherStore} dispatch={dispatch} />
+    </SafeAreaView>
+  );
+};
+
 const PublisherStack = createNativeStackNavigator();
 
-export default function App(props) {
+export default function App() {
   return (
     <PublisherStack.Navigator screenOptions={{headerShown: false}}>
       <PublisherStack.Screen name="Publisher Main" component={PublisherMain} />
