@@ -239,7 +239,6 @@ class MillicastWidget extends React.Component {
   };
 
   render() {
-    console.log(Platform.Brand, 'Platform.Brand');
     return (
       <>
         {this.state.multiView ? (
