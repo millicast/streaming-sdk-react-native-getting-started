@@ -1055,9 +1055,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
 "@millicast/sdk@^0.1.39":
-  version "0.1.39"
-  resolved "https://registry.yarnpkg.com/@millicast/sdk/-/sdk-0.1.39.tgz#53021a022db161a09dfc41eea0717f6027da1c8e"
-  integrity sha512-+sqGzKTBeY0wQZxPa1+9iLLDOCyMiK9GeApIjQsMe7nILTKu9kmUZarpTPagCqCWqDz61f5LK9RPblHzu7Kjfw==
+  version "0.1.41"
+  resolved "https://registry.yarnpkg.com/@millicast/sdk/-/sdk-0.1.41.tgz#a39f2d59361cb919719257202bb769e6a18ffbb6"
+  integrity sha512-j8uedLif28Nm6jGXUdKC87McuKR+ag+xhq3MxJooKg/HYmrL90aJVFhtrYkTuLZn3W4YiCnpOIy+TK6YzIR3Ig==
   dependencies:
     "@types/node" "^18.11.10"
     Base64 "^1.1.0"
@@ -1435,9 +1435,11 @@
     undici-types "~5.25.1"
 
 "@types/node@^18.11.10":
-  version "18.18.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.18.4.tgz#519fef47a13cf869be290c20fc6ae9b7fe887aa7"
-  integrity sha512-t3rNFBgJRugIhackit2mVcLfF6IRc0JE4oeizPQL8Zrm8n2WY/0wOdpOPhdtG0V9Q2TlW/axbF1MJ6z+Yj/kKQ==
+  version "18.18.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.18.8.tgz#2b285361f2357c8c8578ec86b5d097c7f464cfd6"
+  integrity sha512-OLGBaaK5V3VRBS1bAkMVP2/W9B+H8meUfl866OrMNQqt7wDgdpWPp5o6gmIc9pB+lIQHSq4ZL8ypeH1vPxcPaQ==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.2"
@@ -6452,9 +6454,9 @@ sdp-transform@^2:
   integrity sha512-RjZyX3nVwJyCuTo5tGPx+PZWkDMCg7oOLpSlhjDdZfwUoNqG1mM8nyj31IGHyaPWXhjbP7cdK3qZ2bmkJ1GzRw==
 
 semantic-sdp@^3.22.0:
-  version "3.26.6"
-  resolved "https://registry.yarnpkg.com/semantic-sdp/-/semantic-sdp-3.26.6.tgz#76d6019622340def87611d033e122b1d21277476"
-  integrity sha512-Dg8lWMf5j38uYd7ULp/8kxKGHSPACUGpx+qwdbDxQfFSpPeFNtWpKOysun6o5JQpKE/VQKMeiBeWZIFhbCOpXA==
+  version "3.27.1"
+  resolved "https://registry.yarnpkg.com/semantic-sdp/-/semantic-sdp-3.27.1.tgz#b1e3a177fe6edd06086eb76caa208ac84311e51f"
+  integrity sha512-DGVxhWLVqBUxvvohQIUUwkS3c72IIjt/gSutDyDKiKsEr1iI0t8e5QwxO0vQ6t/u3Tg4OkPwSSoQWwZTltDRuA==
   dependencies:
     equals-ignore-case "^1.0.0"
     randombytes "^2.0.3"
@@ -7183,9 +7185,9 @@ typedarray-to-buffer@^3.1.5:
     is-typedarray "^1.0.0"
 
 ua-parser-js@^0.7.30:
-  version "0.7.36"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.36.tgz#382c5d6fc09141b6541be2cae446ecfcec284db2"
-  integrity sha512-CPPLoCts2p7D8VbybttE3P2ylv0OBZEAy7a12DsulIEcAiMtWJy+PBgMXgWDI80D5UwqE8oQPHYnk13tm38M2Q==
+  version "0.7.37"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.37.tgz#e464e66dac2d33a7a1251d7d7a99d6157ec27832"
+  integrity sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==
 
 uglify-es@^3.1.9:
   version "3.3.9"
@@ -7209,6 +7211,11 @@ undici-types@~5.25.1:
   version "5.25.3"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.25.3.tgz#e044115914c85f0bcbb229f346ab739f064998c3"
   integrity sha512-Ga1jfYwRn7+cP9v8auvEXN1rX3sWqlayd4HP7OKk4mZWylEmu3KzXDUGrQUN6Ol7qo1gPvB2e5gX6udnyEPgdA==
+
+undici-types@~5.26.4:
+  version "5.26.5"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
+  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
