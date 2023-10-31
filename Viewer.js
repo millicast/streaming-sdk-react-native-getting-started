@@ -16,6 +16,7 @@ import {
 import myStyles from './styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
+import {platform} from 'os';
 
 const amountCols = Platform.isTV ? 2 : 1;
 
@@ -339,7 +340,7 @@ class MillicastWidget extends React.Component {
                 </Text>
               </TouchableHighlight>
               {this.state.playing &&
-              !JSON.stringify(Platform).includes('AFTMM') ? (
+              !(Platform.OS == 'android' && Platform.isTV) ? (
                 <TouchableHighlight
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
