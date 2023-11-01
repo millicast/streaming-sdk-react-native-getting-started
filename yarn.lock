@@ -6043,7 +6043,7 @@ react-native-screens@^3.20.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-"react-native-webrtc@github:montanaeli/react-native-webrtc":
+"react-native-webrtc@github:montanaeli/react-native-webrtc#master":
   version "111.0.1"
   resolved "https://codeload.github.com/montanaeli/react-native-webrtc/tar.gz/63651a72f1f59d58d9cf5516bf2967c1a897537a"
   dependencies:
