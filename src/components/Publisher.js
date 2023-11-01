@@ -18,6 +18,9 @@ import {Director, Publish} from '@millicast/sdk/dist/millicast.debug.umd';
 
 import {useDispatch, useSelector} from 'react-redux';
 
+const streamName = 'StreamTest';
+const publishingToken = 'a7f38f42d4d60635646a27988fdd1e57089398cd8c92f382f833435d487a346d';
+
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
@@ -56,7 +59,7 @@ function MillicastWidget(props) {
   });
 
   const start = async () => {
-    if (!props.publisherStore.mediaStream) {
+    if (!props.mediaStream) {
       let medias;
       try {
         medias = await mediaDevices.getUserMedia({
@@ -69,8 +72,8 @@ function MillicastWidget(props) {
         console.log('store: ', props.publisherStore);
 
         publish(
-          props.publisherStore.streamName,
-          props.publisherStore.token,
+          streamName,
+          publishingToken,
         );
       } catch (e) {
         console.error(e);
@@ -85,10 +88,10 @@ function MillicastWidget(props) {
         const {name, data} = event;
         if (name === 'viewercount') {
           // this.setState({userCount: data.viewercount});
-          this.props.dispatch({
-            type: 'publisher/userCount',
-            userCount: data.viewercount,
-          });
+          // this.props.dispatch({
+          //   type: 'publisher/userCount',
+          //   userCount: data.viewercount,
+          // });
         }
       });
     }
@@ -131,10 +134,10 @@ function MillicastWidget(props) {
         event === 'closed'
       ) {
         // this.setState({playing: !this.state.playing});
-        props.dispatch({
-          type: 'publisher/playing',
-          playing: !publisherStore.playing,
-        });
+        // props.dispatch({
+        //   type: 'publisher/playing',
+        //   playing: !publisherStore.playing,
+        // });
         console.log('playing???');
       }
     });
@@ -273,12 +276,13 @@ function MillicastWidget(props) {
 }
 
 export const PublisherMain = ({ navigation }) => {
-  const publisherStore = useSelector(state => state.publisherReducer);
+  // const publisherStore = useSelector(state => state.publisherReducer);
+  const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
   const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={styles.body}>
-      <MillicastWidget navigation={navigation} publisherStore={publisherStore} dispatch={dispatch} />
+      <MillicastWidget navigation={navigation} publisherStore={publisherStore} mediaStream={mediaStream} dispatch={dispatch} />
     </SafeAreaView>
   );
 };
