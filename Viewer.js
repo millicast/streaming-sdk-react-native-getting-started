@@ -32,6 +32,7 @@ class MillicastWidget extends React.Component {
       sourceIds: ['main'],
       activeLayers: [],
       multiView: false,
+      connected:false,
       playing: false,
       muted: false,
       millicastView: null,
@@ -116,6 +117,7 @@ class MillicastWidget extends React.Component {
 
       this.setState({
         millicastView: view,
+        connected: true,
       });
     } catch (e) {
       console.error('Connection failed. Reason:', e);
@@ -337,12 +339,17 @@ class MillicastWidget extends React.Component {
                   {this.state.playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
-              {this.state.playing ? (
+              {this.state.playing &&
+              !(Platform.OS == 'android' && Platform.isTV) ? (
                 <TouchableHighlight
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
                   underlayColor="#AA33FF"
-                  onPress={this.multiView}>
+                  onPress={() => {
+                    if (this.state.connected) {
+                      this.multiView();
+                    }
+                  }}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
                     {this.state.multiView ? 'Go back' : 'Multiview'}
                   </Text>
@@ -360,7 +367,10 @@ export default function App({navigation, route}) {
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-        <MillicastWidget streamName={route.params.streamName} accountId={route.params.accountId}  />
+        <MillicastWidget
+          streamName={route.params.streamName}
+          accountId={route.params.accountId}
+        />
       </SafeAreaView>
     </>
   );
