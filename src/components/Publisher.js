@@ -26,12 +26,20 @@ Logger.setLevel(MillicastLogger.DEBUG);
 
 function MillicastWidget(props) {
   const [intervalId, setIntervalId] = useState(null);
+  const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
+  const playing = useSelector(state => state.publisherReducer.playing);
+  const videoEnabled = useSelector(state => state.publisherReducer.videoEnabled);
+  const audioEnabled = useSelector(state => state.publisherReducer.audioEnabled);
+  const codec = useSelector(state => state.publisherReducer.codec);
+  const mirror = useSelector(state => state.publisherReducer.mirror);
+  const userCount = useSelector(state => state.publisherReducer.userCount);
+  const timePlaying = useSelector(state => state.publisherReducer.timePlaying);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const startInterval = () => {
       const newIntervalId = setInterval(() => {
-        if (props.publisherStore.playing) {
+        if (playing) {
           dispatch({type: 'timePlaying'});
         }
       }, 1000);
@@ -44,13 +52,13 @@ function MillicastWidget(props) {
       clearInterval(intervalId);
       clearInterval(this.interval);
     };
-  }, [props.publisherStore.playing, props.publisherStore]);
+  }, [playing]);
 
   const toggleCamera = () => {
-    this.state.mediaStream.getVideoTracks().forEach(track => {
+    mediaStream.getVideoTracks().forEach(track => {
       track._switchCamera();
     });
-    this.setState({mirror: !this.state.mirror});
+    this.setState({mirror: !mirror});
   };
 
   const setMediaStream = (mediaStream) => ({
@@ -59,17 +67,16 @@ function MillicastWidget(props) {
   });
 
   const start = async () => {
-    if (!props.mediaStream) {
+    if (!mediaStream) {
       let medias;
       try {
         medias = await mediaDevices.getUserMedia({
-          video: props.publisherStore.videoEnabled,
-          audio: props.publisherStore.audioEnabled,
+          video: videoEnabled,
+          audio: audioEnabled,
         });
         // this.setState({mediaStream: medias});
         console.log('medias ', medias);
         dispatch(setMediaStream(medias));
-        console.log('store: ', props.publisherStore);
 
         publish(
           streamName,
@@ -111,11 +118,11 @@ function MillicastWidget(props) {
   };
 
   const stop = () => {
-    if (props.publisherStore.playing) {
+    if (playing) {
       millicastPublish.stop();
-      if (props.publisherStore.mediaStream) {
-        props.publisherStore.mediaStream.release();
-        props.dispatch({type: 'publisher/mediaStream', mediaStream: null});
+      if (mediaStream) {
+        mediaStream.release();
+        dispatch({type: 'publisher/mediaStream', mediaStream: null});
       }
       // store.dispatch({type: 'publisher/timePlaying', timePlaying: 0});
     }
@@ -151,8 +158,8 @@ function MillicastWidget(props) {
       });
 
       const broadcastOptions = {
-        mediaStream: props.publisherStore.mediaStream,
-        codec: props.publisherStore.codec,
+        mediaStream: mediaStream,
+        codec: codec,
         events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
       };
 
@@ -161,11 +168,11 @@ function MillicastWidget(props) {
 
     millicastPublish.connect(broadcastOptions);
 
-    props.dispatch({
+    dispatch({
       type: 'publisher/streamURL',
-      streamURL: props.publisherStore.mediaStream,
+      streamURL: mediaStream,
     });
-    console.log('mediaStream, ', props.publisherStore.mediaStream);
+    console.log('mediaStream, ', mediaStream);
     // Publishing Options
 
     // Start broadcast
@@ -177,7 +184,7 @@ function MillicastWidget(props) {
   };
 
   const handleClickPlay = () => {
-    if (!props.publisherStore.playing) {
+    if (!playing) {
       console.log('handle click play');
       start();
     } else {
@@ -187,27 +194,27 @@ function MillicastWidget(props) {
   };
 
   const handleClickMute = () => {
-    props.publisherStore.mediaStream.getAudioTracks().forEach(track => {
+    mediaStream.getAudioTracks().forEach(track => {
       track.enabled = !track.enabled;
     });
-    store.dispatch({
+    dispatch({
       type: 'publisher/audioEnabled',
-      audioEnabled: !this.props.publisherStore.audioEnabled,
+      audioEnabled: !audioEnabled,
     });
   };
 
   const handleClickDisableVideo = () => {
-    publisherStore.mediaStream.getVideoTracks().forEach(track => {
+    mediaStream.getVideoTracks().forEach(track => {
       track.enabled = !track.enabled;
     });
-    store.dispatch({
+    dispatch({
       type: 'publisher/videoEnabled',
-      videoEnabled: !this.props.publisherStore.videoEnabled,
+      videoEnabled: !videoEnabled,
     });
   };
 
   const showTimePlaying = () => {
-    let time = this.props.publisherStore.timePlaying;
+    let time = timePlaying;
 
     let seconds = '' + (time % 60);
     let minutes = '' + (Math.floor(time / 60) % 60);
@@ -228,31 +235,31 @@ function MillicastWidget(props) {
 
   return (
     <SafeAreaView style={styles.body}>
-      {props.publisherStore.mediaStream ? (
+      {mediaStream ? (
         <RTCView
-          streamURL={props.publisherStore.mediaStream.toURL()}
+          streamURL={mediaStream.toURL()}
           style={styles.video} // Define the 'styles.video' style
           objectFit="contain"
-          mirror={props.publisherStore.mirror}
+          mirror={mirror}
         />
       ) : null}
       <View style={myStyles.topViewerCount}>
         <Text
           style={
             myStyles.textShadow
-          }>{`${props.publisherStore.userCount}`}</Text>
+          }>{`${userCount}`}</Text>
       </View>
       <View style={myStyles.bottomMultimediaContainer}>
         <View style={myStyles.bottomIconWrapper}>
           <TouchableOpacity onPress={handleClickPlay}>
             <Text style={{color: 'white', fontWeight: 'bold'}}>
-              {!props.publisherStore.playing ? 'Play' : 'Pause'}
+              {!playing ? 'Play' : 'Pause'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleClickMute}>
             <Text>
-              {props.publisherStore.playing &&
-                (props.publisherStore.audioEnabled ? (
+              {playing &&
+                (audioEnabled ? (
                   <Text> Mic On </Text>
                 ) : (
                   <Text> Mic Off </Text>
@@ -261,8 +268,8 @@ function MillicastWidget(props) {
           </TouchableOpacity>
           <TouchableOpacity onPress={handleClickDisableVideo}>
             <Text>
-              {props.publisherStore.playing &&
-                (!props.publisherStore.videoEnabled ? (
+              {playing &&
+                (!videoEnabled ? (
                   <Text> Camera On </Text>
                 ) : (
                   <Text> Camera Off </Text>
@@ -276,13 +283,10 @@ function MillicastWidget(props) {
 }
 
 export const PublisherMain = ({ navigation }) => {
-  // const publisherStore = useSelector(state => state.publisherReducer);
-  const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
-  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={styles.body}>
-      <MillicastWidget navigation={navigation} publisherStore={publisherStore} mediaStream={mediaStream} dispatch={dispatch} />
+      <MillicastWidget navigation={navigation} />
     </SafeAreaView>
   );
 };
