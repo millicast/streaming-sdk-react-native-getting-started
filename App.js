@@ -26,7 +26,7 @@ function HomeScreen({navigation}) {
   });
   dispatch({
     type: 'publisher/setStreamName',
-    payload: process.env.REACT_APP_MILLICAST_ACCOUNT_ID,
+    payload: process.env.REACT_APP_MILLICAST_STREAM_NAME_PUBLISHER,
   });
   dispatch({
     type: 'publisher/setPublishingToken',

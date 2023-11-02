@@ -1,6 +1,6 @@
 const initialState = {
-  streamName: 'StreamTest',
-  publishingToken: 'a7f38f42d4d60635646a27988fdd1e57089398cd8c92f382f833435d487a346d',
+  streamName: '',
+  publishingToken: '',
   millicastPublish: null,
   mediaStream: null,
   stream: null,

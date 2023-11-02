@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from 'react-redux';
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
-function MillicastWidget(props) {
+export const PublisherMain = ({ navigation }) => {
   const [intervalId, setIntervalId] = useState(null);
   const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
   const playing = useSelector(state => state.publisherReducer.playing);
@@ -51,6 +51,12 @@ function MillicastWidget(props) {
     };
   }, [playing]);
 
+  useEffect(() => {
+    if (mediaStream && !playing) {
+      publish(streamName, publishingToken);
+    }
+  }, [mediaStream])
+
   const toggleCamera = () => {
     mediaStream.getVideoTracks().forEach(track => {
       track._switchCamera();
@@ -72,33 +78,27 @@ function MillicastWidget(props) {
           audio: audioEnabled,
         });
         // this.setState({mediaStream: medias});
-        console.log('medias ', medias);
         dispatch(setMediaStream(medias));
-
-        publish(
-          props.publisherStore.streamName,
-          props.publisherStore.token,
-        );
       } catch (e) {
         console.error(e);
       }
     }
 
-    if (this.millicastPublish) {
-      // State of the broadcast
-      this.connectionState();
+    // if (this.millicastPublish) {
+    //   // State of the broadcast
+    //   this.connectionState();
 
-      this.millicastPublish.on('broadcastEvent', event => {
-        const {name, data} = event;
-        if (name === 'viewercount') {
-          // this.setState({userCount: data.viewercount});
-          this.props.dispatch({
-            type: 'publisher/userCount',
-            userCount: data.viewercount,
-          });
-        }
-      });
-    }
+    //   this.millicastPublish.on('broadcastEvent', event => {
+    //     const {name, data} = event;
+    //     if (name === 'viewercount') {
+    //       // this.setState({userCount: data.viewercount});
+    //       // this.props.dispatch({
+    //       //   type: 'publisher/userCount',
+    //       //   userCount: data.viewercount,
+    //       // });
+    //     }
+    //   });
+    // }
   };
 
   const setCodec = value => {
@@ -148,33 +148,31 @@ function MillicastWidget(props) {
   };
 
   const publish = async (streamName, token) => {
-    const tokenGenerator = () =>
-      Director.getPublisher({
-        token: token,
-        streamName: streamName,
-      });
+    
+    const tokenGenerator = () => Director.getPublisher({
+      token: token,
+      streamName: streamName,
+    });
 
-      const broadcastOptions = {
-        mediaStream: mediaStream,
-        codec: codec,
-        events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
-      };
+    const broadcastOptions = {
+      mediaStream: mediaStream,
+      codec: codec,
+      events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
+    };
 
     // Create a new instance
     let millicastPublish = new Publish(streamName, tokenGenerator);
-
-    millicastPublish.connect(broadcastOptions);
 
     dispatch({
       type: 'publisher/streamURL',
       streamURL: mediaStream,
     });
-    console.log('mediaStream, ', mediaStream);
     // Publishing Options
 
     // Start broadcast
     try {
       await millicastPublish.connect(broadcastOptions);
+      dispatch({type: 'publisher/playing', playing: !playing})
     } catch (e) {
       console.log('Connection failed, handle error', e);
     }
@@ -278,15 +276,6 @@ function MillicastWidget(props) {
     </SafeAreaView>
   );
 }
-
-export const PublisherMain = ({ navigation }) => {
-
-  return (
-    <SafeAreaView style={styles.body}>
-      <MillicastWidget navigation={navigation} />
-    </SafeAreaView>
-  );
-};
 
 const PublisherStack = createNativeStackNavigator();
 
