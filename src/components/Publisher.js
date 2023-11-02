@@ -31,6 +31,8 @@ export const PublisherMain = ({ navigation }) => {
   const mirror = useSelector(state => state.publisherReducer.mirror);
   const userCount = useSelector(state => state.publisherReducer.userCount);
   const timePlaying = useSelector(state => state.publisherReducer.timePlaying);
+  const streamName = useSelector(state => state.publisherReducer.streamName);
+  const publishingToken = useSelector(state => state.publisherReducer.publishingToken);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,11 +59,25 @@ export const PublisherMain = ({ navigation }) => {
     }
   }, [mediaStream])
 
-  const toggleCamera = () => {
-    mediaStream.getVideoTracks().forEach(track => {
-      track._switchCamera();
+  const setCodec = value => {
+    this.setState({
+      codec: value,
     });
-    this.setState({mirror: !mirror});
+  };
+
+  const setBitrate = async value => {
+    this.setState({
+      bitrate: value,
+    });
+    await this.millicastPublish.webRTCPeer.updateBitrate(value);
+  };
+
+  const handleClickPlay = () => {
+    if (!playing) {
+      start();
+    } else {
+      stop();
+    }
   };
 
   const setMediaStream = (mediaStream) => ({
@@ -77,74 +93,27 @@ export const PublisherMain = ({ navigation }) => {
           video: videoEnabled,
           audio: audioEnabled,
         });
-        // this.setState({mediaStream: medias});
         dispatch(setMediaStream(medias));
       } catch (e) {
         console.error(e);
       }
     }
 
-    // if (this.millicastPublish) {
-    //   // State of the broadcast
-    //   this.connectionState();
+    if (this.millicastPublish) {
+      // State of the broadcast
+      this.connectionState();
 
-    //   this.millicastPublish.on('broadcastEvent', event => {
-    //     const {name, data} = event;
-    //     if (name === 'viewercount') {
-    //       // this.setState({userCount: data.viewercount});
-    //       // this.props.dispatch({
-    //       //   type: 'publisher/userCount',
-    //       //   userCount: data.viewercount,
-    //       // });
-    //     }
-    //   });
-    // }
-  };
-
-  const setCodec = value => {
-    this.setState({
-      codec: value,
-    });
-  };
-
-  const setBitrate = async value => {
-    this.setState({
-      bitrate: value,
-    });
-    await this.millicastPublish.webRTCPeer.updateBitrate(value);
-  };
-
-  const stop = () => {
-    if (playing) {
-      millicastPublish.stop();
-      if (mediaStream) {
-        mediaStream.release();
-        dispatch({type: 'publisher/mediaStream', mediaStream: null});
-      }
-      // store.dispatch({type: 'publisher/timePlaying', timePlaying: 0});
+      this.millicastPublish.on('broadcastEvent', event => {
+        const {name, data} = event;
+        if (name === 'viewercount') {
+          // this.setState({userCount: data.viewercount});
+          dispatch({
+            type: 'publisher/userCount',
+            userCount: data.viewercount,
+          });
+        }
+      });
     }
-
-    if (millicastPublish) {
-      connectionState();
-    }
-  };
-
-  const connectionState = () => {
-    // State of the broadcast
-    millicastPublish.on('connectionStateChange', event => {
-      if (
-        event === 'connected' ||
-        event === 'disconnected' ||
-        event === 'closed'
-      ) {
-        // this.setState({playing: !this.state.playing});
-        props.dispatch({
-          type: 'publisher/playing',
-          playing: !publisherStore.playing,
-        });
-        console.log('playing???');
-      }
-    });
   };
 
   const publish = async (streamName, token) => {
@@ -178,14 +147,35 @@ export const PublisherMain = ({ navigation }) => {
     }
   };
 
-  const handleClickPlay = () => {
-    if (!playing) {
-      console.log('handle click play');
-      start();
-    } else {
-      console.log('hello');
-      stop();
+  const stop = () => {
+    if (playing) {
+      millicastPublish.stop();
+      if (mediaStream) {
+        mediaStream.release();
+        dispatch({type: 'publisher/mediaStream', mediaStream: null});
+      }
+      dispatch({type: 'publisher/timePlaying', timePlaying: 0});
     }
+    if (millicastPublish) {
+      connectionState();
+    }
+  };
+
+  const connectionState = () => {
+    // State of the broadcast
+    millicastPublish.on('connectionStateChange', event => {
+      if (
+        event === 'connected' ||
+        event === 'disconnected' ||
+        event === 'closed'
+      ) {
+        dispatch({
+          type: 'publisher/playing',
+          playing: !playing,
+        });
+        console.log('playing???');
+      }
+    });
   };
 
   const handleClickMute = () => {
@@ -206,6 +196,13 @@ export const PublisherMain = ({ navigation }) => {
       type: 'publisher/videoEnabled',
       videoEnabled: !videoEnabled,
     });
+  };
+
+  const toggleCamera = () => {
+    mediaStream.getVideoTracks().forEach(track => {
+      track._switchCamera();
+    });
+    dispatch({type: 'publisher/mirror', mirror: !mirror});
   };
 
   const showTimePlaying = () => {
