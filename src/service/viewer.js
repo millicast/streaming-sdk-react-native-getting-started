@@ -111,13 +111,13 @@ export const changeStateOfMediaTracks = (streams, value) => {
 };
 
 export const playPauseVideo = async () => {
-  if (viewerStore.setMedia) {
-    console.log('viewerStore.setMedia', viewerStore.setMedia)
+  if (viewerStore.isMediaSet) {
+    console.log('viewerStore.isMediaSet', viewerStore.isMediaSet)
     console.log('Stream Name:', viewerStore.streamName);
 
     subscribe(viewerStore.streamName, viewerStore.accountId);
     this.setState({
-      setMedia: false,
+      isMediaSet: false,
     });
   }
   const isPaused = !viewerStore.playing;

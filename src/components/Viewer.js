@@ -24,25 +24,31 @@ Logger.setLevel(MillicastLogger.DEBUG);
 
 function ViewerMain(navigation) {
   const viewerStore = useSelector(state => state.viewerReducer);
-  const dispatch = useDispatch()
+  const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
+  const playing = useSelector(state => state.viewerReducer.playing);
+  const streams = useSelector(state => state.viewerReducer.streams);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // componentWillMount
-    // console.log('VIEWER STORE:', viewerStore);
     return () => {
       // componentWillUnmount
-      // if (!viewerStore.setMedia) {
-      //   viewerService.stopStream();
-      //   dispatch({type: 'viewer/setStreams', payload: true});
-      //   this.setState({
-      //     setMedia: true,
-      //   });
-      // }
-    }
-  }, [viewerStore])
+      if (!isMediaSet) {
+        stopStream();
+        dispatch({type: 'viewer/setIsMediaSet', payload: true});
+        dispatch({type: 'viewer/setPlaying', payload: false});
+      }
+    };
+  }, [isMediaSet]);
+
+  const stopStream = async () => {
+    await viewerStore.millicastView.stop();
+    dispatch({type: 'viewer/setPlaying', payload: false});
+    dispatch({type: 'viewer/setIsMediaSet', payload: true});
+    dispatch({type: 'viewer/setStreams', payload: []});
+  };
 
   const subscribe = async () => {
-    console.log(viewerStore.streamName, 'viewerStore.streamName...subscribe')
     const tokenGenerator = () =>
       Director.getSubscriber({
         streamName: viewerStore.streamName,
@@ -62,8 +68,14 @@ function ViewerMain(navigation) {
         const {name, data} = event;
         switch (name) {
           case 'active':
-            if (viewerStore.sourceIds.indexOf(data.sourceId) === -1 && data.sourceId != null) {
-              dispatch({type: 'viewer/setSourceIds', payload: [...viewerStore.sourceIds, data.sourceId]})
+            if (
+              viewerStore.sourceIds.indexOf(data.sourceId) === -1 &&
+              data.sourceId != null
+            ) {
+              dispatch({
+                type: 'viewer/setSourceIds',
+                payload: [...viewerStore.sourceIds, data.sourceId],
+              });
             }
             //A source has been started on the steam
             break;
@@ -74,7 +86,10 @@ function ViewerMain(navigation) {
             //A new source was multiplexed over the vad tracks
             break;
           case 'layers':
-            dispatch({type: 'viewer/setActiveLayers', payload: data.medias['0']?.active})
+            dispatch({
+              type: 'viewer/setActiveLayers',
+              payload: data.medias['0']?.active,
+            });
             //Updated layer information for each simulcast/svc video track
             break;
         }
@@ -88,78 +103,74 @@ function ViewerMain(navigation) {
     }
   };
 
-  const changeStateOfMediaTracks = (streams, value) => {
+  const changeStateOfMediaTracks = (value) => {
     streams.map(s =>
       s.stream.getTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
       }),
     );
-    dispatch({type: 'viewer/setStreams', payload: [...streams]});
     dispatch({type: 'viewer/setPlaying', payload: value});
   };
 
   const playPauseVideo = async () => {
-    console.log(viewerStore);
-    if (viewerStore.setMedia) {
-      console.log('viewerStore.setMedia', viewerStore.setMedia)
+    if (isMediaSet) {
       console.log('Stream Name:', viewerStore.streamName);
-  
+
       await subscribe();
-      dispatch({type: 'viewer/setSetMedia', payload: false});
+      dispatch({type: 'viewer/setIsMediaSet', payload: false});
     }
-    const isPaused = !viewerStore.playing;
-    changeStateOfMediaTracks(viewerStore.streams, isPaused);
+    changeStateOfMediaTracks(!playing);
   };
 
   return (
     <>
       <SafeAreaView style={stylesContainer.container}>
-      <>
-        {
-          // main/selected source
-          viewerStore.streams[0] ? (
-            <RTCView
-              key={viewerStore.selectedSource ?? 'main'}
-              streamURL={
-                viewerStore.selectedSource ??
-                viewerStore.streams[0].stream.toURL()
-              }
-              style={myStyles.video}
-              objectFit="contain"
-            />
-          ) : (
-            <View style={{padding: '5%'}}>
-              <Text style={{color: 'white'}}>
-                Press the 'play' button to start watching.
-              </Text>
-            </View>
-          )
-        }
-        {
-          <View style={myStyles.bottomMultimediaContainer}>
-            <View style={myStyles.bottomIconWrapper}>
-              <TouchableHighlight
-                hasTVPreferredFocus
-                tvParallaxProperties={{magnification: 1.5}}
-                underlayColor="#AA33FF"
-                onPress={playPauseVideo}>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>
-                  {viewerStore.playing ? 'Pause' : 'Play'}
+        <>
+          {
+            // main/selected source
+            viewerStore.streams[0] ? (
+              <RTCView
+                key={viewerStore.selectedSource ?? 'main'}
+                streamURL={
+                  viewerStore.selectedSource ??
+                  viewerStore.streams[0].stream.toURL()
+                }
+                style={myStyles.video}
+                objectFit="contain"
+              />
+            ) : (
+              <View style={{padding: '5%'}}>
+                <Text style={{color: 'white'}}>
+                  Press the 'play' button to start watching.
                 </Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                hasTVPreferredFocus
-                tvParallaxProperties={{magnification: 1.5}}
-                underlayColor="#AA33FF"
-                onPress={() => navigation.navigate('Multiview')}>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>
-                  Multiview
-                </Text>
-              </TouchableHighlight>
+              </View>
+            )
+          }
+          {
+            <View style={myStyles.bottomMultimediaContainer}>
+              <View style={myStyles.bottomIconWrapper}>
+                <TouchableHighlight
+                  hasTVPreferredFocus
+                  tvParallaxProperties={{magnification: 1.5}}
+                  underlayColor="#AA33FF"
+                  onPress={playPauseVideo}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {playing ? 'Pause' : 'Play'}
+                  </Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  hasTVPreferredFocus
+                  tvParallaxProperties={{magnification: 1.5}}
+                  underlayColor="#AA33FF"
+                  onPress={() => navigation.navigate('Multiview')}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    Multiview
+                  </Text>
+                </TouchableHighlight>
+              </View>
             </View>
-          </View>
-        }
-      </>
+          }
+        </>
       </SafeAreaView>
     </>
   );

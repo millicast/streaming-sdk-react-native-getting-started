@@ -6,10 +6,10 @@ const initialState = {
   sourceIds: ['main'],
   activeLayers: [],
   millicastView: null,
-  setMedia: true,
+  isMediaSet: true,
   selectedSource: null,
   muted: false,
-  multiView: false
+  multiView: false,
 };
 
 const viewerReducer = (state = initialState, action) => {
@@ -42,7 +42,7 @@ const viewerReducer = (state = initialState, action) => {
             }
           }),
         );
-      }
+      };
       if (event.track.kind == 'audio') {
         audioPromise();
       } else {
@@ -50,40 +50,43 @@ const viewerReducer = (state = initialState, action) => {
       }
       return {
         ...state,
-        streams: streams
+        streams: streams,
       };
     case 'viewer/setSourceIds':
       return {
         ...state,
-        sourceIds: action.payload
+        sourceIds: action.payload,
       };
     case 'viewer/setActiveLayers':
       return {
         ...state,
-        activeLayers: action.payload
+        activeLayers: action.payload,
       };
     case 'viewer/setPlaying':
       return {
         ...state,
-        playing: action.payload
+        playing: action.payload,
       };
     case 'viewer/setMuted':
       return {
         ...state,
-        muted: action.payload
+        muted: action.payload,
       };
     case 'viewer/setMillicastView':
       return {
         ...state,
-        millicastView: action.payload
+        millicastView: action.payload,
       };
     case 'viewer/setMultiView':
       return {
         ...state,
-        multiView: action.payload
+        multiView: action.payload,
       };
-    case 'viewer/stopStream':
-      return initialState;
+    case 'viewer/setIsMediaSet':
+      return {
+        ...state,
+        isMediaSet: action.payload,
+      };
     default:
       return state;
   }
