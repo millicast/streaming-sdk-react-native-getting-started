@@ -22,7 +22,7 @@ import {useSelector, useDispatch} from 'react-redux';
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
-function ViewerMain(navigation) {
+function ViewerMain({navigation}) {
   const viewerStore = useSelector(state => state.viewerReducer);
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
   const playing = useSelector(state => state.viewerReducer.playing);
@@ -103,7 +103,7 @@ function ViewerMain(navigation) {
     }
   };
 
-  const changeStateOfMediaTracks = (value) => {
+  const changeStateOfMediaTracks = value => {
     streams.map(s =>
       s.stream.getTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
