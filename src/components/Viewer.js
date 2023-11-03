@@ -164,7 +164,7 @@ function ViewerMain({navigation}) {
                   underlayColor="#AA33FF"
                   onPress={() => navigation.navigate('Multiview')}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    Multiview
+                    {playing ? 'Multiview' : null}
                   </Text>
                 </TouchableHighlight>
               </View>
