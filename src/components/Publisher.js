@@ -21,35 +21,44 @@ import {useDispatch, useSelector} from 'react-redux';
 window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
-export const PublisherMain = ({ navigation }) => {
+export const PublisherMain = ({navigation}) => {
   const [intervalId, setIntervalId] = useState(null);
   const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
   const playing = useSelector(state => state.publisherReducer.playing);
-  const videoEnabled = useSelector(state => state.publisherReducer.videoEnabled);
-  const audioEnabled = useSelector(state => state.publisherReducer.audioEnabled);
+  const videoEnabled = useSelector(
+    state => state.publisherReducer.videoEnabled,
+  );
+  const audioEnabled = useSelector(
+    state => state.publisherReducer.audioEnabled,
+  );
   const codec = useSelector(state => state.publisherReducer.codec);
   const mirror = useSelector(state => state.publisherReducer.mirror);
   const userCount = useSelector(state => state.publisherReducer.userCount);
   const timePlaying = useSelector(state => state.publisherReducer.timePlaying);
   const streamName = useSelector(state => state.publisherReducer.streamName);
-  const publishingToken = useSelector(state => state.publisherReducer.publishingToken);
+  const publishingToken = useSelector(
+    state => state.publisherReducer.publishingToken,
+  );
+  const millicastPublish = useSelector(
+    state => state.publisherReducer.millicastPublish,
+  );
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const startInterval = () => {
-      const newIntervalId = setInterval(() => {
-        if (playing) {
-          dispatch({type: 'timePlaying'});
-        }
-      }, 1000);
-      setIntervalId(newIntervalId);
-    };
+  const [isConnecting, setIsConnecting] = useState(false);
 
-    startInterval();
+  useEffect(() => {
+    if (playing) {
+      setIsConnecting(false);
+    }
+    const newIntervalId = setInterval(() => {
+      if (playing) {
+        dispatch({type: 'timePlaying'});
+      }
+    }, 1000);
+    setIntervalId(newIntervalId);
 
     return () => {
       clearInterval(intervalId);
-      clearInterval(this.interval);
     };
   }, [playing]);
 
@@ -57,7 +66,23 @@ export const PublisherMain = ({ navigation }) => {
     if (mediaStream && !playing) {
       publish(streamName, publishingToken);
     }
-  }, [mediaStream])
+  }, [mediaStream]);
+
+  useEffect(() => {
+    if (millicastPublish) {
+      // State of the broadcast
+      connectionState();
+      millicastPublish.on('broadcastEvent', event => {
+        const {name, data} = event;
+        if (name === 'viewercount') {
+          dispatch({
+            type: 'publisher/userCount',
+            userCount: data.viewercount,
+          });
+        }
+      });
+    }
+  }, [millicastPublish]);
 
   const setCodec = value => {
     this.setState({
@@ -73,14 +98,17 @@ export const PublisherMain = ({ navigation }) => {
   };
 
   const handleClickPlay = () => {
-    if (!playing) {
+    if (isConnecting) {
+      return;
+    } else if (!playing) {
+      setIsConnecting(!isConnecting);
       start();
     } else {
       stop();
     }
   };
 
-  const setMediaStream = (mediaStream) => ({
+  const setMediaStream = mediaStream => ({
     type: 'publisher/mediaStream',
     mediaStream,
   });
@@ -95,33 +123,18 @@ export const PublisherMain = ({ navigation }) => {
         });
         dispatch(setMediaStream(medias));
       } catch (e) {
+        setIsConnecting(!isConnecting);
         console.error(e);
       }
-    }
-
-    if (this.millicastPublish) {
-      // State of the broadcast
-      this.connectionState();
-
-      this.millicastPublish.on('broadcastEvent', event => {
-        const {name, data} = event;
-        if (name === 'viewercount') {
-          // this.setState({userCount: data.viewercount});
-          dispatch({
-            type: 'publisher/userCount',
-            userCount: data.viewercount,
-          });
-        }
-      });
     }
   };
 
   const publish = async (streamName, token) => {
-    
-    const tokenGenerator = () => Director.getPublisher({
-      token: token,
-      streamName: streamName,
-    });
+    const tokenGenerator = () =>
+      Director.getPublisher({
+        token: token,
+        streamName: streamName,
+      });
 
     const broadcastOptions = {
       mediaStream: mediaStream,
@@ -141,29 +154,45 @@ export const PublisherMain = ({ navigation }) => {
     // Start broadcast
     try {
       await millicastPublish.connect(broadcastOptions);
-      dispatch({type: 'publisher/playing', playing: !playing})
+      dispatch({type: 'publisher/publish', millicastPublish});
     } catch (e) {
+      setIsConnecting(!isConnecting);
       console.log('Connection failed, handle error', e);
     }
   };
 
   const stop = () => {
+    console.log(playing);
     if (playing) {
       millicastPublish.stop();
       if (mediaStream) {
         mediaStream.release();
         dispatch({type: 'publisher/mediaStream', mediaStream: null});
       }
-      dispatch({type: 'publisher/timePlaying', timePlaying: 0});
+      dispatch({type: 'publisher/reset'});
     }
     if (millicastPublish) {
       connectionState();
     }
   };
 
+  useEffect(() => {
+    return () => {
+      console.log('Unmount');
+      // if (!playing) {
+      //   dispatch({
+      //     type: 'publisher/playing',
+      //     playing: !playing,
+      //   });
+      // }
+      stop();
+    };
+  }, []);
+
   const connectionState = () => {
     // State of the broadcast
     millicastPublish.on('connectionStateChange', event => {
+      console.log('Connection State:', event);
       if (
         event === 'connected' ||
         event === 'disconnected' ||
@@ -173,7 +202,6 @@ export const PublisherMain = ({ navigation }) => {
           type: 'publisher/playing',
           playing: !playing,
         });
-        console.log('playing???');
       }
     });
   };
@@ -230,32 +258,25 @@ export const PublisherMain = ({ navigation }) => {
       {mediaStream ? (
         <RTCView
           streamURL={mediaStream.toURL()}
-          style={styles.video} // Define the 'styles.video' style
+          style={myStyles.video}
           objectFit="contain"
           mirror={mirror}
         />
       ) : null}
       <View style={myStyles.topViewerCount}>
-        <Text
-          style={
-            myStyles.textShadow
-          }>{`${userCount}`}</Text>
+        <Text style={myStyles.textShadow}>{`${userCount}`}</Text>
       </View>
       <View style={myStyles.bottomMultimediaContainer}>
         <View style={myStyles.bottomIconWrapper}>
           <TouchableOpacity onPress={handleClickPlay}>
             <Text style={{color: 'white', fontWeight: 'bold'}}>
-              {!playing ? 'Play' : 'Pause'}
+              {isConnecting ? 'Publishing' : !playing ? 'Play' : 'Stop'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleClickMute}>
             <Text>
               {playing &&
-                (audioEnabled ? (
-                  <Text> Mic On </Text>
-                ) : (
-                  <Text> Mic Off </Text>
-                ))}
+                (audioEnabled ? <Text> Mic On </Text> : <Text> Mic Off </Text>)}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleClickDisableVideo}>
@@ -272,7 +293,7 @@ export const PublisherMain = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const PublisherStack = createNativeStackNavigator();
 

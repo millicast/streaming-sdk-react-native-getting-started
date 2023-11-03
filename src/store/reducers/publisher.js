@@ -5,7 +5,7 @@ const initialState = {
   mediaStream: null,
   stream: null,
   codec: 'vp8',
-  mirror: true,
+  mirror: false,
   playing: false,
   audioEnabled: true,
   videoEnabled: true,
@@ -27,7 +27,7 @@ const publisherReducer = (state = initialState, action) => {
         ...state,
         streamName: action.payload,
       };
-    case 'publish':
+    case 'publisher/publish':
       return {
         ...state,
         millicastPublish: action.millicastPublish,
@@ -91,6 +91,13 @@ const publisherReducer = (state = initialState, action) => {
       return {
         ...state,
         streamURL: action.streamURL,
+      };
+    case 'publisher/reset':
+      return {
+        ...initialState,
+        streamName: state.streamName,
+        publishingToken: state.publishingToken,
+        codec: state.codec
       };
     default:
       return state;
