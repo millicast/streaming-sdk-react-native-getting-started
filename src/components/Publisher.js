@@ -5,13 +5,12 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {RTCView} from 'react-native-webrtc';
 
 import myStyles from '../../styles/styles.js';
 import {Logger as MillicastLogger} from '@millicast/sdk';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import * as publisherService from '../service/publisher.js';
 
 import {mediaDevices} from 'react-native-webrtc';
 import {Director, Publish} from '@millicast/sdk/dist/millicast.debug.umd';
@@ -46,20 +45,25 @@ export const PublisherMain = ({navigation}) => {
 
   const [isConnecting, setIsConnecting] = useState(false);
 
+  const playingRef = useRef(null);
+  const millicastPublishRef = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const intervalIdRef = useRef(null);
+  playingRef.current = playing;
+  millicastPublishRef.current = millicastPublish;
+  mediaStreamRef.current = mediaStream;
+  intervalIdRef.current = intervalId;
+
   useEffect(() => {
     if (playing) {
       setIsConnecting(false);
+      const newIntervalId = setInterval(() => {
+        if (playingRef.current) {
+          dispatch({type: 'publisher/timePlaying'});
+        }
+      }, 1000);
+      setIntervalId(newIntervalId);
     }
-    const newIntervalId = setInterval(() => {
-      if (playing) {
-        dispatch({type: 'timePlaying'});
-      }
-    }, 1000);
-    setIntervalId(newIntervalId);
-
-    return () => {
-      clearInterval(intervalId);
-    };
   }, [playing]);
 
   useEffect(() => {
@@ -142,16 +146,13 @@ export const PublisherMain = ({navigation}) => {
       events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
     };
 
-    // Create a new instance
     let millicastPublish = new Publish(streamName, tokenGenerator);
 
     dispatch({
       type: 'publisher/streamURL',
       streamURL: mediaStream,
     });
-    // Publishing Options
 
-    // Start broadcast
     try {
       await millicastPublish.connect(broadcastOptions);
       dispatch({type: 'publisher/publish', millicastPublish});
@@ -162,29 +163,19 @@ export const PublisherMain = ({navigation}) => {
   };
 
   const stop = () => {
-    console.log(playing);
-    if (playing) {
-      millicastPublish.stop();
-      if (mediaStream) {
-        mediaStream.release();
+    if (playingRef.current) {
+      millicastPublishRef.current.stop();
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.release();
         dispatch({type: 'publisher/mediaStream', mediaStream: null});
       }
       dispatch({type: 'publisher/reset'});
-    }
-    if (millicastPublish) {
-      connectionState();
+      clearInterval(intervalIdRef.current);
     }
   };
 
   useEffect(() => {
     return () => {
-      console.log('Unmount');
-      // if (!playing) {
-      //   dispatch({
-      //     type: 'publisher/playing',
-      //     playing: !playing,
-      //   });
-      // }
       stop();
     };
   }, []);
@@ -192,15 +183,15 @@ export const PublisherMain = ({navigation}) => {
   const connectionState = () => {
     // State of the broadcast
     millicastPublish.on('connectionStateChange', event => {
-      console.log('Connection State:', event);
-      if (
-        event === 'connected' ||
-        event === 'disconnected' ||
-        event === 'closed'
-      ) {
+      if (event === 'connected') {
         dispatch({
           type: 'publisher/playing',
-          playing: !playing,
+          playing: true,
+        });
+      } else if (event === 'disconnected' || event === 'closed') {
+        dispatch({
+          type: 'publisher/playing',
+          playing: false,
         });
       }
     });
@@ -266,6 +257,9 @@ export const PublisherMain = ({navigation}) => {
       <View style={myStyles.topViewerCount}>
         <Text style={myStyles.textShadow}>{`${userCount}`}</Text>
       </View>
+      <Text style={[myStyles.bottomBarTimePlaying, myStyles.textShadow]}>
+        {playing ? `${showTimePlaying()}` : ''}
+      </Text>
       <View style={myStyles.bottomMultimediaContainer}>
         <View style={myStyles.bottomIconWrapper}>
           <TouchableOpacity onPress={handleClickPlay}>

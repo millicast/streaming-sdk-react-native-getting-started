@@ -97,7 +97,8 @@ const publisherReducer = (state = initialState, action) => {
         ...initialState,
         streamName: state.streamName,
         publishingToken: state.publishingToken,
-        codec: state.codec
+        codec: state.codec,
+        playing: state.playing
       };
     default:
       return state;
