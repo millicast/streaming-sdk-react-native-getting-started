@@ -22,37 +22,36 @@ Logger.setLevel(MillicastLogger.DEBUG);
 
 export const PublisherMain = ({navigation}) => {
   const [intervalId, setIntervalId] = useState(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+
   const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
   const playing = useSelector(state => state.publisherReducer.playing);
-  const videoEnabled = useSelector(
-    state => state.publisherReducer.videoEnabled,
-  );
-  const audioEnabled = useSelector(
-    state => state.publisherReducer.audioEnabled,
-  );
+  const videoEnabled = useSelector(state => state.publisherReducer.videoEnabled);
+  const audioEnabled = useSelector(state => state.publisherReducer.audioEnabled);
   const codec = useSelector(state => state.publisherReducer.codec);
   const mirror = useSelector(state => state.publisherReducer.mirror);
   const userCount = useSelector(state => state.publisherReducer.userCount);
   const timePlaying = useSelector(state => state.publisherReducer.timePlaying);
   const streamName = useSelector(state => state.publisherReducer.streamName);
-  const publishingToken = useSelector(
-    state => state.publisherReducer.publishingToken,
-  );
-  const millicastPublish = useSelector(
-    state => state.publisherReducer.millicastPublish,
-  );
+  const publishingToken = useSelector(state => state.publisherReducer.publishingToken);
+  const millicastPublish = useSelector(state => state.publisherReducer.millicastPublish);
   const dispatch = useDispatch();
-
-  const [isConnecting, setIsConnecting] = useState(false);
 
   const playingRef = useRef(null);
   const millicastPublishRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const intervalIdRef = useRef(null);
+  
   playingRef.current = playing;
   millicastPublishRef.current = millicastPublish;
   mediaStreamRef.current = mediaStream;
   intervalIdRef.current = intervalId;
+
+  useEffect(() => {
+    return () => {
+      stop();
+    };
+  }, []);
 
   useEffect(() => {
     if (playing) {
@@ -173,12 +172,6 @@ export const PublisherMain = ({navigation}) => {
       clearInterval(intervalIdRef.current);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      stop();
-    };
-  }, []);
 
   const connectionState = () => {
     // State of the broadcast

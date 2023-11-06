@@ -15,7 +15,7 @@ import {Logger as MillicastLogger} from '@millicast/sdk';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import myStyles from '../../styles/styles.js';
-import * as viewerService from '../service/viewer.js';
+// import * as viewerService from '../service/viewer.js';
 import Multiview from './Multiview';
 
 import {useSelector} from 'react-redux';
