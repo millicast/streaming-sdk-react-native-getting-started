@@ -1,18 +1,20 @@
 const initialState = {
-  count2: 0,
+  streamName: null,
+  accountId: null,
+  playing: false,
 };
 
 const viewerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'INCREMENT2':
+    case 'viewer/setStreamName':
       return {
         ...state,
-        count2: state.count2 + 1,
+        streamName: action.payload,
       };
-    case 'DECREMENT2':
+    case 'viewer/setAccountId':
       return {
         ...state,
-        count2: state.count2 - 1,
+        accountId: action.payload,
       };
     default:
       return state;
