@@ -27,6 +27,7 @@ function ViewerMain({navigation}) {
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
   const playing = useSelector(state => state.viewerReducer.playing);
   const streams = useSelector(state => state.viewerReducer.streams);
+  const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,12 +70,12 @@ function ViewerMain({navigation}) {
         switch (name) {
           case 'active':
             if (
-              viewerStore.sourceIds.indexOf(data.sourceId) === -1 &&
+              sourceIds?.indexOf(data.sourceId) === -1 &&
               data.sourceId != null
             ) {
               dispatch({
-                type: 'viewer/setSourceIds',
-                payload: [...viewerStore.sourceIds, data.sourceId],
+                type: 'viewer/addSourceId',
+                payload: data.sourceId,
               });
             }
             //A source has been started on the steam
@@ -88,7 +89,7 @@ function ViewerMain({navigation}) {
           case 'layers':
             dispatch({
               type: 'viewer/setActiveLayers',
-              payload: data.medias['0']?.active,
+              payload: data.medias?.['0']?.active,
             });
             //Updated layer information for each simulcast/svc video track
             break;
@@ -104,8 +105,8 @@ function ViewerMain({navigation}) {
   };
 
   const changeStateOfMediaTracks = value => {
-    streams.map(s =>
-      s.stream.getTracks().forEach(videoTrack => {
+    streams?.map(s =>
+      s.stream?.getTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
       }),
     );
@@ -128,12 +129,12 @@ function ViewerMain({navigation}) {
         <>
           {
             // main/selected source
-            viewerStore.streams[0] ? (
+            viewerStore.streams?.[0] ? (
               <RTCView
                 key={viewerStore.selectedSource ?? 'main'}
                 streamURL={
                   viewerStore.selectedSource ??
-                  viewerStore.streams[0].stream.toURL()
+                    viewerStore.streams?.[0]?.stream?.toURL()
                 }
                 style={myStyles.video}
                 objectFit="contain"

@@ -31,26 +31,30 @@ const viewerReducer = (state = initialState, action) => {
       };
     case 'viewer/onTrackEvent':
       const event = action.payload;
-      const mediaStream = event.streams[0] ? event.streams[0] : null;
-      if (!mediaStream) return state;
-      const streams = [...state.streams];
-      const audioPromise = async () => {
-        await Promise.all(
-          streams.map(stream => {
-            if (stream.stream.toURL() == event.streams[0].toURL()) {
-              stream.audioMid = event.transceiver.mid;
-            }
-          }),
-        );
-      };
-      if (event.track.kind == 'audio') {
-        audioPromise();
-      } else {
-        streams.push({stream: mediaStream, videoMid: event.transceiver.mid});
+      const mediaStream = event?.streams?.[0];
+      const streamsArray = [...state.streams];
+      if (mediaStream) {
+        const audioPromise = async () => {
+          await Promise.all(
+            streamsArray?.map(stream => {
+              if (stream.stream.toURL() == event.streams?.[0]?.toURL()) {
+                stream.audioMid = event.transceiver.mid;
+              }
+            }),
+          );
+        };
+        if (event.track.kind == 'audio') {
+          audioPromise();
+        } else {
+          streamsArray.push({
+            stream: mediaStream,
+            videoMid: event.transceiver.mid,
+          });
+        }
       }
       return {
         ...state,
-        streams: streams,
+        streams: streamsArray,
       };
     case 'viewer/setSourceIds':
       return {
@@ -86,6 +90,21 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         isMediaSet: action.payload,
+      };
+    case 'viewer/addSourceId':
+      return {
+        ...state,
+        sourceIds: [...state.sourceIds, action.payload],
+      };
+    case 'viewer/addStream':
+      return {
+        ...state,
+        streams: [...state.streams, action.payload],
+      };
+    case 'viewer/setSelectedSource':
+      return {
+        ...state,
+        selectedSource: action.payload,
       };
     default:
       return state;
