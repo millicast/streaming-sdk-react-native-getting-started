@@ -4,6 +4,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  AppState
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {RTCView} from 'react-native-webrtc';
@@ -23,6 +24,8 @@ Logger.setLevel(MillicastLogger.DEBUG);
 export const PublisherMain = ({navigation}) => {
   const [intervalId, setIntervalId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
   const playing = useSelector(state => state.publisherReducer.playing);
@@ -48,7 +51,14 @@ export const PublisherMain = ({navigation}) => {
   intervalIdRef.current = intervalId;
 
   useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      stop();
+    });
+
     return () => {
+      subscription.remove();
       stop();
     };
   }, []);
