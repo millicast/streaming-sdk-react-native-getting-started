@@ -32,17 +32,21 @@ function ViewerMain({navigation}) {
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
   const dispatch = useDispatch();
 
+  const playingRef = useRef(null);
+  playingRef.current = playing;
+
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
-      console.log('AppState', appState.current);
-      stopStream();
+      if (playingRef.current) {
+        stopStream();
+      }
     });
 
     return () => {
       subscription.remove();
-      if (!isMediaSet) {
+      if (playingRef.current) {
         stopStream();
       }
     };
