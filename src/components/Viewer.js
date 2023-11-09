@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   SafeAreaView,
   TouchableHighlight,
+  AppState
 } from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import {
@@ -27,7 +28,25 @@ function ViewerMain({navigation}) {
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
   const playing = useSelector(state => state.viewerReducer.playing);
   const streams = useSelector(state => state.viewerReducer.streams);
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log('AppState', appState.current);
+      stopStream();
+    });
+
+    return () => {
+      subscription.remove();
+      if (!isMediaSet) {
+        stopStream();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     // componentWillMount
