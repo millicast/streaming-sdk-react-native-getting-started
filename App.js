@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import store from './src/store';
 
 import Viewer from './src/components/Viewer';
-import Publisher from './Publisher';
+import Publisher from './src/components/Publisher';
 
 import {useDispatch} from 'react-redux';
 
@@ -26,7 +26,7 @@ function HomeScreen({navigation}) {
   });
   dispatch({
     type: 'publisher/setStreamName',
-    payload: process.env.REACT_APP_MILLICAST_ACCOUNT_ID,
+    payload: process.env.REACT_APP_MILLICAST_STREAM_NAME_PUBLISHER,
   });
   dispatch({
     type: 'publisher/setPublishingToken',
@@ -38,9 +38,7 @@ function HomeScreen({navigation}) {
       <Text style={myStyles.title}>SAMPLE APP</Text>
       {!Platform.isTV ? (
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('Publisher App')
-          }
+          onPress={() => navigation.navigate('Publisher App')}
           style={myStyles.buttonDesign}>
           <Text style={myStyles.buttonText}>PUBLISHER</Text>
         </TouchableOpacity>
