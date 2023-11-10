@@ -7,8 +7,8 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import React, {useEffect} from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, {useEffect, useRef} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {RTCView} from 'react-native-webrtc';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
@@ -24,6 +24,7 @@ function Multiview(props) {
   const streams = useSelector(state => state.viewerReducer.streams);
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
   const millicastView = useSelector(state => state.viewerReducer.millicastView);
+  const streamsRef = useRef(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -47,6 +48,10 @@ function Multiview(props) {
   };
 
   useEffect(() => {
+    streamsRef.current = [...streams];
+  }, []);
+
+  useEffect(() => {
     // componentWillMount
 
     const initializeMultiview = async () => {
@@ -66,6 +71,18 @@ function Multiview(props) {
 
     return () => {
       // componentWillUnmount
+
+      const unprojectTracks = async () => {
+        let listVideoMids = streamsRef;
+        listVideoMids.map(track => track.videoMid).filter(x => x != '0');
+        // console.log(listVideoMids, 111111111)
+
+        await millicastView.unproject(listVideoMids);
+
+        // dispatch({type: 'viewer/setStreams', payload: streamAux});
+      };
+
+      unprojectTracks();
     };
   }, []);
 

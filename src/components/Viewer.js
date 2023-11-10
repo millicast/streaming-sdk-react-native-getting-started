@@ -36,8 +36,6 @@ function ViewerMain({navigation}) {
       // componentWillUnmount
       if (!isMediaSet) {
         stopStream();
-        dispatch({type: 'viewer/setIsMediaSet', payload: true});
-        dispatch({type: 'viewer/setPlaying', payload: false});
       }
     };
   }, [isMediaSet]);
