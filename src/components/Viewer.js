@@ -33,7 +33,9 @@ function ViewerMain({navigation}) {
   const dispatch = useDispatch();
 
   const playingRef = useRef(null);
+  const millicastViewRef = useRef(null);
   playingRef.current = playing;
+  millicastViewRef.current = viewerStore.millicastView;
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -65,7 +67,7 @@ function ViewerMain({navigation}) {
   }, [isMediaSet]);
 
   const stopStream = async () => {
-    await viewerStore.millicastView.stop();
+    await millicastViewRef.current.stop();
     dispatch({type: 'viewer/setPlaying', payload: false});
     dispatch({type: 'viewer/setIsMediaSet', payload: true});
     dispatch({type: 'viewer/setStreams', payload: []});
