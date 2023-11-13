@@ -8,8 +8,9 @@ import {
   Platform,
 } from 'react-native';
 import React, {useEffect, useRef} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {RTCView} from 'react-native-webrtc';
+import myStyles from '../../styles/styles.js';
 
 import {Logger as MillicastLogger} from '@millicast/sdk';
 
@@ -20,13 +21,21 @@ Logger.setLevel(MillicastLogger.DEBUG);
 
 const amountCols = Platform.isTV ? 2 : 1;
 
-function Multiview(props) {
+export default function Multiview({navigation, route}) {
   const streams = useSelector(state => state.viewerReducer.streams);
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
+  const playing = useSelector(state => state.viewerReducer.playing);
   const millicastView = useSelector(state => state.viewerReducer.millicastView);
-  const streamsRef = useRef(null);
+  const selectedSource = useSelector(state => state.viewerReducer.selectedSource);
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  
+  const streamsRef = useRef(null);
+  const selectedSourceRef = useRef(null);
+  const millicastViewRef = useRef(null);
+
+  selectedSourceRef.current = selectedSource;
+  streamsRef.current = streams;
+  millicastViewRef.current = millicastView
 
   addRemoteTrack = async sourceId => {
     const mediaStream = new MediaStream();
@@ -43,17 +52,19 @@ function Multiview(props) {
     ]);
     dispatch({
       type: 'viewer/addStream',
-      payload: {stream: mediaStream, videoMid: mediaId},
+      payload: {stream: mediaStream, videoMid: mediaId, sourceId: sourceId},
     });
   };
 
   useEffect(() => {
-    streamsRef.current = [...streams];
-  }, []);
+    // FIX ME: Check how to not navigate when coming back to multiview after selecting a source
+    if (selectedSource.mid) {
+      navigation.navigate('Viewer Main');
+    }
+  }, [selectedSource]);
 
   useEffect(() => {
     // componentWillMount
-
     const initializeMultiview = async () => {
       try {
         await Promise.all(
@@ -73,13 +84,17 @@ function Multiview(props) {
       // componentWillUnmount
 
       const unprojectTracks = async () => {
-        let listVideoMids = streamsRef;
-        listVideoMids.map(track => track.videoMid).filter(x => x != '0');
-        // console.log(listVideoMids, 111111111)
+        try {
+          let listVideoMids = streamsRef.current;
+          listVideoMids = listVideoMids.map(track => track.videoMid).filter(x => (x != '0') && (x != selectedSourceRef.current.mid));
+          const streamAux = streamsRef.current.filter(stream => !listVideoMids.includes(stream.videoMid))
 
-        await millicastView.unproject(listVideoMids);
+          await millicastViewRef.current.unproject(listVideoMids);
 
-        // dispatch({type: 'viewer/setStreams', payload: streamAux});
+          dispatch({type: 'viewer/setStreams', payload: streamAux});
+        } catch (error) {
+          console.error(error);
+        }
       };
 
       unprojectTracks();
@@ -87,7 +102,7 @@ function Multiview(props) {
   }, []);
 
   return (
-    <>
+    <SafeAreaView style={stylesContainer.container}>
       <View
         style={{
           alignContent: 'center',
@@ -140,9 +155,11 @@ function Multiview(props) {
                     onPress={() => {
                       dispatch({
                         type: 'viewer/setSelectedSource',
-                        payload: item.stream.toURL(),
+                        payload: {
+                          url: item.stream.toURL(),
+                          mid: item.videoMid
+                        },
                       });
-                      navigation.goBack();
                     }}>
                     <Text style={{color: 'white'}}>
                       {item.stream.videoMid === '0'
@@ -156,17 +173,29 @@ function Multiview(props) {
           )}
         />
       </View>
-    </>
-  );
-}
-
-export default function App(props) {
-  return (
-    <>
-      <SafeAreaView style={stylesContainer.container}>
-        <Multiview />
-      </SafeAreaView>
-    </>
+      <View style={myStyles.bottomMultimediaContainer}>
+        <View style={myStyles.bottomIconWrapper}>
+          <TouchableHighlight
+            hasTVPreferredFocus
+            tvParallaxProperties={{magnification: 1.5}}
+            underlayColor="#AA33FF"
+            onPress={() => {
+              dispatch({
+                type: 'viewer/setSelectedSource',
+                payload: {
+                  url: null,
+                  mid: null
+                },
+              });
+              navigation.navigate('Viewer Main');
+            }}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>
+              {playing ? 'Go back' : null}
+            </Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 

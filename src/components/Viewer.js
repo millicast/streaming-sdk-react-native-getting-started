@@ -36,6 +36,7 @@ function ViewerMain({navigation}) {
       // componentWillUnmount
       if (!isMediaSet) {
         stopStream();
+        dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
       }
     };
   }, [isMediaSet]);
@@ -129,9 +130,9 @@ function ViewerMain({navigation}) {
             // main/selected source
             viewerStore.streams?.[0] ? (
               <RTCView
-                key={viewerStore.selectedSource ?? 'main'}
+                key={viewerStore.selectedSource.mid ?? 'main'}
                 streamURL={
-                  viewerStore.selectedSource ??
+                  viewerStore.selectedSource.url ??
                     viewerStore.streams?.[0]?.stream?.toURL()
                 }
                 style={myStyles.video}
@@ -145,30 +146,37 @@ function ViewerMain({navigation}) {
               </View>
             )
           }
-          {
-            <View style={myStyles.bottomMultimediaContainer}>
-              <View style={myStyles.bottomIconWrapper}>
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={playPauseVideo}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {playing ? 'Pause' : 'Play'}
-                  </Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={() => navigation.navigate('Multiview')}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {playing ? 'Multiview' : null}
-                  </Text>
-                </TouchableHighlight>
-              </View>
+          <View style={myStyles.bottomMultimediaContainer}>
+            <View style={myStyles.bottomIconWrapper}>
+              <TouchableHighlight
+                hasTVPreferredFocus
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
+                onPress={playPauseVideo}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  {playing ? 'Pause' : 'Play'}
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                hasTVPreferredFocus
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
+                onPress={() => {
+                  dispatch({
+                    type: 'viewer/setSelectedSource',
+                    payload: {
+                      url: null,
+                      mid: null
+                    },
+                  });
+                  navigation.navigate('Multiview', {playPauseVideo});
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  {playing ? 'Multiview' : null}
+                </Text>
+              </TouchableHighlight>
             </View>
-          }
+          </View>
         </>
       </SafeAreaView>
     </>

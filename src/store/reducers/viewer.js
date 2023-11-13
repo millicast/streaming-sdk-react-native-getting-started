@@ -7,7 +7,10 @@ const initialState = {
   activeLayers: [],
   millicastView: null,
   isMediaSet: true,
-  selectedSource: null,
+  selectedSource: {
+    url: null,
+    mid: null
+  },
   muted: false,
   multiView: false,
 };
@@ -101,10 +104,16 @@ const viewerReducer = (state = initialState, action) => {
         ...state,
         streams: [...state.streams, action.payload],
       };
+    case 'viewer/removeStream':
+      const streams = state.streams.filter(stream => stream !== action.payload)
+      return {
+        ...state,
+        streams: [...streams],
+      };
     case 'viewer/setSelectedSource':
       return {
         ...state,
-        selectedSource: action.payload,
+        selectedSource: {...action.payload},
       };
     default:
       return state;
