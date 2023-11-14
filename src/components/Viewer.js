@@ -169,7 +169,7 @@ function ViewerMain({navigation}) {
                       mid: null
                     },
                   });
-                  navigation.navigate('Multiview', {playPauseVideo});
+                  navigation.navigate('Multiview');
                 }}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>
                   {playing ? 'Multiview' : null}
