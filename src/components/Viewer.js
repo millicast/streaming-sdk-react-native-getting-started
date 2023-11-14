@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   SafeAreaView,
   TouchableHighlight,
+  AppState
 } from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import {
@@ -23,26 +24,40 @@ window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
 function ViewerMain({navigation}) {
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
   const viewerStore = useSelector(state => state.viewerReducer);
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
   const playing = useSelector(state => state.viewerReducer.playing);
   const streams = useSelector(state => state.viewerReducer.streams);
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
   const dispatch = useDispatch();
+  
+  const appState = useRef(AppState.currentState);
+  const playingRef = useRef(null);
+  const millicastViewRef = useRef(null);
+  playingRef.current = playing;
+  millicastViewRef.current = viewerStore.millicastView;
 
   useEffect(() => {
-    // componentWillMount
-    return () => {
-      // componentWillUnmount
-      if (!isMediaSet) {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      if (playingRef.current) {
         stopStream();
-        dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
+      }
+    });
+
+    return () => {
+      subscription.remove();
+      if (playingRef.current) {
+        stopStream();
       }
     };
-  }, [isMediaSet]);
+  }, []);
 
   const stopStream = async () => {
-    await viewerStore.millicastView.stop();
+    await millicastViewRef.current.stop();
     dispatch({type: 'viewer/setPlaying', payload: false});
     dispatch({type: 'viewer/setIsMediaSet', payload: true});
     dispatch({type: 'viewer/setStreams', payload: []});
