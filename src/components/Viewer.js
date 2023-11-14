@@ -56,6 +56,17 @@ function ViewerMain({navigation}) {
     };
   }, []);
 
+  useEffect(() => {
+    // componentWillMount
+    return () => {
+      // componentWillUnmount
+      if (!isMediaSet) {
+        stopStream();
+        dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
+      }
+    };
+  }, [isMediaSet]);
+
   const stopStream = async () => {
     await millicastViewRef.current.stop();
     dispatch({type: 'viewer/setPlaying', payload: false});
