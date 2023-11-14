@@ -35,33 +35,46 @@ export default function Multiview({navigation, route}) {
 
   selectedSourceRef.current = selectedSource;
   streamsRef.current = streams;
-  millicastViewRef.current = millicastView
+  millicastViewRef.current = millicastView;
 
-  addRemoteTrack = async sourceId => {
-    const mediaStream = new MediaStream();
-    const transceiver = await millicastView.addRemoteTrack('video', [
-      mediaStream,
-    ]);
-    const mediaId = transceiver.mid;
-    await millicastView.project(sourceId, [
-      {
-        media: 'video',
-        mediaId,
-        trackId: 'video',
-      },
-    ]);
-    dispatch({
-      type: 'viewer/addStream',
-      payload: {stream: mediaStream, videoMid: mediaId, sourceId: sourceId},
-    });
+  const addRemoteTrack = async sourceId => {
+    const isAlreadyProjected = streams.some(stream => stream.sourceId === sourceId);
+    if (!isAlreadyProjected) {
+      const mediaStream = new MediaStream();
+      const transceiver = await millicastView.addRemoteTrack('video', [
+        mediaStream,
+      ]);
+      const mediaId = transceiver.mid;
+      await millicastView.project(sourceId, [
+        {
+          media: 'video',
+          mediaId,
+          trackId: 'video',
+        },
+      ]);
+      dispatch({
+        type: 'viewer/addStream',
+        payload: {stream: mediaStream, videoMid: mediaId, sourceId: sourceId},
+      });
+    }
   };
 
-  useEffect(() => {
-    // FIX ME: Check how to not navigate when coming back to multiview after selecting a source
-    if (selectedSource.mid) {
-      navigation.navigate('Viewer Main');
+  const navigateSingleView = async (url = null, mid = null) => {
+    dispatch({ type: 'viewer/setSelectedSource', payload: { url, mid } });
+
+    try {
+      const listVideoMids = streamsRef.current.map(track => track.videoMid).filter(x => (x != '0') && (x != mid));
+      const streamAux = streamsRef.current.filter(stream => !listVideoMids.includes(stream.videoMid))
+
+      await millicastViewRef.current.unproject(listVideoMids);
+
+      dispatch({type: 'viewer/setStreams', payload: streamAux});
+    } catch (error) {
+      console.error(error);
     }
-  }, [selectedSource]);
+
+    navigation.navigate('Viewer Main');
+  }
 
   useEffect(() => {
     // componentWillMount
@@ -79,26 +92,6 @@ export default function Multiview({navigation, route}) {
       }
     };
     initializeMultiview();
-
-    return () => {
-      // componentWillUnmount
-
-      const unprojectTracks = async () => {
-        try {
-          let listVideoMids = streamsRef.current;
-          listVideoMids = listVideoMids.map(track => track.videoMid).filter(x => (x != '0') && (x != selectedSourceRef.current.mid));
-          const streamAux = streamsRef.current.filter(stream => !listVideoMids.includes(stream.videoMid))
-
-          await millicastViewRef.current.unproject(listVideoMids);
-
-          dispatch({type: 'viewer/setStreams', payload: streamAux});
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-      unprojectTracks();
-    };
   }, []);
 
   return (
@@ -152,19 +145,9 @@ export default function Multiview({navigation, route}) {
                     hasTVPreferredFocus
                     style={{padding: 10, bottom: 150, borderRadius: 6}}
                     underlayColor="#AA33FF"
-                    onPress={() => {
-                      dispatch({
-                        type: 'viewer/setSelectedSource',
-                        payload: {
-                          url: item.stream.toURL(),
-                          mid: item.videoMid
-                        },
-                      });
-                    }}>
+                    onPress={() => navigateSingleView(item.stream.toURL(), item.videoMid)}>
                     <Text style={{color: 'white'}}>
-                      {item.stream.videoMid === '0'
-                        ? 'Main'
-                        : String(sourceIds[index])}
+                      {!item.sourceId ? 'Main' : String(item.sourceId)}
                     </Text>
                   </TouchableHighlight>
                 </>
@@ -179,16 +162,7 @@ export default function Multiview({navigation, route}) {
             hasTVPreferredFocus
             tvParallaxProperties={{magnification: 1.5}}
             underlayColor="#AA33FF"
-            onPress={() => {
-              dispatch({
-                type: 'viewer/setSelectedSource',
-                payload: {
-                  url: null,
-                  mid: null
-                },
-              });
-              navigation.navigate('Viewer Main');
-            }}>
+            onPress={() => navigateSingleView()}>
             <Text style={{color: 'white', fontWeight: 'bold'}}>
               {playing ? 'Go back' : null}
             </Text>
