@@ -24,6 +24,7 @@ window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
 function ViewerMain({navigation}) {
+  const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const viewerStore = useSelector(state => state.viewerReducer);
@@ -33,7 +34,6 @@ function ViewerMain({navigation}) {
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
   const dispatch = useDispatch();
   
-  const appState = useRef(AppState.currentState);
   const playingRef = useRef(null);
   const millicastViewRef = useRef(null);
   playingRef.current = playing;
