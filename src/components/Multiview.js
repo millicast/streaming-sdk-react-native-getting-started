@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   FlatList,
   Platform,
+  AppState
 } from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -92,6 +93,16 @@ export default function Multiview({navigation, route}) {
       }
     };
     initializeMultiview();
+    
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'background') {
+        navigation.navigate('Viewer Main');
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   return (

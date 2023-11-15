@@ -25,7 +25,6 @@ Logger.setLevel(MillicastLogger.DEBUG);
 
 function ViewerMain({navigation}) {
   const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const viewerStore = useSelector(state => state.viewerReducer);
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
@@ -40,13 +39,7 @@ function ViewerMain({navigation}) {
   millicastViewRef.current = viewerStore.millicastView;
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      appState.current = nextAppState;
-      setAppStateVisible(appState.current);
-      if (playingRef.current) {
-        stopStream();
-      }
-    });
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
       subscription.remove();
@@ -56,22 +49,19 @@ function ViewerMain({navigation}) {
     };
   }, []);
 
-  useEffect(() => {
-    // componentWillMount
-    return () => {
-      // componentWillUnmount
-      if (!isMediaSet) {
-        stopStream();
-        dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
-      }
-    };
-  }, [isMediaSet]);
+  const handleAppStateChange = (nextAppState) => {
+    appState.current = nextAppState;
+    if (playingRef.current) {
+      stopStream();
+    }
+  }
 
   const stopStream = async () => {
     await millicastViewRef.current.stop();
     dispatch({type: 'viewer/setPlaying', payload: false});
     dispatch({type: 'viewer/setIsMediaSet', payload: true});
     dispatch({type: 'viewer/setStreams', payload: []});
+    dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
   };
 
   const subscribe = async () => {
