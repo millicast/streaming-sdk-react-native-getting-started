@@ -38,6 +38,11 @@ function ViewerMain({navigation}) {
   playingRef.current = playing;
   millicastViewRef.current = viewerStore.millicastView;
 
+  const playingRef = useRef(null);
+  const millicastViewRef = useRef(null);
+  playingRef.current = playing;
+  millicastViewRef.current = viewerStore.millicastView;
+
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
 
