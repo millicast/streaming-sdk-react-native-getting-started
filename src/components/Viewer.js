@@ -26,20 +26,22 @@ Logger.setLevel(MillicastLogger.DEBUG);
 function ViewerMain({navigation}) {
   const appState = useRef(AppState.currentState);
 
-  const streamName = useSelector(state => state.viewerReducer.streamName);
-  const accountId = useSelector(state => state.viewerReducer.accountId);
+  const viewerStore = useSelector(state => state.viewerReducer);
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
   const playing = useSelector(state => state.viewerReducer.playing);
   const streams = useSelector(state => state.viewerReducer.streams);
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
-  const selectedSource = useSelector(state => state.viewerReducer.selectedSource);
-  const millicastView = useSelector(state => state.viewerReducer.millicastView);
   const dispatch = useDispatch();
   
   const playingRef = useRef(null);
   const millicastViewRef = useRef(null);
   playingRef.current = playing;
-  millicastViewRef.current = millicastView;
+  millicastViewRef.current = viewerStore.millicastView;
+
+  const playingRef = useRef(null);
+  const millicastViewRef = useRef(null);
+  playingRef.current = playing;
+  millicastViewRef.current = viewerStore.millicastView;
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
@@ -70,11 +72,11 @@ function ViewerMain({navigation}) {
   const subscribe = async () => {
     const tokenGenerator = () =>
       Director.getSubscriber({
-        streamName: streamName,
-        streamAccountId: accountId,
+        streamName: viewerStore.streamName,
+        streamAccountId: viewerStore.accountId,
       });
     // Create a new instance
-    let view = new MillicastView(streamName, tokenGenerator, null);
+    let view = new MillicastView(viewerStore.streamName, tokenGenerator, null);
     // Set track event handler to receive streams from Publisher.
     view.on('track', async event => {
       dispatch({type: 'viewer/onTrackEvent', payload: event});
@@ -133,6 +135,8 @@ function ViewerMain({navigation}) {
 
   const playPauseVideo = async () => {
     if (isMediaSet) {
+      console.log('Stream Name:', viewerStore.streamName);
+
       await subscribe();
       dispatch({type: 'viewer/setIsMediaSet', payload: false});
     }
@@ -145,12 +149,12 @@ function ViewerMain({navigation}) {
         <>
           {
             // main/selected source
-            streams?.[0] ? (
+            viewerStore.streams?.[0] ? (
               <RTCView
-                key={selectedSource.mid ?? 'main'}
+                key={viewerStore.selectedSource.mid ?? 'main'}
                 streamURL={
-                  selectedSource.url ??
-                    streams?.[0]?.stream?.toURL()
+                  viewerStore.selectedSource.url ??
+                    viewerStore.streams?.[0]?.stream?.toURL()
                 }
                 style={myStyles.video}
                 objectFit="contain"
@@ -174,24 +178,24 @@ function ViewerMain({navigation}) {
                   {playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
-              { playing &&
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={() => {
-                    dispatch({
-                      type: 'viewer/setSelectedSource',
-                      payload: {
-                        url: null,
-                        mid: null
-                      },
-                    });
-                    navigation.navigate('Multiview');
-                  }}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>Multiview</Text>
-                </TouchableHighlight>
-              }
+              <TouchableHighlight
+                hasTVPreferredFocus
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
+                onPress={() => {
+                  dispatch({
+                    type: 'viewer/setSelectedSource',
+                    payload: {
+                      url: null,
+                      mid: null
+                    },
+                  });
+                  navigation.navigate('Multiview');
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  {playing ? 'Multiview' : null}
+                </Text>
+              </TouchableHighlight>
             </View>
           </View>
         </>
