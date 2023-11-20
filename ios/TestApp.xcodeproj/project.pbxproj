@@ -50,8 +50,6 @@
 		0A4D40952A42286A00021330 /* OpenSSL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OpenSSL.xcframework; path = "Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework"; sourceTree = "<group>"; };
 		0A4D40972A422C6C00021330 /* double-conversion.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = "double-conversion.xcframework"; path = "Pods/Flipper-DoubleConversion/Frameworks/double-conversion.xcframework"; sourceTree = "<group>"; };
 		0A4D40992A422D1200021330 /* glog.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = glog.xcframework; path = "Pods/Flipper-Glog/Frameworks/glog.xcframework"; sourceTree = "<group>"; };
-		0A5797522AC46D5B0073B095 /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = "libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework"; sourceTree = "<group>"; };
-		0A635C402A93C93400D25991 /* tvos-arm64-simulator */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tvos-arm64-simulator"; path = "libWebRTC/WebRTC.xcframework/tvos-arm64-simulator"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = TestApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.mm; path = TestApp/AppDelegate.mm; sourceTree = "<group>"; };
@@ -149,10 +147,6 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0A5028B22AC3525400F54529 /* WebRTC.framework */,
-				0A5797522AC46D5B0073B095 /* WebRTC.framework */,
-				0A8C99E22AFA7D5C008FB904 /* WebRTC.framework */,
-				0A635C402A93C93400D25991 /* tvos-arm64-simulator */,
 				0A4D40992A422D1200021330 /* glog.xcframework */,
 				0A4D40972A422C6C00021330 /* double-conversion.xcframework */,
 				0A4D40952A42286A00021330 /* OpenSSL.xcframework */,
@@ -249,6 +243,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				B0563F1945F562EA860C8FFD /* [CP] Embed Pods Frameworks */,
 				2D6599C4C57E3845B3362D38 /* [CP] Copy Pods Resources */,
+				0A7620132AD6E95000B25F63 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -754,7 +749,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P493P8H229;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -836,9 +830,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P493P8H229;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Pods/**"
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Pods/**";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
@@ -922,15 +914,9 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				EXCLUDED_ARCHS = i386;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/**",
-					"$(PROJECT_DIR)/Pods/libWebRTC/WebRTC.xcframework/tvos-arm64-simulator",
-					"$(PROJECT_DIR)/libWebRTC/WebRTC.xcframework/tvos-arm64-simulator",
-				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/libWebRTC/tvos-arm64-simulator/WebRTC.framework/Headers",
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"\"${PODS_ROOT}/Headers/Public/CocoaAsyncSocket\"",
 					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
@@ -1009,15 +995,9 @@
 				DEVELOPMENT_TEAM = P493P8H229;
 				ENABLE_BITCODE = YES;
 				EXCLUDED_ARCHS = i386;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/**",
-					"$(PROJECT_DIR)/Pods/libWebRTC/WebRTC.xcframework/tvos-arm64-simulator",
-					"$(PROJECT_DIR)/libWebRTC/WebRTC.xcframework/tvos-arm64-simulator",
-				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/libWebRTC/tvos-arm64-simulator/WebRTC.framework/Headers",
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"\"${PODS_ROOT}/Headers/Public/CocoaAsyncSocket\"",
 					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
@@ -1175,7 +1155,6 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1191,7 +1170,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -1242,7 +1220,6 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1251,7 +1228,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,

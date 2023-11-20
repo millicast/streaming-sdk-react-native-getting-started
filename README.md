@@ -222,6 +222,8 @@ To navigate use the arrow keys and enter button. Also, on the Simulator window y
 #### Remarks
 (*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
 
+<img src="assets/Remove-old-reference-WebRTC.png" alt="drawing" width="500"/>
+
 <span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, different builds are required for intel-based (`x64`, `x86`) and M1 based (`arm64`).
 
 
@@ -257,6 +259,18 @@ You should have an Android TV/mobile simulator on Android Studio.
 - For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
 
 ## Troubleshooting
+
+### WebRTC related errors during runtime
+If you have any issues related to WebRTC, and you already used this app it maybe due to an outdated node module. Follow this steps:
+1. Delete `node_modules` directory.
+2. Run `yarn cache clean`.
+3. Re install dependencies with `yarn` command.
+4. Continue with [Getting Started](#getting-started).
+
+### Framework not found WebRTC
+Check inside the TestApp or TestApp-tvOS project (depending on which platform do you want to run the application) go to `General -> Framework, Libraries, and Embedded Content` and look for WebRTC.framework. You should to confirm that you are using the proper framework for the platform and it should be with `Embed && Sign` option.
+
+If you are still having the error, maybe is because the project has an old link to another platform framework, go to `Build Settings -> Search Paths` and inside `Frameworks Search Paths` remove the path of the other framework platform. Do the same thing for `Header Search Paths` and leave only the path to the correct WebRTC framework where do you want to run the application.
 
 ### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
 
