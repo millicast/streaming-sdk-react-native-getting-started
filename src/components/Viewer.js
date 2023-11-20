@@ -24,27 +24,26 @@ window.Logger = MillicastLogger;
 Logger.setLevel(MillicastLogger.DEBUG);
 
 function ViewerMain({navigation}) {
-  const viewerStore = useSelector(state => state.viewerReducer);
+  const appState = useRef(AppState.currentState);
+
+  const streamName = useSelector(state => state.viewerReducer.streamName);
+  const accountId = useSelector(state => state.viewerReducer.accountId);
   const isMediaSet = useSelector(state => state.viewerReducer.isMediaSet);
   const playing = useSelector(state => state.viewerReducer.playing);
   const streams = useSelector(state => state.viewerReducer.streams);
-  const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+  const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
+  const selectedSource = useSelector(state => state.viewerReducer.selectedSource);
+  const millicastView = useSelector(state => state.viewerReducer.millicastView);
   const dispatch = useDispatch();
-
+  
   const playingRef = useRef(null);
   const millicastViewRef = useRef(null);
+
   playingRef.current = playing;
-  millicastViewRef.current = viewerStore.millicastView;
+  millicastViewRef.current = millicastView;
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      appState.current = nextAppState;
-      setAppStateVisible(appState.current);
-      if (playingRef.current) {
-        stopStream();
-      }
-    });
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
       subscription.remove();
@@ -54,33 +53,29 @@ function ViewerMain({navigation}) {
     };
   }, []);
 
-  useEffect(() => {
-    // componentWillMount
-    return () => {
-      // componentWillUnmount
-      if (!isMediaSet) {
-        stopStream();
-        dispatch({type: 'viewer/setIsMediaSet', payload: true});
-        dispatch({type: 'viewer/setPlaying', payload: false});
-      }
-    };
-  }, [isMediaSet]);
+  const handleAppStateChange = (nextAppState) => {
+    appState.current = nextAppState;
+    if (playingRef.current) {
+      stopStream();
+    }
+  }
 
   const stopStream = async () => {
     await millicastViewRef.current.stop();
     dispatch({type: 'viewer/setPlaying', payload: false});
     dispatch({type: 'viewer/setIsMediaSet', payload: true});
     dispatch({type: 'viewer/setStreams', payload: []});
+    dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
   };
 
   const subscribe = async () => {
     const tokenGenerator = () =>
       Director.getSubscriber({
-        streamName: viewerStore.streamName,
-        streamAccountId: viewerStore.accountId,
+        streamName: streamName,
+        streamAccountId: accountId,
       });
     // Create a new instance
-    let view = new MillicastView(viewerStore.streamName, tokenGenerator, null);
+    let view = new MillicastView(streamName, tokenGenerator, null);
     // Set track event handler to receive streams from Publisher.
     view.on('track', async event => {
       dispatch({type: 'viewer/onTrackEvent', payload: event});
@@ -94,12 +89,12 @@ function ViewerMain({navigation}) {
         switch (name) {
           case 'active':
             if (
-              viewerStore.sourceIds.indexOf(data.sourceId) === -1 &&
+              sourceIds?.indexOf(data.sourceId) === -1 &&
               data.sourceId != null
             ) {
               dispatch({
-                type: 'viewer/setSourceIds',
-                payload: [...viewerStore.sourceIds, data.sourceId],
+                type: 'viewer/addSourceId',
+                payload: data.sourceId,
               });
             }
             //A source has been started on the steam
@@ -113,7 +108,7 @@ function ViewerMain({navigation}) {
           case 'layers':
             dispatch({
               type: 'viewer/setActiveLayers',
-              payload: data.medias['0']?.active,
+              payload: data.medias?.['0']?.active,
             });
             //Updated layer information for each simulcast/svc video track
             break;
@@ -129,8 +124,8 @@ function ViewerMain({navigation}) {
   };
 
   const changeStateOfMediaTracks = value => {
-    streams.map(s =>
-      s.stream.getTracks().forEach(videoTrack => {
+    streams?.map(s =>
+      s.stream?.getTracks().forEach(videoTrack => {
         videoTrack.enabled = value;
       }),
     );
@@ -139,8 +134,6 @@ function ViewerMain({navigation}) {
 
   const playPauseVideo = async () => {
     if (isMediaSet) {
-      console.log('Stream Name:', viewerStore.streamName);
-
       await subscribe();
       dispatch({type: 'viewer/setIsMediaSet', payload: false});
     }
@@ -153,12 +146,12 @@ function ViewerMain({navigation}) {
         <>
           {
             // main/selected source
-            viewerStore.streams[0] ? (
+            streams?.[0] ? (
               <RTCView
-                key={viewerStore.selectedSource ?? 'main'}
+                key={selectedSource.mid ?? 'main'}
                 streamURL={
-                  viewerStore.selectedSource ??
-                  viewerStore.streams[0].stream.toURL()
+                  selectedSource.url ??
+                    streams?.[0]?.stream?.toURL()
                 }
                 style={myStyles.video}
                 objectFit="contain"
@@ -171,30 +164,40 @@ function ViewerMain({navigation}) {
               </View>
             )
           }
-          {
-            <View style={myStyles.bottomMultimediaContainer}>
-              <View style={myStyles.bottomIconWrapper}>
+          <View style={myStyles.bottomMultimediaContainer}>
+            <View style={myStyles.bottomIconWrapper}>
+              <TouchableHighlight
+                hasTVPreferredFocus
+                tvParallaxProperties={{magnification: 1.5}}
+                underlayColor="#AA33FF"
+                onPress={playPauseVideo}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  {playing ? 'Pause' : 'Play'}
+                </Text>
+              </TouchableHighlight>
+              {
+                playing && 
                 <TouchableHighlight
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
                   underlayColor="#AA33FF"
-                  onPress={playPauseVideo}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {playing ? 'Pause' : 'Play'}
-                  </Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  tvParallaxProperties={{magnification: 1.5}}
-                  underlayColor="#AA33FF"
-                  onPress={() => navigation.navigate('Multiview')}>
+                  onPress={() => {
+                    dispatch({
+                      type: 'viewer/setSelectedSource',
+                      payload: {
+                        url: null,
+                        mid: null
+                      },
+                    });
+                    navigation.navigate('Multiview');
+                  }}>
                   <Text style={{color: 'white', fontWeight: 'bold'}}>
                     {playing ? 'Multiview' : null}
                   </Text>
                 </TouchableHighlight>
-              </View>
+              }
             </View>
-          }
+          </View>
         </>
       </SafeAreaView>
     </>
