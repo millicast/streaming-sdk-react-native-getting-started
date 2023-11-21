@@ -10,11 +10,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import {RTCView} from 'react-native-webrtc';
 
 import myStyles from '../../styles/styles.js';
-import {Logger as MillicastLogger} from '@millicast/sdk';
+import {Logger as MillicastLogger, Director, Publish} from '@millicast/sdk';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {mediaDevices} from 'react-native-webrtc';
-import {Director, Publish} from '@millicast/sdk/dist/millicast.debug.umd';
 
 import {useDispatch, useSelector} from 'react-redux';
 
