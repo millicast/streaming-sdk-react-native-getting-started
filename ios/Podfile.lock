@@ -329,7 +329,7 @@ PODS:
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
-  - SocketRocket (0.6.1)
+  - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga
@@ -528,7 +528,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 92e1600ad33818e45fcf1831e2fdd6451a4d3a47
   ReactCommon: e3818869621c119aea08bd5ce8ed0b8c64abeafe
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
-  SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 486daad4f5db121eb2e831e2aae8ad994011573f
   YogaKit: 1e22bf2228b3a5ac8cc88965153061ae92c494b5
 

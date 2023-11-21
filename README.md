@@ -260,6 +260,13 @@ You should have an Android TV/mobile simulator on Android Studio.
 
 ## Troubleshooting
 
+### WebRTC related errors during runtime
+If you have any issues related to WebRTC, and you already used this app it maybe due to an outdated node module. Follow this steps:
+1. Delete `node_modules` directory.
+2. Run `yarn cache clean`.
+3. Re install dependencies with `yarn` command.
+4. Continue with [Getting Started](#getting-started).
+
 ### Framework not found WebRTC
 Check inside the TestApp or TestApp-tvOS project (depending on which platform do you want to run the application) go to `General -> Framework, Libraries, and Embedded Content` and look for WebRTC.framework. You should to confirm that you are using the proper framework for the platform and it should be with `Embed && Sign` option.
 
