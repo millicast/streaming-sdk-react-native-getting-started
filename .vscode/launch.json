@@ -9,7 +9,17 @@
             "request": "launch",
             "type": "reactnativedirect",
             "cwd": "${workspaceFolder}",
-            "platform": "ios"
+            "platform": "ios",
+            "target": "simulator",
+            "sourceMaps": true,
+            "outDir": "${workspaceFolder}/.vscode/.react",
+            "runArguments": [
+                "run-ios",
+                "--simulator",
+                "iPhone 14 Pro Max",
+                "--scheme",
+                "TestApp"
+            ]
         },
         {
             "name": "Debug Android Hermes",
