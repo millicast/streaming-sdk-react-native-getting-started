@@ -1,0 +1,8 @@
+#include "Pods-TestApp.debug.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = io.dolby.rn.interactiveplayer.development
+
+DEVELOPMENT_TEAM = E4A6TDH44W
+CODE_SIGN_STYLE = Manual
+
+PROVISIONING_PROFILE_SPECIFIER = Dolby IO Interactive Player RN Development iOS
