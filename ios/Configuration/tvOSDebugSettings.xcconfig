@@ -1,4 +1,4 @@
-#include "Pods-TestApp.debug.xcconfig"
+#include "../Pods/Target Support Files/Pods-TestApp-tvOS/Pods-TestApp-tvOS.debug.xcconfig"
 
 PRODUCT_BUNDLE_IDENTIFIER = io.dolby.rn.interactiveplayer.development
 
