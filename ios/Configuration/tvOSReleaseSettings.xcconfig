@@ -1,0 +1,9 @@
+#include "../Pods/Target Support Files/Pods-TestApp-tvOS/Pods-TestApp-tvOS.release.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = io.dolby.rn.interactiveplayer
+
+DEVELOPMENT_TEAM = B5PH3RUUX8
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = iPhone Distribution
+
+PROVISIONING_PROFILE_SPECIFIER = Dolby IO Interactive Player RN tvOS
