@@ -1,4 +1,4 @@
-package com.testapp;
+package io.dolby.rn.interactiveplayer;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

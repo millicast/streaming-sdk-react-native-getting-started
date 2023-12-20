@@ -1,4 +1,4 @@
-package com.testapp.newarchitecture;
+package io.dolby.rn.interactiveplayer.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,11 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.testapp.BuildConfig;
-import com.testapp.newarchitecture.components.MainComponentsRegistry;
-import com.testapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+
+import io.dolby.rn.interactiveplayer.BuildConfig;
+import io.dolby.rn.interactiveplayer.newarchitecture.components.MainComponentsRegistry;
+import io.dolby.rn.interactiveplayer.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+
 import java.util.ArrayList;
 import java.util.List;
 
