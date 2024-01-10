@@ -1,0 +1,22 @@
+name: Continuous Integration Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  Run-Checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Install modules
+        run: yarn
+      - name: Run lint
+        run: |
+          yarn run lint
