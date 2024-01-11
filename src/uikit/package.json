@@ -1,0 +1,20 @@
+{
+  "name": "@dolbyio/uikit-react-native",
+  "version": "1.0.0",
+  "description": "Dolby.IO UIKit React Native",
+  "main": "./index.ts",
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "mobile.podspec",
+    "!lib/typescript/example",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ]
+}

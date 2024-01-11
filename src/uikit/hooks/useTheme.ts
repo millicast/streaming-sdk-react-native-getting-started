@@ -1,4 +1,4 @@
-import type { ColorKey } from '@dolbyio/comms-uikit-common';
+import type { ColorKey } from '../theme/types';
 import { useCallback, useContext } from 'react';
 
 import { ThemeContext } from '../providers/ThemeProvider';
