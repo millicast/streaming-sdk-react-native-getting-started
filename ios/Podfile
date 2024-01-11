@@ -25,6 +25,8 @@ target 'TestApp' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  
+  pod 'WebRTC', :podspec => 'WebRTC/'
 
   target 'TestAppTests' do
     inherit! :complete
@@ -48,6 +50,8 @@ target 'TestApp-tvOS' do
     # An absolute path to your application root.
     :app_path => "#{Dir.pwd}/.."
   )
+
+  pod 'WebRTC', :podspec => 'WebRTC/'
 
   target 'TestApp-tvOSTests' do
     inherit! :complete
