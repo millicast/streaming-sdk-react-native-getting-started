@@ -253,7 +253,6 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				B0563F1945F562EA860C8FFD /* [CP] Embed Pods Frameworks */,
 				2D6599C4C57E3845B3362D38 /* [CP] Copy Pods Resources */,
-				0A7620132AD6E95000B25F63 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -275,6 +274,7 @@
 				2D02E4791E0B4A5D006451C7 /* Resources */,
 				2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */,
 				A8E5427FAF6B986158E2633A /* [CP] Copy Pods Resources */,
+				D46E476AA326815930F22144 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -294,6 +294,7 @@
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
 				C9FF6748541601D7E0EE9EFE /* [CP] Copy Pods Resources */,
+				435E04E9659EFC79282C5E9B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -454,6 +455,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestApp/Pods-TestApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		435E04E9659EFC79282C5E9B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS-TestApp-tvOSTests/Pods-TestApp-tvOS-TestApp-tvOSTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS-TestApp-tvOSTests/Pods-TestApp-tvOS-TestApp-tvOSTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS-TestApp-tvOSTests/Pods-TestApp-tvOS-TestApp-tvOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		5989D29631C9458163258B7D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -581,6 +599,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS-TestApp-tvOSTests/Pods-TestApp-tvOS-TestApp-tvOSTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D46E476AA326815930F22144 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS/Pods-TestApp-tvOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS/Pods-TestApp-tvOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestApp-tvOS/Pods-TestApp-tvOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FA9E4818ACF76DCCB207186D /* [CP] Check Pods Manifest.lock */ = {
@@ -839,7 +874,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Pods/**";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
