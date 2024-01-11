@@ -1,4 +1,6 @@
-const defaultTheme = {
+import { Theme } from "./types";
+
+const defaultTheme: Theme = {
   // COLORS for Dark theme
   colors: {
     black: '#14141A',

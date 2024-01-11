@@ -7,7 +7,7 @@ export { default as defaultTheme } from './theme/defaultTheme';
 export type { ColorHues, Colors, Theme, ColorKey, ThemeMode, Sizes } from './theme/types';
 
 // Hooks
-export { default as useTheme } from './hooks/useTheme';
+export { default as useAppTheme } from './hooks/useAppTheme';
 
 // Components - UI
 export { default as Icon } from './components/Icon/Icon';

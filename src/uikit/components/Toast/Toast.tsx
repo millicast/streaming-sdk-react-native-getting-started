@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, LayoutChangeEvent, View } from 'react-native';
 
-import useTheme from '../../hooks/useTheme';
+import useTheme from '../../hooks/useAppTheme';
 import Icon from '../Icon/Icon';
 import IconButton from '../IconButton/IconButton';
 import Text from '../Text/Text';

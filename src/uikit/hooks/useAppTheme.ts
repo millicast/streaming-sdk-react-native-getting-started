@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react';
 
 import { ThemeContext } from '../providers/ThemeProvider';
 
-const useTheme = () => {
+const useAppTheme = () => {
   const { theme, themeMode, setThemeMode } = useContext(ThemeContext);
 
   const getColor = useCallback(
@@ -63,4 +63,4 @@ const useTheme = () => {
   };
 };
 
-export default useTheme;
+export default useAppTheme;

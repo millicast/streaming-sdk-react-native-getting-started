@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import useTheme from '../../hooks/useTheme';
+import useTheme from '../../hooks/useAppTheme';
 import Badge from '../Badge/Badge';
 import Icon, { ColorTone } from '../Icon/Icon';
 import type { IconComponentName } from '../Icon/IconComponents';

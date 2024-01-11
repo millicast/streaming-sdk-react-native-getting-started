@@ -2,7 +2,7 @@ import type { ColorKey } from '../../theme/types';
 import React from 'react';
 import { Text, TextProps } from 'react-native';
 
-import useTheme from '../../hooks/useTheme';
+import useTheme from '../../hooks/useAppTheme';
 
 import styles from './Text.style';
 

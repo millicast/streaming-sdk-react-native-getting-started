@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 
-import useTheme from '../../hooks/useTheme';
+import useTheme from '../../hooks/useAppTheme';
 import IconButton from '../IconButton/IconButton';
 import Text from '../Text/Text';
 

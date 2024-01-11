@@ -13,6 +13,7 @@ import {useDispatch} from 'react-redux';
 
 import myStyles from './styles/styles.js';
 import {Platform} from 'react-native';
+import {Button} from '@dolbyio/uikit-react-native';
 
 function HomeScreen({navigation}) {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ function HomeScreen({navigation}) {
         style={myStyles.buttonDesign}>
         <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
       </TouchableOpacity>
+      <Button title="logout" type="secondaryDark" onPress={() => {}} />
     </SafeAreaView>
   );
 }
