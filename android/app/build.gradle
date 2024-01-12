@@ -1,4 +1,7 @@
-apply plugin: "com.android.application"
+plugins {
+    id 'com.android.application'
+    id("com.github.triplet.play") version "3.8.6"
+}
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -131,6 +134,9 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+def appVersionCode = Integer.valueOf(System.env.VERSION_CODE ?: 1)
+def appVersionName = System.env.VERSION_NAME ?: "1.0"
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -140,8 +146,8 @@ android {
         applicationId "io.dolby.rn.interactiveplayer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -247,6 +253,10 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
+            play {
+                track.set("internal")
+            }
         }
     }
 

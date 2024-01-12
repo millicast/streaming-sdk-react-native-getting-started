@@ -9,7 +9,7 @@ const initialState = {
   isMediaSet: true,
   selectedSource: {
     url: null,
-    mid: null
+    mid: null,
   },
   muted: false,
   multiView: false,
@@ -105,7 +105,7 @@ const viewerReducer = (state = initialState, action) => {
         streams: [...state.streams, action.payload],
       };
     case 'viewer/removeStream':
-      const streams = state.streams.filter(stream => stream !== action.payload)
+      const streams = state.streams.filter(stream => stream !== action.payload);
       return {
         ...state,
         streams: [...streams],

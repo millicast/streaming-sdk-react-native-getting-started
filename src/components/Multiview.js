@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   StyleSheet,
   View,
@@ -6,10 +7,9 @@ import {
   TouchableHighlight,
   FlatList,
   Platform,
-  AppState
+  AppState,
 } from 'react-native';
 import React, {useEffect, useRef} from 'react';
-import { useNavigation } from '@react-navigation/native';
 import {RTCView} from 'react-native-webrtc';
 import myStyles from '../../styles/styles.js';
 
@@ -18,7 +18,7 @@ import {Logger as MillicastLogger} from '@millicast/sdk';
 import {useSelector, useDispatch} from 'react-redux';
 
 window.Logger = MillicastLogger;
-Logger.setLevel(MillicastLogger.DEBUG);
+window.Logger.setLevel(MillicastLogger.DEBUG);
 
 const amountCols = Platform.isTV ? 2 : 1;
 
@@ -27,9 +27,11 @@ export default function Multiview({navigation, route}) {
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
   const playing = useSelector(state => state.viewerReducer.playing);
   const millicastView = useSelector(state => state.viewerReducer.millicastView);
-  const selectedSource = useSelector(state => state.viewerReducer.selectedSource);
+  const selectedSource = useSelector(
+    state => state.viewerReducer.selectedSource,
+  );
   const dispatch = useDispatch();
-  
+
   const streamsRef = useRef(null);
   const selectedSourceRef = useRef(null);
   const millicastViewRef = useRef(null);
@@ -39,8 +41,11 @@ export default function Multiview({navigation, route}) {
   millicastViewRef.current = millicastView;
 
   const addRemoteTrack = async sourceId => {
-    const isAlreadyProjected = streams.some(stream => stream.sourceId === sourceId);
+    const isAlreadyProjected = streams.some(
+      stream => stream.sourceId === sourceId,
+    );
     if (!isAlreadyProjected) {
+      // eslint-disable-next-line no-undef
       const mediaStream = new MediaStream();
       const transceiver = await millicastView.addRemoteTrack('video', [
         mediaStream,
@@ -61,11 +66,15 @@ export default function Multiview({navigation, route}) {
   };
 
   const navigateSingleView = async (url = null, mid = null) => {
-    dispatch({ type: 'viewer/setSelectedSource', payload: { url, mid } });
+    dispatch({type: 'viewer/setSelectedSource', payload: {url, mid}});
 
     try {
-      const listVideoMids = streamsRef.current.map(track => track.videoMid).filter(x => (x != '0') && (x != mid));
-      const streamAux = streamsRef.current.filter(stream => !listVideoMids.includes(stream.videoMid))
+      const listVideoMids = streamsRef.current
+        .map(track => track.videoMid)
+        .filter(x => x != '0' && x != mid);
+      const streamAux = streamsRef.current.filter(
+        stream => !listVideoMids.includes(stream.videoMid),
+      );
 
       await millicastViewRef.current.unproject(listVideoMids);
 
@@ -75,7 +84,7 @@ export default function Multiview({navigation, route}) {
     }
 
     navigation.navigate('Viewer Main');
-  }
+  };
 
   useEffect(() => {
     // componentWillMount
@@ -93,7 +102,7 @@ export default function Multiview({navigation, route}) {
       }
     };
     initializeMultiview();
-    
+
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'background') {
         navigation.navigate('Viewer Main');
@@ -103,7 +112,7 @@ export default function Multiview({navigation, route}) {
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [addRemoteTrack, navigation, sourceIds]);
 
   return (
     <SafeAreaView style={stylesContainer.container}>
@@ -156,7 +165,9 @@ export default function Multiview({navigation, route}) {
                     hasTVPreferredFocus
                     style={{padding: 10, bottom: 150, borderRadius: 6}}
                     underlayColor="#AA33FF"
-                    onPress={() => navigateSingleView(item.stream.toURL(), item.videoMid)}>
+                    onPress={() =>
+                      navigateSingleView(item.stream.toURL(), item.videoMid)
+                    }>
                     <Text style={{color: 'white'}}>
                       {!item.sourceId ? 'Main' : String(item.sourceId)}
                     </Text>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useRef, useState, useEffect} from 'react';
 import {
   StyleSheet,
@@ -5,7 +6,7 @@ import {
   Text,
   SafeAreaView,
   TouchableHighlight,
-  AppState
+  AppState,
 } from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import {
@@ -21,7 +22,7 @@ import Multiview from './Multiview';
 import {useSelector, useDispatch} from 'react-redux';
 
 window.Logger = MillicastLogger;
-Logger.setLevel(MillicastLogger.DEBUG);
+window.Logger.setLevel(MillicastLogger.DEBUG);
 
 function ViewerMain({navigation}) {
   const appState = useRef(AppState.currentState);
@@ -32,10 +33,12 @@ function ViewerMain({navigation}) {
   const playing = useSelector(state => state.viewerReducer.playing);
   const streams = useSelector(state => state.viewerReducer.streams);
   const sourceIds = useSelector(state => state.viewerReducer.sourceIds);
-  const selectedSource = useSelector(state => state.viewerReducer.selectedSource);
+  const selectedSource = useSelector(
+    state => state.viewerReducer.selectedSource,
+  );
   const millicastView = useSelector(state => state.viewerReducer.millicastView);
   const dispatch = useDispatch();
-  
+
   const playingRef = useRef(null);
   const millicastViewRef = useRef(null);
 
@@ -43,7 +46,10 @@ function ViewerMain({navigation}) {
   millicastViewRef.current = millicastView;
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
 
     return () => {
       subscription.remove();
@@ -51,21 +57,24 @@ function ViewerMain({navigation}) {
         stopStream();
       }
     };
-  }, []);
+  }, [handleAppStateChange, stopStream]);
 
-  const handleAppStateChange = (nextAppState) => {
+  const handleAppStateChange = nextAppState => {
     appState.current = nextAppState;
     if (playingRef.current) {
       stopStream();
     }
-  }
+  };
 
   const stopStream = async () => {
     await millicastViewRef.current.stop();
     dispatch({type: 'viewer/setPlaying', payload: false});
     dispatch({type: 'viewer/setIsMediaSet', payload: true});
     dispatch({type: 'viewer/setStreams', payload: []});
-    dispatch({type: 'viewer/setSelectedSource', payload: {url: null, mid: null}});
+    dispatch({
+      type: 'viewer/setSelectedSource',
+      payload: {url: null, mid: null},
+    });
   };
 
   const subscribe = async () => {
@@ -149,10 +158,7 @@ function ViewerMain({navigation}) {
             streams?.[0] ? (
               <RTCView
                 key={selectedSource.mid ?? 'main'}
-                streamURL={
-                  selectedSource.url ??
-                    streams?.[0]?.stream?.toURL()
-                }
+                streamURL={selectedSource.url ?? streams?.[0]?.stream?.toURL()}
                 style={myStyles.video}
                 objectFit="contain"
               />
@@ -175,8 +181,7 @@ function ViewerMain({navigation}) {
                   {playing ? 'Pause' : 'Play'}
                 </Text>
               </TouchableHighlight>
-              {
-                playing && 
+              {playing && (
                 <TouchableHighlight
                   hasTVPreferredFocus
                   tvParallaxProperties={{magnification: 1.5}}
@@ -186,7 +191,7 @@ function ViewerMain({navigation}) {
                       type: 'viewer/setSelectedSource',
                       payload: {
                         url: null,
-                        mid: null
+                        mid: null,
                       },
                     });
                     navigation.navigate('Multiview');
@@ -195,7 +200,7 @@ function ViewerMain({navigation}) {
                     {playing ? 'Multiview' : null}
                   </Text>
                 </TouchableHighlight>
-              }
+              )}
             </View>
           </View>
         </>

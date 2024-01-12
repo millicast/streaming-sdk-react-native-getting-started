@@ -1,0 +1,66 @@
+name: CD Android build and distribution
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  Android-App-Build-And-Internal-Distribution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Install modules
+        run: yarn install
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Install the signing certificate
+        env:
+          DISTRIBUTION_CERTIFICATE_ANDROID_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+        run: |
+          CERTIFICATE_PATH=./android/app/release.keystore
+          echo -n "$DISTRIBUTION_CERTIFICATE_ANDROID_BASE64" | base64 --decode > $CERTIFICATE_PATH
+
+      - name: calculate version
+        run: |
+          versionName='1.0.'$GITHUB_RUN_NUMBER
+          versionCode=$GITHUB_RUN_NUMBER; echo "versionName: $versionName; versionCode: $versionCode"
+          echo "export VERSION_NAME=$versionName; export VERSION_CODE=$versionCode" > ~/.env_version
+
+      - name: Android App Build
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.RELEASE_KEYSTORE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_KEY_PASSWORD }}
+        run: |
+          export KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD
+          export KEY_ALIAS=$KEY_ALIAS
+          export KEY_PASSWORD=$KEY_PASSWORD
+          source ~/.env_version
+          cd android && chmod +x ./gradlew && ./gradlew bundleRelease
+      - name: Archive production bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-release-bundle
+          path: |
+            ./android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Deploy to Play Store
+        env:
+          ANDROID_PUBLISHER_CREDENTIALS: ${{ secrets.ANDROID_PUBLISHER_CREDENTIALS }}
+        run: |
+          export ANDROID_PUBLISHER_CREDENTIALS=$ANDROID_PUBLISHER_CREDENTIALS
+          cd android && chmod +x ./gradlew && ./gradlew publishReleaseBundle --artifact-dir ./app/build/outputs/bundle/release/ --stacktrace
