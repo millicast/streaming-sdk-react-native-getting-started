@@ -1,5 +1,6 @@
-import type { Colors } from '../../theme/types';
 import { StyleSheet } from 'react-native';
+
+import type { Colors } from '../../theme/types';
 
 const makeButtonStyles = (colors: Colors) =>
   StyleSheet.create({

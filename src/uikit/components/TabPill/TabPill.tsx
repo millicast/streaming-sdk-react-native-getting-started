@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 
-import useTheme from '../../hooks/useTheme';
+import useTheme from '../../hooks/useAppTheme';
 import Icon from '../Icon/Icon';
 import type { IconComponentName } from '../Icon/IconComponents';
 import Text from '../Text/Text';

@@ -1,8 +1,8 @@
-import type { ColorKey } from '../../theme/types';
 import React from 'react';
 import { View } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { ColorKey } from '../../theme/types';
 
 import styles from './Layout.style';
 

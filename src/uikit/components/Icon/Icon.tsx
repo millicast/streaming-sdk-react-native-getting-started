@@ -1,8 +1,8 @@
-import type { ColorKey, Sizes } from '../../theme/types';
 import Color from 'color';
 import React, { useMemo } from 'react';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { ColorKey, Sizes } from '../../theme/types';
 
 import Icons from './IconComponents';
 import type { IconComponentName } from './IconComponents';

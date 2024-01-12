@@ -1,8 +1,8 @@
-import type { Sizes } from '../../theme/types';
 import React from 'react';
 import { Text, Pressable, View } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { Sizes } from '../../theme/types';
 import Icon from '../Icon/Icon';
 import type { IconComponentName } from '../Icon/IconComponents';
 import Spinner from '../Spinner/Spinner';

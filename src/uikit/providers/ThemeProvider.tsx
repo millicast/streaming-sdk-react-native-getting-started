@@ -1,9 +1,10 @@
-import customThemes from '../theme/customThemes';
-import defaultTheme from '../theme/defaultTheme';
-import type {Theme, ThemeMode} from '../theme/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import deepMerge from 'lodash.merge';
 import React, { createContext, useState, useEffect, useMemo } from 'react';
+
+import customThemes from '../theme/customThemes';
+import defaultTheme from '../theme/defaultTheme';
+import type { Theme, ThemeMode } from '../theme/types';
 
 type ThemeContext = {
   theme: Theme;
@@ -15,7 +16,9 @@ type ThemeProviderProps = {
   theme?: Theme;
 };
 
-export const ThemeContext = createContext<ThemeContext>({ theme: defaultTheme } as ThemeContext);
+export const ThemeContext = createContext<ThemeContext>({
+  theme: defaultTheme,
+} as ThemeContext);
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme }) => {
   const [themeState, setThemeState] = useState(defaultTheme);
@@ -48,7 +51,9 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme }) => {
   }, [setThemeMode, themeModeState]);
 
   useEffect(() => {
-    setThemeState({ ...deepMerge(defaultTheme, customThemes[themeModeState], theme) });
+    setThemeState({
+      ...deepMerge(defaultTheme, customThemes[themeModeState], theme),
+    });
   }, [theme, themeModeState]);
 
   const contextValue: ThemeContext = useMemo(

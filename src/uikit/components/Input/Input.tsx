@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import type { ColorKey } from '../../theme/types';
 import React, { useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { ColorKey } from '../../theme/types';
 import IconButton from '../IconButton/IconButton';
 import Text from '../Text/Text';
 
@@ -78,7 +78,10 @@ const Input = ({
           autoCorrect={false}
           onFocus={() => setTextInputInFocus(true)}
           onBlur={() => setTextInputInFocus(false)}
-          style={{ fontFamily: theme.fontFamily, color: getColor(textColor, 'black') }}
+          style={{
+            fontFamily: theme.fontFamily,
+            color: getColor(textColor, 'black'),
+          }}
           {...props}
         />
       </View>

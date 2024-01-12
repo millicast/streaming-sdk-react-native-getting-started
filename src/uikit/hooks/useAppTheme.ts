@@ -1,7 +1,7 @@
-import type { ColorKey } from '../theme/types';
 import { useCallback, useContext } from 'react';
 
 import { ThemeContext } from '../providers/ThemeProvider';
+import type { ColorKey } from '../theme/types';
 
 const useAppTheme = () => {
   const { theme, themeMode, setThemeMode } = useContext(ThemeContext);

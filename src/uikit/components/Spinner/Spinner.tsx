@@ -1,7 +1,7 @@
-import type { ColorKey } from '../../theme/types';
 import React from 'react';
 import { Animated } from 'react-native';
 
+import type { ColorKey } from '../../theme/types';
 import Icon, { IconSize } from '../Icon/Icon';
 
 export type SpinnerProps = {

@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import type { Sizes } from '../../theme/types';
 import React from 'react';
 import { View } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { Sizes } from '../../theme/types';
 import Text from '../Text/Text';
 
 import styles from './Pill.style';
@@ -25,7 +25,12 @@ const Pill = ({ text, subtitleText, label, active = false, size = 'm', testID }:
   return (
     <View
       testID={testID}
-      style={[styles.container, { backgroundColor: active ? getColor('white') : getColor('whiteAlpha.50') }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: active ? getColor('white') : getColor('whiteAlpha.50'),
+        },
+      ]}
     >
       <View style={{ flexShrink: 1 }}>
         <Text

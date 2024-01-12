@@ -1,8 +1,8 @@
-import type { ColorKey } from '../../theme/types';
 import React from 'react';
 import { View } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { ColorKey } from '../../theme/types';
 import Text from '../Text/Text';
 
 import styles from './Badge.style';

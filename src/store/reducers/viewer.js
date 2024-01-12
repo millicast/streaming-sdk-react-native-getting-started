@@ -39,7 +39,7 @@ const viewerReducer = (state = initialState, action) => {
       if (mediaStream) {
         const audioPromise = async () => {
           await Promise.all(
-            streamsArray?.map(stream => {
+            streamsArray?.map((stream) => {
               if (stream.stream.toURL() == event.streams?.[0]?.toURL()) {
                 stream.audioMid = event.transceiver.mid;
               }
@@ -105,7 +105,7 @@ const viewerReducer = (state = initialState, action) => {
         streams: [...state.streams, action.payload],
       };
     case 'viewer/removeStream':
-      const streams = state.streams.filter(stream => stream !== action.payload);
+      const streams = state.streams.filter((stream) => stream !== action.payload);
       return {
         ...state,
         streams: [...streams],
@@ -113,7 +113,7 @@ const viewerReducer = (state = initialState, action) => {
     case 'viewer/setSelectedSource':
       return {
         ...state,
-        selectedSource: {...action.payload},
+        selectedSource: { ...action.payload },
       };
     default:
       return state;

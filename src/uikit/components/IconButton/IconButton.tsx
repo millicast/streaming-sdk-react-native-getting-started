@@ -1,10 +1,10 @@
-import type { ColorKey, Sizes } from '../../theme/types';
 import Color from 'color';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import useTheme from '../../hooks/useAppTheme';
+import type { ColorKey, Sizes } from '../../theme/types';
 import Badge from '../Badge/Badge';
 import Icon, { ColorTone } from '../Icon/Icon';
 import type { IconComponentName } from '../Icon/IconComponents';
@@ -90,7 +90,9 @@ const IconButton = ({
 
     return activeContent;
   }, [icon, iconColor, disabled]);
-  const handleStrokeColor = { borderColor: strokeColor == null ? 'transparent' : strokeColor };
+  const handleStrokeColor = {
+    borderColor: strokeColor == null ? 'transparent' : strokeColor,
+  };
   return (
     <>
       <TouchableOpacity

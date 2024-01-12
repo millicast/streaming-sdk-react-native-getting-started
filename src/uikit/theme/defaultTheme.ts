@@ -1,4 +1,4 @@
-import { Theme } from "./types";
+import { Theme } from './types';
 
 const defaultTheme: Theme = {
   // COLORS for Dark theme
