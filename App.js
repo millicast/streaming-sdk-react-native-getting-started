@@ -1,20 +1,17 @@
+/* eslint-disable */
+import { Button } from '@dolbyio/uikit-react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import {Text, TouchableOpacity, SafeAreaView} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Provider} from 'react-redux';
+import { Text, View, SafeAreaView, Platform } from 'react-native';
+import { Provider, useDispatch } from 'react-redux';
 
-import store from './src/store';
-
-import Viewer from './src/components/Viewer';
 import Publisher from './src/components/Publisher';
-
-import {useDispatch} from 'react-redux';
-
+import Viewer from './src/components/Viewer';
+import store from './src/store';
 import myStyles from './styles/styles.js';
-import {Platform} from 'react-native';
 
-function HomeScreen({navigation}) {
+const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   dispatch({
     type: 'viewer/setStreamName',
@@ -37,26 +34,18 @@ function HomeScreen({navigation}) {
     <SafeAreaView style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
       {!Platform.isTV ? (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Publisher App')}
-          style={myStyles.buttonDesign}>
-          <Text style={myStyles.buttonText}>PUBLISHER</Text>
-        </TouchableOpacity>
+        <Button title="publisher" type="primary" onPress={() => navigation.navigate('Publisher App')} />
       ) : null}
 
-      <TouchableOpacity
-        hasTVPreferredFocus
-        onPress={() => navigation.navigate('Subscriber App')}
-        style={myStyles.buttonDesign}>
-        <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
-      </TouchableOpacity>
+      <View style={{ paddingTop: 16 }} />
+      <Button title="subscriber" type="primary" onPress={() => navigation.navigate('Subscriber App')} />
     </SafeAreaView>
   );
-}
+};
 
 const Stack = createNativeStackNavigator();
 
-function App() {
+const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -74,7 +63,8 @@ function App() {
             },
             // hide the header bar for tvOS due to incompatibility of the library
             headerShown: !(Platform.OS === 'ios' && Platform.isTV),
-          }}>
+          }}
+        >
           <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
           <Stack.Screen name="Subscriber App" component={Viewer} />
           <Stack.Screen name="Publisher App" component={Publisher} />
@@ -82,6 +72,6 @@ function App() {
       </NavigationContainer>
     </Provider>
   );
-}
+};
 
 export default App;

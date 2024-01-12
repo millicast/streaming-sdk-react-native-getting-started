@@ -1,51 +1,33 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  AppState,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {RTCView} from 'react-native-webrtc';
+/* eslint-disable */
+import { Logger as MillicastLogger, Director, Publish } from '@millicast/sdk';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect, useRef, useState } from 'react';
+import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity, AppState } from 'react-native';
+import { RTCView, mediaDevices } from 'react-native-webrtc';
+import { useDispatch, useSelector } from 'react-redux';
 
 import myStyles from '../../styles/styles.js';
-import {Logger as MillicastLogger, Director, Publish} from '@millicast/sdk';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-import {mediaDevices} from 'react-native-webrtc';
-
-import {useDispatch, useSelector} from 'react-redux';
 
 window.Logger = MillicastLogger;
 window.Logger.setLevel(MillicastLogger.DEBUG);
 
-export const PublisherMain = ({navigation}) => {
+export const PublisherMain = ({ navigation }) => {
   const [intervalId, setIntervalId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
-  const playing = useSelector(state => state.publisherReducer.playing);
-  const videoEnabled = useSelector(
-    state => state.publisherReducer.videoEnabled,
-  );
-  const audioEnabled = useSelector(
-    state => state.publisherReducer.audioEnabled,
-  );
-  const codec = useSelector(state => state.publisherReducer.codec);
-  const mirror = useSelector(state => state.publisherReducer.mirror);
-  const userCount = useSelector(state => state.publisherReducer.userCount);
-  const timePlaying = useSelector(state => state.publisherReducer.timePlaying);
-  const streamName = useSelector(state => state.publisherReducer.streamName);
-  const publishingToken = useSelector(
-    state => state.publisherReducer.publishingToken,
-  );
-  const millicastPublish = useSelector(
-    state => state.publisherReducer.millicastPublish,
-  );
+  const mediaStream = useSelector((state) => state.publisherReducer.mediaStream);
+  const playing = useSelector((state) => state.publisherReducer.playing);
+  const videoEnabled = useSelector((state) => state.publisherReducer.videoEnabled);
+  const audioEnabled = useSelector((state) => state.publisherReducer.audioEnabled);
+  const codec = useSelector((state) => state.publisherReducer.codec);
+  const mirror = useSelector((state) => state.publisherReducer.mirror);
+  const userCount = useSelector((state) => state.publisherReducer.userCount);
+  const timePlaying = useSelector((state) => state.publisherReducer.timePlaying);
+  const streamName = useSelector((state) => state.publisherReducer.streamName);
+  const publishingToken = useSelector((state) => state.publisherReducer.publishingToken);
+  const millicastPublish = useSelector((state) => state.publisherReducer.millicastPublish);
   const dispatch = useDispatch();
 
   const playingRef = useRef(null);
@@ -59,7 +41,7 @@ export const PublisherMain = ({navigation}) => {
   intervalIdRef.current = intervalId;
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
       stop();
@@ -76,7 +58,7 @@ export const PublisherMain = ({navigation}) => {
       setIsConnecting(false);
       const newIntervalId = setInterval(() => {
         if (playingRef.current) {
-          dispatch({type: 'publisher/timePlaying'});
+          dispatch({ type: 'publisher/timePlaying' });
         }
       }, 1000);
       setIntervalId(newIntervalId);
@@ -93,8 +75,8 @@ export const PublisherMain = ({navigation}) => {
     if (millicastPublish) {
       // State of the broadcast
       connectionState();
-      millicastPublish.on('broadcastEvent', event => {
-        const {name, data} = event;
+      millicastPublish.on('broadcastEvent', (event) => {
+        const { name, data } = event;
         if (name === 'viewercount') {
           dispatch({
             type: 'publisher/userCount',
@@ -105,13 +87,13 @@ export const PublisherMain = ({navigation}) => {
     }
   }, [connectionState, dispatch, millicastPublish]);
 
-  const setCodec = value => {
+  const setCodec = (value) => {
     this.setState({
       codec: value,
     });
   };
 
-  const setBitrate = async value => {
+  const setBitrate = async (value) => {
     this.setState({
       bitrate: value,
     });
@@ -120,7 +102,6 @@ export const PublisherMain = ({navigation}) => {
 
   const handleClickPlay = () => {
     if (isConnecting) {
-      return;
     } else if (!playing) {
       setIsConnecting(!isConnecting);
       start();
@@ -129,7 +110,7 @@ export const PublisherMain = ({navigation}) => {
     }
   };
 
-  const setMediaStream = mediaStream => ({
+  const setMediaStream = (mediaStream) => ({
     type: 'publisher/mediaStream',
     mediaStream,
   });
@@ -153,17 +134,17 @@ export const PublisherMain = ({navigation}) => {
   const publish = async (streamName, token) => {
     const tokenGenerator = () =>
       Director.getPublisher({
-        token: token,
-        streamName: streamName,
+        token,
+        streamName,
       });
 
     const broadcastOptions = {
-      mediaStream: mediaStream,
-      codec: codec,
+      mediaStream,
+      codec,
       events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
     };
 
-    let millicastPublish = new Publish(streamName, tokenGenerator);
+    const millicastPublish = new Publish(streamName, tokenGenerator);
 
     dispatch({
       type: 'publisher/streamURL',
@@ -172,7 +153,7 @@ export const PublisherMain = ({navigation}) => {
 
     try {
       await millicastPublish.connect(broadcastOptions);
-      dispatch({type: 'publisher/publish', millicastPublish});
+      dispatch({ type: 'publisher/publish', millicastPublish });
     } catch (e) {
       setIsConnecting(!isConnecting);
       console.log('Connection failed, handle error', e);
@@ -184,16 +165,16 @@ export const PublisherMain = ({navigation}) => {
       millicastPublishRef.current.stop();
       if (mediaStreamRef.current) {
         mediaStreamRef.current.release();
-        dispatch({type: 'publisher/mediaStream', mediaStream: null});
+        dispatch({ type: 'publisher/mediaStream', mediaStream: null });
       }
-      dispatch({type: 'publisher/reset'});
+      dispatch({ type: 'publisher/reset' });
       clearInterval(intervalIdRef.current);
     }
   };
 
   const connectionState = () => {
     // State of the broadcast
-    millicastPublish.on('connectionStateChange', event => {
+    millicastPublish.on('connectionStateChange', (event) => {
       if (event === 'connected') {
         dispatch({
           type: 'publisher/playing',
@@ -209,7 +190,7 @@ export const PublisherMain = ({navigation}) => {
   };
 
   const handleClickMute = () => {
-    mediaStream.getAudioTracks().forEach(track => {
+    mediaStream.getAudioTracks().forEach((track) => {
       track.enabled = !track.enabled;
     });
     dispatch({
@@ -219,7 +200,7 @@ export const PublisherMain = ({navigation}) => {
   };
 
   const handleClickDisableVideo = () => {
-    mediaStream.getVideoTracks().forEach(track => {
+    mediaStream.getVideoTracks().forEach((track) => {
       track.enabled = !track.enabled;
     });
     dispatch({
@@ -229,70 +210,53 @@ export const PublisherMain = ({navigation}) => {
   };
 
   const toggleCamera = () => {
-    mediaStream.getVideoTracks().forEach(track => {
+    mediaStream.getVideoTracks().forEach((track) => {
       track._switchCamera();
     });
-    dispatch({type: 'publisher/mirror', mirror: !mirror});
+    dispatch({ type: 'publisher/mirror', mirror: !mirror });
   };
 
   const showTimePlaying = () => {
-    let time = timePlaying;
+    const time = timePlaying;
 
-    let seconds = '' + (time % 60);
-    let minutes = '' + (Math.floor(time / 60) % 60);
-    let hours = '' + Math.floor(time / 3600);
+    let seconds = `${time % 60}`;
+    let minutes = `${Math.floor(time / 60) % 60}`;
+    let hours = `${Math.floor(time / 3600)}`;
 
     if (seconds < 10) {
-      seconds = '0' + seconds;
+      seconds = `0${seconds}`;
     }
     if (minutes < 10) {
-      minutes = '0' + minutes;
+      minutes = `0${minutes}`;
     }
     if (hours < 10) {
-      hours = '0' + hours;
+      hours = `0${hours}`;
     }
 
-    return hours + ':' + minutes + ':' + seconds;
+    return `${hours}:${minutes}:${seconds}`;
   };
 
   return (
     <SafeAreaView style={styles.body}>
       {mediaStream ? (
-        <RTCView
-          streamURL={mediaStream.toURL()}
-          style={myStyles.video}
-          objectFit="contain"
-          mirror={mirror}
-        />
+        <RTCView streamURL={mediaStream.toURL()} style={myStyles.video} objectFit="contain" mirror={mirror} />
       ) : null}
       <View style={myStyles.topViewerCount}>
         <Text style={myStyles.textShadow}>{`${userCount}`}</Text>
       </View>
-      <Text style={[myStyles.bottomBarTimePlaying, myStyles.textShadow]}>
-        {playing ? `${showTimePlaying()}` : ''}
-      </Text>
+      <Text style={[myStyles.bottomBarTimePlaying, myStyles.textShadow]}>{playing ? `${showTimePlaying()}` : ''}</Text>
       <View style={myStyles.bottomMultimediaContainer}>
         <View style={myStyles.bottomIconWrapper}>
           <TouchableOpacity onPress={handleClickPlay}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>
               {isConnecting ? 'Publishing' : !playing ? 'Play' : 'Stop'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleClickMute}>
-            <Text>
-              {playing &&
-                (audioEnabled ? <Text> Mic On </Text> : <Text> Mic Off </Text>)}
-            </Text>
+            <Text>{playing && (audioEnabled ? <Text> Mic On </Text> : <Text> Mic Off </Text>)}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleClickDisableVideo}>
-            <Text>
-              {playing &&
-                (!videoEnabled ? (
-                  <Text> Camera On </Text>
-                ) : (
-                  <Text> Camera Off </Text>
-                ))}
-            </Text>
+            <Text>{playing && (!videoEnabled ? <Text> Camera On </Text> : <Text> Camera Off </Text>)}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -304,7 +268,7 @@ const PublisherStack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <PublisherStack.Navigator screenOptions={{headerShown: false}}>
+    <PublisherStack.Navigator screenOptions={{ headerShown: false }}>
       <PublisherStack.Screen name="Publisher Main" component={PublisherMain} />
     </PublisherStack.Navigator>
   );

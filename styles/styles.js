@@ -1,6 +1,7 @@
-import {StyleSheet, Dimensions} from 'react-native';
+/* eslint-disable */
+import { StyleSheet, Dimensions } from 'react-native';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const theme = StyleSheet.create({
   video: {
@@ -68,7 +69,7 @@ const theme = StyleSheet.create({
     fontSize: 30,
   },
   bottomMultimediaContainer: {
-    width: width,
+    width,
     alignItems: 'center',
     paddingVertical: 15,
     borderTopColor: '#34343B',
@@ -106,7 +107,7 @@ const theme = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     textShadowColor: 'white',
-    textShadowOffset: {width: 1, height: 1},
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
   },
   titleSettings: {
