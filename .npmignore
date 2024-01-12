@@ -1,0 +1,7 @@
+Documentation/
+examples/
+apple/WebRTC.xcframework
+apple/WebRTC.dSYMs
+*.jar
+*.tgz
+*.zip
