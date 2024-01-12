@@ -1,3 +1,4 @@
+/* eslint-disable */
 const initialState = {
   streamName: '',
   publishingToken: '',

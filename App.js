@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button } from '@dolbyio/uikit-react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

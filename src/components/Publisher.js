@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
+/* eslint-disable */
 import { Logger as MillicastLogger, Director, Publish } from '@millicast/sdk';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';

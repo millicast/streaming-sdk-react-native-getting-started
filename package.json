@@ -18,6 +18,7 @@
     "@types/react-native": "^0.63.17",
     "@types/react-native-dotenv": "^0.2.0",
     "color": "4.2.3",
+    "lodash.merge": "^4.6.2",
     "react": "18.0.0",
     "react-native": "npm:react-native-tvos@0.69.8-2",
     "react-native-codegen": "^0.70.6",

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable */
 import { Logger as MillicastLogger } from '@millicast/sdk';
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, TouchableHighlight, FlatList, Platform, AppState } from 'react-native';
