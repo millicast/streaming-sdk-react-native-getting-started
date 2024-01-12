@@ -50,14 +50,7 @@ jobs:
           export KEY_ALIAS=$KEY_ALIAS
           export KEY_PASSWORD=$KEY_PASSWORD
           source ~/.env_version
-          cd android && chmod +x ./gradlew && ./gradlew assembleRelease bundleRelease
-      - name: Archive production apk
-        uses: actions/upload-artifact@v3
-        with:
-          name: android-release-apk
-          path: |
-            ./android/app/build/outputs/apk/release
-          retention-days: 3
+          cd android && chmod +x ./gradlew && ./gradlew bundleRelease
       - name: Archive production bundle
         uses: actions/upload-artifact@v3
         with:
@@ -66,7 +59,6 @@ jobs:
             ./android/app/build/outputs/bundle/release/app-release.aab
 
   Android-Play-Store-Distribution:
-    # if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     needs: Android-App-Build
     runs-on: ubuntu-latest
     steps:
