@@ -12,7 +12,7 @@ const initialState = {
   timePlaying: 0, // in seconds
   userCount: 0,
   bitrate: 0,
-  streamURL: null
+  streamURL: null,
 };
 
 const publisherReducer = (state = initialState, action) => {
@@ -98,7 +98,7 @@ const publisherReducer = (state = initialState, action) => {
         streamName: state.streamName,
         publishingToken: state.publishingToken,
         codec: state.codec,
-        playing: state.playing
+        playing: state.playing,
       };
     default:
       return state;

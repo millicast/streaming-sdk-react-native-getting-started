@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   SafeAreaView,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  AppState
+  AppState,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {RTCView} from 'react-native-webrtc';
@@ -18,7 +19,7 @@ import {mediaDevices} from 'react-native-webrtc';
 import {useDispatch, useSelector} from 'react-redux';
 
 window.Logger = MillicastLogger;
-Logger.setLevel(MillicastLogger.DEBUG);
+window.Logger.setLevel(MillicastLogger.DEBUG);
 
 export const PublisherMain = ({navigation}) => {
   const [intervalId, setIntervalId] = useState(null);
@@ -28,22 +29,30 @@ export const PublisherMain = ({navigation}) => {
 
   const mediaStream = useSelector(state => state.publisherReducer.mediaStream);
   const playing = useSelector(state => state.publisherReducer.playing);
-  const videoEnabled = useSelector(state => state.publisherReducer.videoEnabled);
-  const audioEnabled = useSelector(state => state.publisherReducer.audioEnabled);
+  const videoEnabled = useSelector(
+    state => state.publisherReducer.videoEnabled,
+  );
+  const audioEnabled = useSelector(
+    state => state.publisherReducer.audioEnabled,
+  );
   const codec = useSelector(state => state.publisherReducer.codec);
   const mirror = useSelector(state => state.publisherReducer.mirror);
   const userCount = useSelector(state => state.publisherReducer.userCount);
   const timePlaying = useSelector(state => state.publisherReducer.timePlaying);
   const streamName = useSelector(state => state.publisherReducer.streamName);
-  const publishingToken = useSelector(state => state.publisherReducer.publishingToken);
-  const millicastPublish = useSelector(state => state.publisherReducer.millicastPublish);
+  const publishingToken = useSelector(
+    state => state.publisherReducer.publishingToken,
+  );
+  const millicastPublish = useSelector(
+    state => state.publisherReducer.millicastPublish,
+  );
   const dispatch = useDispatch();
 
   const playingRef = useRef(null);
   const millicastPublishRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const intervalIdRef = useRef(null);
-  
+
   playingRef.current = playing;
   millicastPublishRef.current = millicastPublish;
   mediaStreamRef.current = mediaStream;
@@ -72,13 +81,13 @@ export const PublisherMain = ({navigation}) => {
       }, 1000);
       setIntervalId(newIntervalId);
     }
-  }, [playing]);
+  }, [dispatch, playing]);
 
   useEffect(() => {
     if (mediaStream && !playing) {
       publish(streamName, publishingToken);
     }
-  }, [mediaStream]);
+  }, [mediaStream, playing, publish, publishingToken, streamName]);
 
   useEffect(() => {
     if (millicastPublish) {
@@ -94,7 +103,7 @@ export const PublisherMain = ({navigation}) => {
         }
       });
     }
-  }, [millicastPublish]);
+  }, [connectionState, dispatch, millicastPublish]);
 
   const setCodec = value => {
     this.setState({
