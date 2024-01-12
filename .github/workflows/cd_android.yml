@@ -8,7 +8,7 @@ on:
       - '*'
 
 jobs:
-  Android-App-Build:
+  Android-App-Build-And-Internal-Distribution:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -40,7 +40,7 @@ jobs:
           versionCode=$GITHUB_RUN_NUMBER; echo "versionName: $versionName; versionCode: $versionCode"
           echo "export VERSION_NAME=$versionName; export VERSION_CODE=$versionCode" > ~/.env_version
 
-      - name: Beta Android App Build
+      - name: Android App Build
         env:
           KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.RELEASE_KEYSTORE_KEY_ALIAS }}
@@ -57,32 +57,6 @@ jobs:
           name: android-release-bundle
           path: |
             ./android/app/build/outputs/bundle/release/app-release.aab
-
-  Android-Play-Store-Distribution:
-    needs: Android-App-Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - name: Install modules
-        run: yarn install
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Download release artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: android-release-bundle
-          path: ./android/app/build/outputs/bundle/release/
 
       - name: Deploy to Play Store
         env:
