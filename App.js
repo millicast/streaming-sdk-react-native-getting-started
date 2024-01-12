@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {Text, View, SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider} from 'react-redux';
@@ -38,20 +38,19 @@ function HomeScreen({navigation}) {
     <SafeAreaView style={myStyles.screenContainer}>
       <Text style={myStyles.title}>SAMPLE APP</Text>
       {!Platform.isTV ? (
-        <TouchableOpacity
+        <Button
+          title="publisher"
+          type="primary"
           onPress={() => navigation.navigate('Publisher App')}
-          style={myStyles.buttonDesign}>
-          <Text style={myStyles.buttonText}>PUBLISHER</Text>
-        </TouchableOpacity>
+        />
       ) : null}
 
-      <TouchableOpacity
-        hasTVPreferredFocus
+      <View style={{paddingTop: 16}} />
+      <Button
+        title="subscriber"
+        type="primary"
         onPress={() => navigation.navigate('Subscriber App')}
-        style={myStyles.buttonDesign}>
-        <Text style={myStyles.buttonText}>SUBSCRIBER</Text>
-      </TouchableOpacity>
-      <Button title="logout" type="secondaryDark" onPress={() => {}} />
+      />
     </SafeAreaView>
   );
 }
