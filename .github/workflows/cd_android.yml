@@ -40,6 +40,12 @@ jobs:
           versionCode=$GITHUB_RUN_NUMBER; echo "versionName: $versionName; versionCode: $versionCode"
           echo "export VERSION_NAME=$versionName; export VERSION_CODE=$versionCode" > ~/.env_version
 
+      - name: Create internal environment
+        env:
+          ENV: ${{secrets.ENV}}
+        run: |
+          echo $ENV > .env
+
       - name: Android App Build
         env:
           KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_STORE_PASSWORD }}
