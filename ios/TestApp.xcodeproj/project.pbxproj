@@ -19,6 +19,7 @@
 		48F65A263BCAFB7654B4F3E6 /* libPods-TestApp-TestAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A25958479D7F3A160A84C9 /* libPods-TestApp-TestAppTests.a */; };
 		553CA1E7DF96DFCBCAAEAA39 /* libPods-TestApp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB052B85A83A3969FB1387D9 /* libPods-TestApp-tvOS.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		9502A7782B5647BE00AA17E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D7C814AB2A9257F05D443C46 /* libPods-TestApp-tvOS-TestApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E18A8BA22CAA8B2C348808 /* libPods-TestApp-tvOS-TestApp-tvOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -375,6 +376,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				9502A7782B5647BE00AA17E7 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
