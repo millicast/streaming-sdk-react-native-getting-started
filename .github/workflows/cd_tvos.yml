@@ -14,6 +14,10 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Checkout LFS objects
+        run: git lfs pull
       - uses: actions/setup-node@v3
       - name: Install modules
         run: yarn install
@@ -29,14 +33,12 @@ jobs:
         with:
           ruby-version: 3.1.2
 
-      - name: Setup Fastlane
+      - name: Setup Bundler
         run: |
-          cd ios && bundle install
-
-      - name: Run pod install
-        run: |
-          cd ios && bundle exec pod install
-
+          cd ios
+          gem install bundler
+          bundle install
+          
       - name: Build App and Upload to Appstore
         env:
           TEMP_KEYCHAIN_NAME: ${{ secrets.TEMP_KEYCHAIN_NAME_APPSTORE }}
@@ -50,8 +52,7 @@ jobs:
           APPSTORE_CONNECT_KEY_CONTENT: ${{ secrets.APPSTORE_CONNECT_KEY_CONTENT }}
         run: |
           cd ios
-          gem install bundler
-          bundle install
+          bundle exec pod install
           bundle exec fastlane build_and_deploy_to_appstore --env testapp-tvos-appstore build_number:$GITHUB_RUN_NUMBER
 
       - name: 'Upload Artifacts'
