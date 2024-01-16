@@ -3,6 +3,8 @@ package io.dolby.rn.interactiveplayer;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import android.os.Bundle;
+import androidx.core.splashscreen.SplashScreen;
 
 public class MainActivity extends ReactActivity {
 
@@ -13,6 +15,14 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "TestApp";
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    // Splash doesn't work on TV https://issuetracker.google.com/issues/216374010
+    SplashScreen.installSplashScreen(this);
+
+    super.onCreate(null);
   }
 
   /**
