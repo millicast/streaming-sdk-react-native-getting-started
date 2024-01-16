@@ -3,7 +3,7 @@ name: Interactive Player RN - iOS Build and Distribution
 on:
   push:
     branches:
-      - main
+      - '*'
     tags:
       - '*'
 
