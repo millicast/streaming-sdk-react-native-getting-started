@@ -1,4 +1,4 @@
-name: CD iOS build and distribution
+name: Interactive Player RN - iOS Build and Distribution
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - '*'
 
 jobs:
-  iOS-App-Build:
+  Build-And-Deploy-iOS-App-To-Appstore:
     runs-on: macos-13
     steps:
       - name: Checkout source code
