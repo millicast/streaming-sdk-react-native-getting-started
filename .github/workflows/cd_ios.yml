@@ -17,12 +17,12 @@ jobs:
       - name: Install modules
         run: yarn install
       - name: Temp update dependency for webrtc
-        env:
-          TEMP_IOS_DEPENDENCIES: ${{secrets.TEMP_IOS_DEPENDENCIES}}
         run: |
           cd node_modules/react-native-webrtc
-          rm react-native-webrtc.podspec
-          echo $TEMP_IOS_DEPENDENCIES > react-native-webrtc.podspec
+          sed -i '' -e '$ d' react-native-webrtc.podspec
+          sed -i '' -e '$ d' react-native-webrtc.podspec
+          echo "  s.dependency          'WebRTC', '0.0.112'" >> react-native-webrtc.podspec
+          echo "end" >> react-native-webrtc.podspec
 
       - name: Pod install
         run: cd ios && pod install
