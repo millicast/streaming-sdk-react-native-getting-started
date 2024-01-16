@@ -31,9 +31,11 @@ jobs:
 
       - name: Setup Fastlane
         run: |
-          cd ios
-          bundle install
-          bundle exec pod install
+          cd ios && bundle install
+
+      - name: Run pod install
+        run: |
+          cd ios && bundle exec pod install
 
       - name: Build App and Upload to Appstore
         env:
