@@ -3,7 +3,7 @@ name: Interactive Player RN - tvOS Build and Distribution
 on:
   push:
     branches:
-      - '*'
+      - main
     tags:
       - '*'
   workflow_dispatch:
