@@ -5661,7 +5661,7 @@ react-native-screens@^3.20.0:
 
 "react-native-webrtc@github:montanaeli/react-native-webrtc":
   version "111.0.1"
-  resolved "https://codeload.github.com/montanaeli/react-native-webrtc/tar.gz/63651a72f1f59d58d9cf5516bf2967c1a897537a"
+  resolved "https://codeload.github.com/montanaeli/react-native-webrtc/tar.gz/2c7b6e370e245dee84a72912f6e246ef885a0955"
   dependencies:
     adm-zip "0.5.9"
     base64-js "1.5.1"

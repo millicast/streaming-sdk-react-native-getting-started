@@ -122,7 +122,6 @@ To give your Android emulator access to your microphone, start your emulator and
 
 <img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
 
-
 ## How to build and run the React Native Sample App
 
 ### Apple
@@ -130,102 +129,36 @@ To give your Android emulator access to your microphone, start your emulator and
 The following steps are common for all Apple devices.
 
 1. Clone this repository.
-2. Install the dependencies:
+
+2. `WebRTC.framework` is a required dependency for the iOS/tvOS apps. You can find it in `ios/libWebRTC.zip`. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
+
+3. Install the dependencies:
 ```
 yarn
 ```
-3. Then, execute:
+
+4. Then, execute:
 ```
-cd ios && pod install
+cd ios && bundle exec pod install
 ```
-
-4. It is required to have `WebRTC.framework` M112 builds. You can find it in `ios/libWebRTC.zip`.
-
-5. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
-
-6. Unzip `libWebRTC` inside the `ios` folder from this project. See [remark (**)](#remark-**).
-
 
 #### iOS
 
 1. Open Xcode.
 2. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
 3. Select `TestApp project`, then `TestApp` target.
-4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for iOS.
-Check if the framework appears in `Build Phases -> Embed Frameworks` on `Link Binary With Libraries`, if not, add it.
-5. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
-
-- In `Frameworks Search Paths`, insert the following line: 
-```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64-simulator
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-x64-simulator
-```
-
-- In `Header Search Paths`, insert the following lines: 
-```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework/Headers
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-arm64-simulator/WebRTC.framework/Headers
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/ios-x64-simulator/WebRTC.framework/Headers
-```
-
-6. Select `TestApp` project and use an iOS simulator with iOS 16.
-
-7. Run the project, you should see the simulator with the app home page with a button to publish or subscribe to a stream.
+4. Select `TestApp` project and use an iOS simulator with iOS 16.
+5. Run the project, you should see the simulator with the app home page with a button to publish or subscribe to a stream.
 
 #### tvOS
-
-##### Xcode settings
 
 1. Open Xcode.
 2. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
 3. Select `TestApp project`, then `TestApp-tvOS` target.
-4. Go to `General -> Frameworks, Libraries, and Embedded Content` and add `WebRTC.framework` M112 build for tvOS.
-Also, add the framework in `Build Phases -> Embed Frameworks` and on `Link Binary With Libraries`.
-5. Then select `Pods` Xcode project and go to `Build Settings -> Search Paths`.
-
-![Adding WebRTC local reference in Pods target](assets/WebRTC-References-Pods.png)
-
-###### For Simulator only (*):
-
-- In `Frameworks Search Paths`, insert the following line: 
-```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-x64-simulator
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator
-```
-
-- In `Header Search Paths`, insert the following lines: 
-```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-x64-simulator/WebRTC.framework/Headers
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64-simulator/WebRTC.framework/Headers
-```
-
-###### For Real Device only (*):
-
-- In `Frameworks Search Paths`, insert the following line: 
-```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64
-```
-
-- In `Header Search Paths`, insert the following lines: 
-```
-$(PROJECT_DIR)/../libWebRTC/WebRTC.xcframework/tvos-arm64/WebRTC.framework/Headers
-```
-
-
-6. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
-
-7. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+4. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
+5. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
 
 To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to `Window -> Show Apple TV Remote` and use it.
-
-#### Remarks
-(*) The frameworks and header search paths are exclusive. If a developer is working on a platform, this developer needs to remove the search paths for the other platform.
-
-<img src="assets/Remove-old-reference-WebRTC.png" alt="drawing" width="500"/>
-
-<span id="remark-**">(**)</span> Depending on the architecture you are using, the build might be different. For instance, on mac, different builds are required for intel-based (`x64`, `x86`) and M1 based (`arm64`).
-
 
 ### Android
 
