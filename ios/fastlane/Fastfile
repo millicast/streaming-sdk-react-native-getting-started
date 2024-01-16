@@ -21,7 +21,7 @@ lane :build_and_deploy_to_appstore do |options|
 
   # Build and export
   gym(
-    project: ENV['GYM_PROJECT'],
+    workspace: ENV['GYM_WORKSPACE'],
     scheme: ENV['GYM_SCHEME'],
     clean: true,
     output_directory: ENV['GYM_OUTPUT_DIR'],
