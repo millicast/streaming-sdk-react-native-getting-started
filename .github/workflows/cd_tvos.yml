@@ -1,0 +1,67 @@
+name: Interactive Player RN - tvOS Build and Distribution
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  Build-And-Deploy-tvOS-App-To-Appstore:
+    runs-on: macos-13
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Install modules
+        run: yarn install
+
+      - name: Temp update dependency for webrtc
+        run: |
+          cd node_modules/react-native-webrtc
+          sed -i '' -e '$ d' react-native-webrtc.podspec
+          sed -i '' -e '$ d' react-native-webrtc.podspec
+          echo "  s.dependency          'WebRTC', '0.0.112'" >> react-native-webrtc.podspec
+          echo "end" >> react-native-webrtc.podspec
+
+      - name: Create internal environment
+        env:
+          ENV: ${{secrets.ENV}}
+        run: |
+          echo $ENV > .env
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
+
+      - name: Setup Fastlane
+        run: |
+          cd ios
+          bundle install
+
+      - name: Build App and Upload to Appstore
+        env:
+          TEMP_KEYCHAIN_NAME: ${{ secrets.TEMP_KEYCHAIN_NAME_APPSTORE }}
+          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD_APPSTORE }}
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64_APPSTORE }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD_APPSTORE }}
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.TVOS_INTERACTIVE_PLAYER_PROFILE_BASE64_APPSTORE }}
+          EXPORT_OPTIONS_PLIST_BASE64: ${{ secrets.TVOS_INTERACTIVE_PLAYER_EXPORT_OPTIONS_PLIST_BASE64_APPSTORE }}
+          APPSTORE_CONNECT_KEY_ID: ${{ secrets.APPSTORE_CONNECT_KEY_ID }}
+          APPSTORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_ISSUER_ID }}
+          APPSTORE_CONNECT_KEY_CONTENT: ${{ secrets.APPSTORE_CONNECT_KEY_CONTENT }}
+        run: |
+          gem install bundler
+          bundle install
+          bundle exec fastlane build_and_deploy_to_appstore --env testapp-tvos-appstore build_number:$GITHUB_RUN_NUMBER
+
+      - name: 'Upload Artifacts'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_artifacts_appstore
+          path: |
+            artifacts
+          retention-days: 60
