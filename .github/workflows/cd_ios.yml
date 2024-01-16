@@ -53,9 +53,10 @@ jobs:
           APPSTORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_ISSUER_ID }}
           APPSTORE_CONNECT_KEY_CONTENT: ${{ secrets.APPSTORE_CONNECT_KEY_CONTENT }}
         run: |
+          cd ios
           gem install bundler
           bundle install
-          bundle exec fastlane build_and_deploy_to_appstore --env stream-dvr-ios-appstore build_number:$GITHUB_RUN_NUMBER
+          bundle exec fastlane build_and_deploy_to_appstore --env testapp-ios-appstore build_number:$GITHUB_RUN_NUMBER
 
       - name: 'Upload Artifacts'
         uses: actions/upload-artifact@v3
