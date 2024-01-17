@@ -45,7 +45,6 @@ npm install --global yarn
 brew install git-lfs
 ```
 
-
 - For **Android** platforms you will need `Java SDK 11` and Android Studio installed.
 
 - Add a `.env` file in current path. You can find the following example in `.env.sample`:
@@ -76,11 +75,13 @@ To get started with building this app, you will need a Dolby.io account.
 - [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed
 - It is required to have Java SDK 11
 - Yarn installed
-- Xcode 14
+- Xcode 15.1
 - Android Studio Dolphin
 - iOS 16
 - tvOS 16
 - Android API 33
+- Ruby version 3.1 or higher
+- Bundler
 
 #### How to get a Dolby.io account
 To set up your [Dolby.io](https://dolby.io/) account, go to the [Dolby.io](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
@@ -139,7 +140,9 @@ yarn
 
 4. Then, execute:
 ```
-cd ios && bundle exec pod install
+cd ios && bundle install
+
+bundle exec pod install
 ```
 
 #### iOS
