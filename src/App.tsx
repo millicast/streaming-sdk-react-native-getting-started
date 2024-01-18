@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@dolbyio/uikit-react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import * as React from 'react';
 import { Provider } from 'react-redux';
@@ -11,7 +12,9 @@ const App = () => {
     <TranslationProvider>
       <Provider store={store}>
         <NavigationContainer>
-          <Navigator />
+          <ThemeProvider>
+            <Navigator />
+          </ThemeProvider>
         </NavigationContainer>
       </Provider>
     </TranslationProvider>
