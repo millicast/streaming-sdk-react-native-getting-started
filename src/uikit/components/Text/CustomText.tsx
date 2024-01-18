@@ -4,7 +4,7 @@ import { Text, TextProps } from 'react-native';
 import useTheme from '../../hooks/useAppTheme';
 import type { ColorKey } from '../../theme/types';
 
-import styles from './Text.style';
+import styles from './CustomText.style';
 
 export type DeprecatedTextTypes =
   | 'H0'

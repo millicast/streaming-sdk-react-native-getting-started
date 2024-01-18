@@ -1,0 +1,6 @@
+{
+  "demo": "Demo a stream",
+  "demoDescription": "Try a Dolby.io demo stream.",
+  "demoAction": "Play Dolby.io demo stream",
+  "streamNameInputLabel": "Stream Name"
+}

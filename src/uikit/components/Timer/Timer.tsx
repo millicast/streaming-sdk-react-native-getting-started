@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
-import Text from '../Text/Text';
+import Text from '../Text/CustomText';
 
 import styles from './Timer.style';
 
