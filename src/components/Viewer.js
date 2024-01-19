@@ -34,7 +34,8 @@ const ViewerMain = ({ navigation }) => {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
-
+    playPauseVideo();
+    
     return () => {
       subscription.remove();
       if (playingRef.current) {
