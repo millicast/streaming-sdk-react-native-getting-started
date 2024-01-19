@@ -5,6 +5,7 @@ import camera from './camera.svg';
 import chat from './chat.svg';
 import close from './close.svg';
 import copy from './copy.svg';
+import dolbyLogo from './dolby.svg';
 import dotsHorizontal from './dots-horizontal.svg';
 import dotsVertical from './dots-vertical.svg';
 import error from './error.svg';
@@ -39,6 +40,7 @@ const Icons = {
   chat,
   close,
   copy,
+  dolbyLogo,
   dotsHorizontal,
   dotsVertical,
   error,

@@ -11,6 +11,10 @@ import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();
 
+const LogoTitle = () => {
+  return <Icon name="dolbyLogo" color="white" />;
+};
+
 export const Navigator = () => {
   const { theme } = useTheme();
 
@@ -20,6 +24,7 @@ export const Navigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
+        headerTitle: (props) => <LogoTitle {...props} />,
         headerTitleAlign: 'center',
         headerTintColor: theme.colors.white, // FIXME: Use a different color defined in the themes
         headerBackTitleVisible: false,
