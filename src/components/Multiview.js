@@ -300,39 +300,17 @@ const stylesContainer = StyleSheet.create({
 });
 
 function margins(columnsNumber, isLabel) {
-  console.log('***** width: ', Dimensions.get('window').width);
-
   if (Platform.isTV && Platform.OS === 'ios') {
     return { marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0 };
   }
 
+  if (isLabel) {
+    return { marginLeft: '2.5%', bottom: '25%' };
+  }
+
   if (columnsNumber == 1) {
-    if (Dimensions.get('window').width < 500) {
-      if (!isLabel) {
-        return { marginTop: '-10%', marginBottom: '-25%', marginLeft: '2.5%', marginRight: '2.5%' };
-      } else {
-        return { marginLeft: '2.5%', bottom: '25%' };
-      }
-    } else {
-      if (!isLabel) {
-        return { marginTop: -90, marginBottom: -100, marginLeft: '2.5%', marginRight: '2.5%' };
-      } else {
-        return { marginLeft: '2.5%', bottom: 100 };
-      }
-    }
+    return { marginTop: '-10%', marginBottom: '-25%', marginLeft: '2.5%', marginRight: '2.5%' };
   } else {
-    if (Dimensions.get('window').height < 500) {
-      if (!isLabel) {
-        return { marginTop: '-10%', marginBottom: '-10%', marginLeft: '2.5%', marginRight: '2.5%' };
-      } else {
-        return { marginLeft: '2.5%', bottom: '25%' };
-      }
-    } else {
-      if (!isLabel) {
-        return { marginTop: -90, marginBottom: -100, marginLeft: '2.5%', marginRight: '2.5%' };
-      } else {
-        return { marginLeft: '2.5%', bottom: 100 };
-      }
-    }
+    return { marginTop: '-10%', marginBottom: '-10%', marginLeft: '2.5%', marginRight: '2.5%' };
   }
 }
