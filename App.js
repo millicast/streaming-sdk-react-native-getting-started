@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Text, View, SafeAreaView, Platform } from 'react-native';
 import { Provider, useDispatch } from 'react-redux';
+import Multiview from './src/components/Multiview';
 
 import Publisher from './src/components/Publisher';
 import Viewer from './src/components/Viewer';
@@ -66,7 +67,7 @@ const App = () => {
           }}
         >
           <Stack.Screen name="Millicast SDK Demo" component={HomeScreen} />
-          <Stack.Screen name="Subscriber App" component={Viewer} />
+          <Stack.Screen name="Subscriber App" component={Multiview} />
           <Stack.Screen name="Publisher App" component={Publisher} />
         </Stack.Navigator>
       </NavigationContainer>
