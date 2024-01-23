@@ -1,4 +1,5 @@
 import { Layout, Input, Button, Icon, ValidationType } from '@dolbyio/uikit-react-native';
+import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Pressable, ScrollView, View } from 'react-native';
@@ -15,6 +16,8 @@ export const UserInput = ({ navigation }) => {
   const styles = makeStyles();
   const intl = useIntl();
   const dispatch = useDispatch();
+  const { theme } = useTheme();
+
   const MINIMUM_INPUT_LENGTH = 3;
 
   const [streamName, setStreamName] = useState<string>('');
@@ -80,11 +83,19 @@ export const UserInput = ({ navigation }) => {
       <SafeAreaView style={styles.wrapper}>
         <ScrollView>
           <Text id="appTitle" type="h2" align="center" style={{ paddingTop: 16 }} />
-          <Text id="startStream" type="h3" align="center" style={{ paddingTop: 8 }} />
-          <Text id="startStreamLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} />
+          <Text id="startStream" type="h3" align="center" style={{ paddingTop: 24 }} />
+          <Text
+            id="startStreamLabel"
+            type="paragraph"
+            align="center"
+            style={{ paddingTop: 8, paddingHorizontal: 48 }}
+            color="grey.500"
+          />
           <Input
             value={streamName}
             label={streamNameInputLabel}
+            labelColor="white"
+            labelBackground={theme.colors.background}
             textColor="white"
             onChangeText={onChangeStreamName}
             validation={validation}
@@ -93,6 +104,7 @@ export const UserInput = ({ navigation }) => {
           <Input
             value={accountId}
             label={accountIdInputLabel}
+            labelColor="white"
             textColor="white"
             onChangeText={onChangeAccountId}
             validation={validation}
@@ -105,7 +117,7 @@ export const UserInput = ({ navigation }) => {
             disabled={playDisabled(validation, streamName, accountId)}
           />
           <Text id="demoTitle" type="h2" align="center" style={{ paddingTop: 48 }} />
-          <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} />
+          <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} color="grey.500" />
           <View style={{ paddingTop: 16 }} />
           <Pressable onPress={handleDemoPlayClick} style={styles.demoButton}>
             <Text id="playDemoStream" type="paragraph" />
