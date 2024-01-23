@@ -11,5 +11,6 @@
   "play": "Play",
   "demoTitle": "Demo a stream",
   "demoLabel": "Try a Dolby.io demo stream.",
-  "playDemoStream": "Play Dolby.io demo stream"
+  "playDemoStream": "Play Dolby.io demo stream",
+  "enterValidInputMessage": "Invalid input"
 }

@@ -1,8 +1,7 @@
-import { Layout, Input, Button } from '@dolbyio/uikit-react-native';
-import { StackActions } from '@react-navigation/native';
+import { Layout, Input, Button, Icon, ValidationType } from '@dolbyio/uikit-react-native';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 
@@ -16,9 +15,11 @@ export const UserInput = ({ navigation }) => {
   const styles = makeStyles();
   const intl = useIntl();
   const dispatch = useDispatch();
+  const MINIMUM_INPUT_LENGTH = 3;
 
   const [streamName, setStreamName] = useState<string>('');
   const [accountId, setAccountId] = useState<string>('');
+  const [validation, setValidation] = useState<ValidationType>({ valid: true });
 
   const streamNameInputLabel = intl.formatMessage({
     id: 'streamNameInputLabel',
@@ -49,13 +50,29 @@ export const UserInput = ({ navigation }) => {
   };
 
   const onChangeStreamName = (text: string) => {
-    // validateInput(text);
+    validateInput(text);
     setStreamName(text);
   };
 
   const onChangeAccountId = (text: string) => {
-    // validateInput(text);
+    validateInput(text);
     setAccountId(text);
+  };
+
+  const validateInput = (value: string) => {
+    const valid = value.length >= MINIMUM_INPUT_LENGTH;
+    setValidation(
+      value.length && value.length >= MINIMUM_INPUT_LENGTH
+        ? {
+            valid,
+            message: valid ? undefined : intl.formatMessage({ id: 'enterValidInputMessage' }),
+          }
+        : { valid: true },
+    );
+  };
+
+  const playDisabled = (validation: ValidationType, streamName: string, accountId: string) => {
+    return !(validation.valid && streamName.length >= MINIMUM_INPUT_LENGTH && accountId.length >= MINIMUM_INPUT_LENGTH);
   };
 
   return (
@@ -63,14 +80,14 @@ export const UserInput = ({ navigation }) => {
       <SafeAreaView style={styles.wrapper}>
         <ScrollView>
           <Text id="appTitle" type="h2" align="center" style={{ paddingTop: 16 }} />
-          <Text id="startStream" type="h3" align="center" style={{ paddingTop: 16 }} />
-          <Text id="startStreamLabel" type="paragraph" align="center" style={{ paddingTop: 16 }} />
+          <Text id="startStream" type="h3" align="center" style={{ paddingTop: 8 }} />
+          <Text id="startStreamLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} />
           <Input
             value={streamName}
             label={streamNameInputLabel}
             textColor="white"
             onChangeText={onChangeStreamName}
-            validation={() => {}}
+            validation={validation}
             autoFocus
           />
           <Input
@@ -78,13 +95,22 @@ export const UserInput = ({ navigation }) => {
             label={accountIdInputLabel}
             textColor="white"
             onChangeText={onChangeAccountId}
-            validation={() => {}}
+            validation={validation}
             autoFocus
           />
-          <Button title="play" type="primary" onPress={handlePlayClick} />
-          <Text id="demoTitle" type="h2" align="center" style={{ paddingTop: 16 }} />
-          <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 16 }} />
-          <Button title="playDemoStream" type="secondaryDark" onPress={handleDemoPlayClick} />
+          <Button
+            title="play"
+            type="primary"
+            onPress={handlePlayClick}
+            disabled={playDisabled(validation, streamName, accountId)}
+          />
+          <Text id="demoTitle" type="h2" align="center" style={{ paddingTop: 48 }} />
+          <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} />
+          <View style={{ paddingTop: 16 }} />
+          <Pressable onPress={handleDemoPlayClick} style={styles.demoButton}>
+            <Text id="playDemoStream" type="paragraph" />
+            <Icon name="playOutline" />
+          </Pressable>
         </ScrollView>
       </SafeAreaView>
       <WelcomeFooter />

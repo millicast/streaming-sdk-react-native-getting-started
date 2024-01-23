@@ -334,6 +334,8 @@ PODS:
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
+  - RNSVG (12.5.1):
+    - React-Core
   - SocketRocket (0.6.1)
   - WebRTC (0.0.112)
   - Yoga (1.14.0)
@@ -400,6 +402,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - WebRTC (from `WebRTC/`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -492,6 +495,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   WebRTC:
     :podspec: WebRTC/
   Yoga:
@@ -545,6 +550,7 @@ SPEC CHECKSUMS:
   ReactCommon: e3818869621c119aea08bd5ce8ed0b8c64abeafe
   RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
+  RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   WebRTC: b53aafa670460bb2232580405cbe2f3eeff2ad9a
   Yoga: 486daad4f5db121eb2e831e2aae8ad994011573f
