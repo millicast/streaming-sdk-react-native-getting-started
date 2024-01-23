@@ -1,6 +1,8 @@
 /* eslint-disable */
+import { Director, View as MillicastView } from '@millicast/sdk';
 import { Logger as MillicastLogger } from '@millicast/sdk';
-import React, { useEffect, useRef } from 'react';
+import { Dimensions } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, TouchableHighlight, FlatList, Platform, AppState } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,16 +12,22 @@ import myStyles from '../../styles/styles.js';
 window.Logger = MillicastLogger;
 window.Logger.setLevel(MillicastLogger.DEBUG);
 
-const amountCols = Platform.isTV ? 2 : 1;
-
 export default function Multiview({ navigation, route }) {
+  const appState = useRef(AppState.currentState);
+
+  const streamName = useSelector((state) => state.viewerReducer.streamName);
+  const accountId = useSelector((state) => state.viewerReducer.accountId);
+  const isMediaSet = useSelector((state) => state.viewerReducer.isMediaSet);
   const streams = useSelector((state) => state.viewerReducer.streams);
+  const streamsProjecting = useSelector((state) => state.viewerReducer.streamsProjecting);
   const sourceIds = useSelector((state) => state.viewerReducer.sourceIds);
   const playing = useSelector((state) => state.viewerReducer.playing);
   const millicastView = useSelector((state) => state.viewerReducer.millicastView);
   const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
   const dispatch = useDispatch();
 
+  const playingRef = useRef(null);
+  playingRef.current = playing;
   const streamsRef = useRef(null);
   const selectedSourceRef = useRef(null);
   const millicastViewRef = useRef(null);
@@ -28,12 +36,151 @@ export default function Multiview({ navigation, route }) {
   streamsRef.current = streams;
   millicastViewRef.current = millicastView;
 
+  const [columnsNumber, setColumnsNumber] = useState(1);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+      if (playingRef.current) {
+        changeStateOfMediaTracks(false);
+        unprojectAll();
+        stopStream();
+        dispatch({ type: 'viewer/resetAll' });
+        streamsRef.current = [];
+      }
+    };
+  }, [handleAppStateChange, stopStream]);
+
+  const handleAppStateChange = (nextAppState) => {
+    appState.current = nextAppState;
+  };
+
+  const stopStream = async () => {
+    await millicastViewRef.current.stop();
+    dispatch({ type: 'viewer/setPlaying', payload: false });
+    dispatch({ type: 'viewer/setIsMediaSet', payload: true });
+    dispatch({ type: 'viewer/setStreams', payload: [] });
+    dispatch({
+      type: 'viewer/setSelectedSource',
+      payload: { url: null, mid: null },
+    });
+    dispatch({ type: 'viewer/removeProjectingStreams' });
+    dispatch({ type: 'viewer/setSourceIds', payload: [] });
+  };
+
+  const subscribe = async () => {
+    const tokenGenerator = () =>
+      Director.getSubscriber({
+        streamName,
+        streamAccountId: accountId,
+      });
+    // Create a new instance
+    const view = new MillicastView(streamName, tokenGenerator, null);
+    // Set track event handler to receive streams from Publisher.
+    view.on('track', async (event) => {
+      dispatch({ type: 'viewer/onTrackEvent', payload: event });
+    });
+
+    // Start connection to viewer
+    try {
+      view.on('broadcastEvent', async (event) => {
+        // Get event name and data
+        const { name, data } = event;
+        switch (name) {
+          case 'active':
+            if (sourceIds?.indexOf(data.sourceId) === -1 && data.sourceId != null) {
+              dispatch({
+                type: 'viewer/addSourceId',
+                payload: data.sourceId,
+              });
+              if (data.sourceId != 'main' && data.sourceId != null) {
+                addRemoteTrack(data.sourceId);
+              }
+            }
+            // A source has been started on the steam
+            break;
+          case 'inactive':
+            console.log('inactive');
+            // A source has been stopped on the steam
+            break;
+          case 'vad':
+            // A new source was multiplexed over the vad tracks
+            break;
+          case 'layers':
+            dispatch({
+              type: 'viewer/setActiveLayers',
+              payload: data.medias?.['0']?.active,
+            });
+            // Updated layer information for each simulcast/svc video track
+            break;
+        }
+      });
+      await view.connect({
+        events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
+      });
+      dispatch({ type: 'viewer/setMillicastView', payload: view });
+
+      millicastViewRef.current = view;
+    } catch (e) {
+      console.error('Connection failed. Reason:', e);
+    }
+  };
+
+  const unprojectAll = async (url = null, mid = null) => {
+    dispatch({ type: 'viewer/setSelectedSource', payload: { url, mid } });
+
+    try {
+      const listVideoMids = streamsRef.current.map((track) => track.videoMid).filter((x) => x != '0' && x != mid);
+      await millicastViewRef.current.unproject(listVideoMids);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    checkOrientation();
+    const subscription = Dimensions.addEventListener('change', () => {
+      checkOrientation();
+    });
+    return () => subscription?.remove();
+  }, []);
+  const checkOrientation = async () => {
+    setColumnsNumber(Dimensions.get('window').width > Dimensions.get('window').height ? 2 : 1);
+  };
+
+  const changeStateOfMediaTracks = (value) => {
+    streams?.map((s) =>
+      s.stream?.getTracks().forEach((videoTrack) => {
+        videoTrack.enabled = value;
+      }),
+    );
+    dispatch({ type: 'viewer/setPlaying', payload: value });
+  };
+
+  const playPauseVideo = async () => {
+    if (isMediaSet) {
+      await subscribe();
+      dispatch({ type: 'viewer/setIsMediaSet', payload: false });
+    }
+    changeStateOfMediaTracks(!playing);
+  };
+
   const addRemoteTrack = async (sourceId) => {
+    if (millicastViewRef.current == null) {
+      return;
+    }
     const isAlreadyProjected = streams.some((stream) => stream.sourceId === sourceId);
-    if (!isAlreadyProjected) {
+    const isAlreadyProjecting = streamsProjecting.some((stream) => stream.sourceId === sourceId);
+    if (!isAlreadyProjected && !isAlreadyProjecting) {
+      dispatch({
+        type: 'viewer/addProjectingStream',
+        payload: { sourceId },
+      });
       // eslint-disable-next-line no-undef
       const mediaStream = new MediaStream();
-      const transceiver = await millicastView.addRemoteTrack('video', [mediaStream]);
+      const transceiver = await millicastViewRef.current.addRemoteTrack('video', [mediaStream]);
       const mediaId = transceiver.mid;
       await millicastView.project(sourceId, [
         {
@@ -46,28 +193,14 @@ export default function Multiview({ navigation, route }) {
         type: 'viewer/addStream',
         payload: { stream: mediaStream, videoMid: mediaId, sourceId },
       });
+      dispatch({
+        type: 'viewer/removeProjectingStream',
+        payload: { sourceId },
+      });
     }
-  };
-
-  const navigateSingleView = async (url = null, mid = null) => {
-    dispatch({ type: 'viewer/setSelectedSource', payload: { url, mid } });
-
-    try {
-      const listVideoMids = streamsRef.current.map((track) => track.videoMid).filter((x) => x != '0' && x != mid);
-      const streamAux = streamsRef.current.filter((stream) => !listVideoMids.includes(stream.videoMid));
-
-      await millicastViewRef.current.unproject(listVideoMids);
-
-      dispatch({ type: 'viewer/setStreams', payload: streamAux });
-    } catch (error) {
-      console.error(error);
-    }
-
-    navigation.navigate('Viewer Main');
   };
 
   useEffect(() => {
-    // componentWillMount
     const initializeMultiview = async () => {
       try {
         await Promise.all(
@@ -82,18 +215,10 @@ export default function Multiview({ navigation, route }) {
       }
     };
     initializeMultiview();
-
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (nextAppState === 'background') {
-        navigation.navigate('Viewer Main');
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
   }, [addRemoteTrack, navigation, sourceIds]);
 
+  const margin = margins(columnsNumber);
+  const labelLayout = margins(columnsNumber, true);
   return (
     <SafeAreaView style={stylesContainer.container}>
       <View
@@ -102,56 +227,59 @@ export default function Multiview({ navigation, route }) {
           marginBottom: 50,
         }}
       >
-        <FlatList
-          data={streams}
-          style={{
-            textAlign: 'center',
-          }}
-          numColumns={amountCols}
-          keyExtractor={(_, index) => String(index)}
-          renderItem={({ item, index }) => (
-            <View
-              style={
-                Platform.isTV && Platform.OS === 'ios'
-                  ? {}
-                  : amountCols === 2
-                  ? [
-                      { marginTop: -90, marginBottom: -100 },
-                      index % 2 == 0 ? { marginLeft: 10, marginRight: 5 } : { marginLeft: 5, marginRight: 10 },
-                    ]
-                  : [
-                      {
-                        marginTop: -75,
-                        marginBottom: -85,
-                        marginLeft: '2.5%',
-                        marginRight: '2.5%',
-                      },
-                    ]
-              }
-            >
-              <>
-                <RTCView
-                  key={item?.stream.toURL() + item?.stream.videoMid}
-                  streamURL={item?.stream.toURL()}
-                  style={{
-                    width: amountCols === 2 ? '70%' : '100%',
-                    flex: 1,
-                    aspectRatio: 1,
-                    borderRadius: 30,
-                  }}
-                />
-                <TouchableHighlight
-                  hasTVPreferredFocus
-                  style={{ padding: 10, bottom: 150, borderRadius: 6 }}
-                  underlayColor="#AA33FF"
-                  onPress={() => navigateSingleView(item.stream.toURL(), item.videoMid)}
-                >
-                  <Text style={{ color: 'white' }}>{!item.sourceId ? 'Main' : String(item.sourceId)}</Text>
-                </TouchableHighlight>
-              </>
-            </View>
-          )}
-        />
+        {playing ? (
+          <FlatList
+            key={columnsNumber}
+            data={streams}
+            style={{
+              textAlign: 'center',
+            }}
+            numColumns={columnsNumber}
+            keyExtractor={(_, index) => String(index)}
+            renderItem={({ item, index }) => (
+              <View style={margin}>
+                <>
+                  <RTCView
+                    key={item?.stream.toURL() + item?.stream.videoMid}
+                    streamURL={item?.stream.toURL()}
+                    style={{
+                      width: columnsNumber === 2 ? '70%' : '100%',
+                      flex: 1,
+                      aspectRatio: 1,
+                    }}
+                  />
+                  <TouchableHighlight
+                    style={{
+                      padding: 1,
+                      position: 'absolute',
+                      marginLeft: labelLayout.marginLeft,
+                      bottom: labelLayout.bottom,
+                      zIndex: 0,
+                    }}
+                    underlayColor="#AA33FF"
+                    onPress={() => {}}
+                  >
+                    <Text
+                      style={{
+                        color: 'white',
+                        backgroundColor: 'grey',
+                        borderRadius: 3,
+                        paddingHorizontal: 3,
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      {!item.sourceId ? 'Main' : String(item.sourceId)}
+                    </Text>
+                  </TouchableHighlight>
+                </>
+              </View>
+            )}
+          />
+        ) : (
+          <View style={{ padding: '5%' }}>
+            <Text style={{ color: 'white' }}>Press the 'play' button to start watching.</Text>
+          </View>
+        )}
       </View>
       <View style={myStyles.bottomMultimediaContainer}>
         <View style={myStyles.bottomIconWrapper}>
@@ -159,9 +287,9 @@ export default function Multiview({ navigation, route }) {
             hasTVPreferredFocus
             tvParallaxProperties={{ magnification: 1.5 }}
             underlayColor="#AA33FF"
-            onPress={() => navigateSingleView()}
+            onPress={playPauseVideo}
           >
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>{playing ? 'Go back' : null}</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>{playing ? 'Pause' : 'Play'}</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -175,3 +303,19 @@ const stylesContainer = StyleSheet.create({
     ...StyleSheet.absoluteFill,
   },
 });
+
+function margins(columnsNumber, isLabel) {
+  if (Platform.isTV && Platform.OS === 'ios') {
+    return { marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0 };
+  }
+
+  if (isLabel) {
+    return { marginLeft: '2.5%', bottom: '25%' };
+  }
+
+  if (columnsNumber == 1) {
+    return { marginTop: '-10%', marginBottom: '-25%', marginLeft: '2.5%', marginRight: '2.5%' };
+  } else {
+    return { marginTop: '-10%', marginBottom: '-10%', marginLeft: '2.5%', marginRight: '2.5%' };
+  }
+}

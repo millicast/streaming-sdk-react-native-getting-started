@@ -5,6 +5,7 @@ const initialState = {
   playing: false,
   streams: [],
   sourceIds: ['main'],
+  streamsProjecting: [],
   activeLayers: [],
   millicastView: null,
   isMediaSet: true,
@@ -111,10 +112,32 @@ const viewerReducer = (state = initialState, action) => {
         ...state,
         streams: [...streams],
       };
+    case 'viewer/addProjectingStream':
+      return {
+        ...state,
+        streamsProjecting: [...state.streamsProjecting, action.payload],
+      };
+    case 'viewer/removeProjectingStream':
+      const projectingStreams = state.streamsProjecting.filter((stream) => stream !== action.payload);
+      return {
+        ...state,
+        streamsProjecting: projectingStreams,
+      };
+    case 'viewer/removeProjectingStreams':
+      return {
+        ...state,
+        streamsProjecting: [],
+      };
     case 'viewer/setSelectedSource':
       return {
         ...state,
         selectedSource: { ...action.payload },
+      };
+    case 'viewer/resetAll':
+      return {
+        ...initialState,
+        streamName: state.streamName,
+        accountId: state.accountId,
       };
     default:
       return state;
