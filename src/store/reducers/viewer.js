@@ -133,6 +133,12 @@ const viewerReducer = (state = initialState, action) => {
         ...state,
         selectedSource: { ...action.payload },
       };
+    case 'viewer/resetAll':
+      return {
+        ...initialState,
+        streamName: state.streamName,
+        accountId: state.accountId,
+      };
     default:
       return state;
   }

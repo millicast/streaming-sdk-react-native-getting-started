@@ -39,23 +39,22 @@ export default function Multiview({ navigation, route }) {
   const [columnsNumber, setColumnsNumber] = useState(1);
 
   useEffect(() => {
-    console.log('***** addEventListener');
     const subscription = AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
       subscription.remove();
       if (playingRef.current) {
+        changeStateOfMediaTracks(false);
+        unprojectAll();
         stopStream();
+        dispatch({ type: 'viewer/resetAll' });
+        streamsRef.current = [];
       }
     };
   }, [handleAppStateChange, stopStream]);
 
   const handleAppStateChange = (nextAppState) => {
-    console.log('***** handleAppStateChange', nextAppState);
     appState.current = nextAppState;
-    if (playingRef.current) {
-      stopStream();
-    }
   };
 
   const stopStream = async () => {
@@ -91,9 +90,7 @@ export default function Multiview({ navigation, route }) {
         const { name, data } = event;
         switch (name) {
           case 'active':
-            console.log('*** active', sourceIds, data.sourceId);
             if (sourceIds?.indexOf(data.sourceId) === -1 && data.sourceId != null) {
-              console.log('*** sourceIds active', sourceIds, data.sourceId);
               dispatch({
                 type: 'viewer/addSourceId',
                 payload: data.sourceId,
@@ -105,6 +102,7 @@ export default function Multiview({ navigation, route }) {
             // A source has been started on the steam
             break;
           case 'inactive':
+            console.log('inactive');
             // A source has been stopped on the steam
             break;
           case 'vad':
@@ -130,15 +128,23 @@ export default function Multiview({ navigation, route }) {
     }
   };
 
+  const unprojectAll = async (url = null, mid = null) => {
+    dispatch({ type: 'viewer/setSelectedSource', payload: { url, mid } });
+
+    try {
+      const listVideoMids = streamsRef.current.map((track) => track.videoMid).filter((x) => x != '0' && x != mid);
+      await millicastViewRef.current.unproject(listVideoMids);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     checkOrientation();
     const subscription = Dimensions.addEventListener('change', () => {
       checkOrientation();
     });
     return () => subscription?.remove();
-    // return () => {
-    //   Dimensions.removeEventListener(subscription);
-    // };
   }, []);
   const checkOrientation = async () => {
     setColumnsNumber(Dimensions.get('window').width > Dimensions.get('window').height ? 2 : 1);
@@ -163,7 +169,6 @@ export default function Multiview({ navigation, route }) {
 
   const addRemoteTrack = async (sourceId) => {
     if (millicastViewRef.current == null) {
-      console.log('***** call and exit addRemoteTrack for', sourceId);
       return;
     }
     const isAlreadyProjected = streams.some((stream) => stream.sourceId === sourceId);
@@ -192,7 +197,6 @@ export default function Multiview({ navigation, route }) {
         type: 'viewer/removeProjectingStream',
         payload: { sourceId },
       });
-      console.log('**** streams:', streams, mediaStream);
     }
   };
 
@@ -212,6 +216,7 @@ export default function Multiview({ navigation, route }) {
     };
     initializeMultiview();
   }, [addRemoteTrack, navigation, sourceIds]);
+
   const margin = margins(columnsNumber);
   const labelLayout = margins(columnsNumber, true);
   return (
