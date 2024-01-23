@@ -105,10 +105,10 @@ export const UserInput = ({ navigation }) => {
             value={accountId}
             label={accountIdInputLabel}
             labelColor="white"
+            labelBackground={theme.colors.background}
             textColor="white"
             onChangeText={onChangeAccountId}
             validation={validation}
-            autoFocus
           />
           <Button
             title="play"
