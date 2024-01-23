@@ -8,7 +8,9 @@ import { useDispatch } from 'react-redux';
 
 import Text from '../../components/text/Text';
 import { WelcomeFooter } from '../../components/WelcomeFooter/WelcomeFooter';
+import { addStream } from '../../store/reducers/savedStreams';
 import { Routes } from '../../types/routes.types';
+import { StreamInfo } from '../../types/StreamInfo.types';
 
 import makeStyles from './UserInput.style';
 
@@ -33,10 +35,10 @@ export const UserInput = ({ navigation }) => {
   });
 
   const handlePlayClick = () => {
-    play(streamName, accountId);
+    play(streamName, accountId, true);
   };
 
-  const play = (streamName: string, accountId: string) => {
+  const play = (streamName: string, accountId: string, save: boolean) => {
     dispatch({
       type: 'viewer/setStreamName',
       payload: streamName,
@@ -46,10 +48,16 @@ export const UserInput = ({ navigation }) => {
       payload: accountId,
     });
     navigation.navigate(Routes.MultiView);
+
+    if (save) {
+      // Save stream information
+      const streamInfo: StreamInfo = { streamName, accountId };
+      dispatch(addStream(streamInfo));
+    }
   };
 
   const handleDemoPlayClick = () => {
-    play('simulcastmultiview', 'k9Mwad');
+    play('simulcastmultiview', 'k9Mwad', false);
   };
 
   const onChangeStreamName = (text: string) => {
@@ -119,6 +127,7 @@ export const UserInput = ({ navigation }) => {
           <Text id="demoTitle" type="h2" align="center" style={{ paddingTop: 48 }} />
           <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} color="grey.500" />
           <View style={{ paddingTop: 16 }} />
+
           <Pressable onPress={handleDemoPlayClick} style={styles.demoButton}>
             <Text id="playDemoStream" type="paragraph" />
             <Icon name="playOutline" />

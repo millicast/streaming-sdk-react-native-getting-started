@@ -5,7 +5,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, TouchableHighlight, AppState } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
-
 import myStyles from '../../styles/styles.js';
 
 import Multiview from './Multiview';
