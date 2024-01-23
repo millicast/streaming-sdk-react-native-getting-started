@@ -270,6 +270,7 @@ PODS:
     - React-Core
   - react-native-webrtc (111.0.1):
     - React-Core
+    - WebRTC
   - React-perflogger (0.69.8-2)
   - React-RCTAnimation (0.69.8-2):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -531,7 +532,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1560aa917ee101aa7db67b0ea0c7fcf23f1cd969
   React-logger: e30a213559d779b696231615a145ddb29d18c742
   react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
-  react-native-webrtc: ca0f8d55a2cddaf1ea98dd4253e2d8590f1c1b3d
+  react-native-webrtc: 3ca3dfee03ed944cc6ec89c38862cbe7c9f53ab7
   React-perflogger: 6c01400e9d679980209c5debe4438eafd7e656b0
   React-RCTAnimation: 00220b81e0f8bc61cc1283544fc78d4f5cc8f857
   React-RCTBlob: a23e9da46cd0523a130b4658a22ffa758c459cc4
@@ -551,4 +552,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9869ca4977ac114cc9c047b15136f63cc9487604
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.3
