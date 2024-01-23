@@ -24,7 +24,7 @@ export const Navigator = () => {
         headerStyle: {
           backgroundColor: theme.colors.background,
         },
-        headerTitle: (props) => <LogoTitle {...props} />,
+        headerTitle: () => <LogoTitle />,
         headerTitleAlign: 'center',
         headerTintColor: theme.colors.white, // FIXME: Use a different color defined in the themes
         headerBackTitleVisible: false,

@@ -20,7 +20,7 @@ import microphone from './microphone.svg';
 import participants from './participants.svg';
 import paste from './paste-files.svg';
 import pin from './pin.svg';
-import playOutline from './play-outline';
+import playOutline from './play-outline.svg';
 import present from './present.svg';
 import record from './record.svg';
 import scan from './scan.svg';
