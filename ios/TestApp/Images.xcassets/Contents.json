@@ -1,6 +1,12 @@
 {
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
+  "images": [
+    {
+      "filename": "LaunchIcon.pdf",
+      "idiom": "universal"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
   }
 }
