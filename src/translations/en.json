@@ -1,0 +1,16 @@
+{
+  "copyright": "Copyright © 2023 Dolby.io — All Rights Reserved",
+  "appTitle": "Interactive player",
+  "startStream": "Start a stream",
+  "startStreamLabel": "Enter the stream name and publisher account ID to view a stream.",
+  "demo": "Demo a stream",
+  "demoDescription": "Try a Dolby.io demo stream.",
+  "demoAction": "Play Dolby.io demo stream",
+  "streamNameInputLabel": "Stream Name",
+  "accountIdInputLabel": "Account ID",
+  "play": "Play",
+  "demoTitle": "Demo a stream",
+  "demoLabel": "Try a Dolby.io demo stream.",
+  "playDemoStream": "Play Dolby.io demo stream",
+  "enterValidInputMessage": "Invalid input"
+}

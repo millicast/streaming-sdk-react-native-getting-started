@@ -1,0 +1,41 @@
+import { Icon } from '@dolbyio/uikit-react-native';
+import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { Platform } from 'react-native';
+
+import { Routes } from '../types/routes.types';
+
+import MultiView from './multiview';
+import UserInput from './userInput';
+
+const Stack = createNativeStackNavigator();
+
+const LogoTitle = () => {
+  return <Icon name="dolbyLogo" color="white" />;
+};
+
+export const Navigator = () => {
+  const { theme } = useTheme();
+
+  const content = (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        headerTitle: () => <LogoTitle />,
+        headerTitleAlign: 'center',
+        headerTintColor: theme.colors.white, // FIXME: Use a different color defined in the themes
+        headerBackTitleVisible: false,
+        // hide the header bar for tvOS due to incompatibility of the library
+        headerShown: !(Platform.OS === 'ios' && Platform.isTV),
+      }}
+    >
+      <Stack.Screen name={Routes.UserInput} component={UserInput} />
+      <Stack.Screen name={Routes.MultiView} component={MultiView} />
+    </Stack.Navigator>
+  );
+
+  return content;
+};

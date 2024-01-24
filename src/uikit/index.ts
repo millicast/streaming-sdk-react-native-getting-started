@@ -9,6 +9,9 @@ export type { ColorHues, Colors, Theme, ColorKey, ThemeMode, Sizes } from './the
 // Hooks
 export { default as useAppTheme } from './hooks/useAppTheme';
 
+// Provider
+export { default as ThemeProvider } from './providers/ThemeProvider';
+
 // Components - UI
 export { default as Icon } from './components/Icon/Icon';
 export { default as Layout } from './components/Layout/Layout';
@@ -23,3 +26,9 @@ export { default as Pill } from './components/Pill/Pill';
 export { default as Timer } from './components/Timer/Timer';
 export { default as Spinner } from './components/Spinner/Spinner';
 export { default as Toast } from './components/Toast/Toast';
+export { default as CustomText } from './components/Text/CustomText';
+
+// Types
+export type { CustomTextProps } from './components/Text/CustomText';
+export type { ValidationType } from './components/Input/Input';
+export type { IconComponentName } from './components/Icon/IconComponents';

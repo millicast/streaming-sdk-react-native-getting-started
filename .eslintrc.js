@@ -55,6 +55,8 @@ module.exports = {
     ],
     'react/jsx-closing-bracket-location': 'off',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+    // TODO: Fix this issue for Navigator
+    'react/no-unstable-nested-components': ['off', { allowAsProps: true }],
   },
   overrides: [
     {

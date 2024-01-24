@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
 import type { Sizes } from '../../theme/types';
-import Text from '../Text/Text';
+import Text from '../Text/CustomText';
 
 import styles from './Pill.style';
 

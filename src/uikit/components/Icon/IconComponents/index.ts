@@ -5,6 +5,7 @@ import camera from './camera.svg';
 import chat from './chat.svg';
 import close from './close.svg';
 import copy from './copy.svg';
+import dolbyLogo from './dolby.svg';
 import dotsHorizontal from './dots-horizontal.svg';
 import dotsVertical from './dots-vertical.svg';
 import error from './error.svg';
@@ -19,6 +20,7 @@ import microphone from './microphone.svg';
 import participants from './participants.svg';
 import paste from './paste-files.svg';
 import pin from './pin.svg';
+import playOutline from './play-outline.svg';
 import present from './present.svg';
 import record from './record.svg';
 import scan from './scan.svg';
@@ -39,6 +41,7 @@ const Icons = {
   chat,
   close,
   copy,
+  dolbyLogo,
   dotsHorizontal,
   dotsVertical,
   error,
@@ -51,6 +54,7 @@ const Icons = {
   microphoneOff,
   participants,
   pin,
+  playOutline,
   present,
   record,
   sendMessage,
