@@ -7,10 +7,12 @@ import { Text, View, SafeAreaView, Platform } from 'react-native';
 import { Provider, useDispatch } from 'react-redux';
 import Multiview from './src/components/Multiview';
 
-import Publisher from './src/components/Publisher';
-import Viewer from './src/components/Viewer';
-import store from './src/store';
-import myStyles from './styles/styles.js';
+import Publisher from './components/Publisher';
+import Viewer from './components/Viewer';
+import store from './store';
+import { Routes } from './types/routes.types';
+import myStyles from '../styles/styles.js';
+import {Navigator} from './components/Navigator';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
       ) : null}
 
       <View style={{ paddingTop: 16 }} />
-      <Button title="subscriber" type="primary" onPress={() => navigation.navigate('Subscriber App')} />
+      <Button title="subscriber" type="primary" onPress={() => navigation.navigate(Routes.UserInput)} />
     </SafeAreaView>
   );
 };
@@ -50,6 +52,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
+<<<<<<< HEAD:App.js
         <Stack.Navigator
           screenOptions={{
             headerMode: 'screen',
@@ -70,8 +73,11 @@ const App = () => {
           <Stack.Screen name="Subscriber App" component={Multiview} />
           <Stack.Screen name="Publisher App" component={Publisher} />
         </Stack.Navigator>
+=======
+        <Navigator />
+>>>>>>> 9b19362 (navigator):src/App.js
       </NavigationContainer>
-    </Provider>
+      </Provider>
   );
 };
 
