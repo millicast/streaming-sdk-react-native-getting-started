@@ -23,3 +23,9 @@ export { default as Pill } from './components/Pill/Pill';
 export { default as Timer } from './components/Timer/Timer';
 export { default as Spinner } from './components/Spinner/Spinner';
 export { default as Toast } from './components/Toast/Toast';
+export { default as Text } from './components/Text/Text';
+
+// Types
+export type { CustomTextProps as TextProps } from './components/Text/Text';
+export type { ValidationType } from './components/Input/Input';
+export type { IconComponentName } from './components/Icon/IconComponents';
