@@ -45,7 +45,7 @@ export const UserInput = ({ navigation }) => {
       type: 'viewer/setAccountId',
       payload: accountId,
     });
-    navigation.navigate(Routes.Viewer);
+    navigation.navigate(Routes.MultiView);
   };
 
   const handleDemoPlayClick = () => {

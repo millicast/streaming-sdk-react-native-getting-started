@@ -4,9 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import Viewer from '../components/Viewer';
 import { Routes } from '../types/routes.types';
 
+import MultiView from './multiview';
 import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();
@@ -33,7 +33,7 @@ export const Navigator = () => {
       }}
     >
       <Stack.Screen name={Routes.UserInput} component={UserInput} />
-      <Stack.Screen name={Routes.Viewer} component={Viewer} />
+      <Stack.Screen name={Routes.MultiView} component={MultiView} />
     </Stack.Navigator>
   );
 
