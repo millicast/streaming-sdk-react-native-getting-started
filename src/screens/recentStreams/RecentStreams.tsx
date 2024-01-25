@@ -1,7 +1,7 @@
 import { Layout, Button } from '@dolbyio/uikit-react-native';
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { ScrollView, View, Pressable } from 'react-native';
+import { ScrollView, View, Pressable, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -52,6 +52,10 @@ export const RecentStreams = ({ navigation }) => {
       navigation.navigate(Routes.UserInput);
     }
   }, [streamsList]);
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }, []);
 
   return (
     <Layout testID="RecentStreamsScreen">
