@@ -1,8 +1,8 @@
 import { Icon } from '@dolbyio/uikit-react-native';
 import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import { Platform } from 'react-native';
+import React, { useEffect } from 'react';
+import { Platform, LogBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { StreamInfo } from '../../types/StreamInfo.types';
@@ -21,6 +21,10 @@ const LogoTitle = () => {
 export const Navigator = () => {
   const { theme } = useTheme();
   const streamsList: StreamInfo[] = useSelector((state) => state.persistedSavedStreamsReducer.streams);
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['Persistent storage is not supported on tvOS']);
+  }, []);
 
   return (
     <Stack.Navigator
