@@ -30,6 +30,7 @@ import speakerOff from './speaker-off.svg';
 import speaker from './speaker.svg';
 import success from './success.svg';
 import successStatus from './successStatus.svg';
+import trash from './trash.svg';
 import warning from './warning.svg';
 import warningStatus from './warningStatus.svg';
 
@@ -66,6 +67,7 @@ const Icons = {
   invite,
   paste,
   scan,
+  trash,
   warning,
   warningStatus,
 };

@@ -30,7 +30,7 @@ export const RecentStreams = ({ navigation }) => {
   };
 
   const handleViewAllClick = () => {
-    // TODO: Navigate to View all streams
+    navigation.navigate(Routes.SavedStreams);
   };
 
   const handlePlayStreamClick = (stream: StreamInfo) => {
