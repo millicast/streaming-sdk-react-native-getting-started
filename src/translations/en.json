@@ -12,5 +12,11 @@
   "demoTitle": "Demo a stream",
   "demoLabel": "Try a Dolby.io demo stream.",
   "playDemoStream": "Play Dolby.io demo stream",
-  "enterValidInputMessage": "Invalid input"
+  "enterValidInputMessage": "Invalid input",
+  "recentStreamsInfoText": "Open one of your saved streams or join new.",
+  "recentlyViewedText": "Recently viewed",
+  "viewAllButtonText": "View all",
+  "alternateOptionText": "or",
+  "playNewStream": "PLAY NEW",
+  "accountIDLabel": "ID:"
 }

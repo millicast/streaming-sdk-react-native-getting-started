@@ -1,12 +1,15 @@
 import { Icon } from '@dolbyio/uikit-react-native';
 import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import { Platform } from 'react-native';
+import React, { useEffect } from 'react';
+import { Platform, LogBox } from 'react-native';
+import { useSelector } from 'react-redux';
 
+import { StreamInfo } from '../../types/StreamInfo.types';
 import { Routes } from '../types/routes.types';
 
 import MultiView from './multiview';
+import RecentStreams from './recentStreams';
 import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();
@@ -17,8 +20,13 @@ const LogoTitle = () => {
 
 export const Navigator = () => {
   const { theme } = useTheme();
+  const streamsList: StreamInfo[] = useSelector((state) => state.persistedSavedStreamsReducer.streams);
 
-  const content = (
+  useEffect(() => {
+    LogBox.ignoreLogs(['Persistent storage is not supported on tvOS']);
+  }, []);
+
+  return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
@@ -32,10 +40,13 @@ export const Navigator = () => {
         headerShown: !(Platform.OS === 'ios' && Platform.isTV),
       }}
     >
-      <Stack.Screen name={Routes.UserInput} component={UserInput} />
+      <Stack.Screen name={Routes.RecentStreams} component={RecentStreams} />
+      <Stack.Screen
+        name={Routes.UserInput}
+        component={UserInput}
+        options={{ headerBackVisible: streamsList.length > 0 }}
+      />
       <Stack.Screen name={Routes.MultiView} component={MultiView} />
     </Stack.Navigator>
   );
-
-  return content;
 };
