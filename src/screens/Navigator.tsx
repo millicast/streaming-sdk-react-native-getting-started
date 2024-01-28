@@ -10,6 +10,7 @@ import { Routes } from '../types/routes.types';
 
 import MultiView from './multiview';
 import RecentStreams from './recentStreams';
+import SavedStreams from './savedStreams';
 import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +42,7 @@ export const Navigator = () => {
       }}
     >
       <Stack.Screen name={Routes.RecentStreams} component={RecentStreams} />
+      <Stack.Screen name={Routes.SavedStreams} component={SavedStreams} />
       <Stack.Screen
         name={Routes.UserInput}
         component={UserInput}
