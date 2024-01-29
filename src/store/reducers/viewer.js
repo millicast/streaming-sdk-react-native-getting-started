@@ -15,10 +15,16 @@ const initialState = {
   },
   muted: false,
   multiView: false,
+  streamStats: null,
 };
 
 const viewerReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'viewer/setStreamStats':
+      return {
+        ...state,
+        streamStats: action.payload,
+      };
     case 'viewer/setStreamName':
       return {
         ...state,
