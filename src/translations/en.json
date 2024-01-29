@@ -18,5 +18,8 @@
   "viewAllButtonText": "View all",
   "alternateOptionText": "or",
   "playNewStream": "PLAY NEW",
-  "accountIDLabel": "ID:"
+  "accountIDLabel": "ID:",
+  "streamInfoTitle": "Streaming statistics",
+  "streamOffline": "Stream is offline",
+  "waitToBegin": "Please wait for livestream to begin."
 }
