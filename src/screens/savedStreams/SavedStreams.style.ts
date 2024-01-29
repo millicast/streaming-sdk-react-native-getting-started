@@ -5,6 +5,12 @@ const styles = () =>
     wrapper: {
       flex: 1,
     },
+    headerViewWrapperTV: {
+      flexDirection: 'row',
+      height: 75,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
     streamListSectionHeaderWrapper: {
       flexDirection: 'row',
       flex: 1,
