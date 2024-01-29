@@ -67,28 +67,44 @@ export const SavedStreams = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: !(Platform.OS === 'ios' && Platform.isTV),
+      headerShown: !Platform.isTV,
       headerTitle: savedStreamsHeaderText,
-      headerRight: () => (
-        <IconButton backgroundColor="transparent" icon="trash" size="m" onPress={clearSavedStreamsAlert} />
-      ),
+      headerRight: () =>
+        streamsList.length > 0 && (
+          <IconButton backgroundColor="transparent" icon="trash" size="m" onPress={clearSavedStreamsAlert} />
+        ),
     });
   }, []);
 
   return (
     <Layout testID="SavedStreamsScreen">
       <SafeAreaView style={styles.wrapper}>
-        <ScrollView>
-          <View style={styles.streamListSectionHeaderWrapper}>
-            <Text id="lastPlayedStreamText" type="bodyDefault" style={styles.streamListSectionHeaderText} />
+        {Platform.isTV && (
+          <View style={styles.headerViewWrapperTV}>
+            <View />
+            <Text id="savedStreamsHeaderText" type="H2" />
+            {streamsList.length > 0 && (
+              <IconButton backgroundColor="transparent" icon="trash" size="m" onPress={clearSavedStreamsAlert} />
+            )}
           </View>
-          <StreamList streams={streamsList.slice(0, 1)} onPlayStream={handlePlayStream} />
-
-          <View style={styles.streamListSectionHeaderWrapper}>
-            <Text id="allStreamsText" type="bodyDefault" style={styles.streamListSectionHeaderText} />
+        )}
+        {streamsList.length > 0 ? (
+          <ScrollView>
+            <View style={styles.streamListSectionHeaderWrapper}>
+              <Text id="lastPlayedStreamText" type="bodyDefault" style={styles.streamListSectionHeaderText} />
+            </View>
+            <StreamList streams={streamsList.slice(0, 1)} onPlayStream={handlePlayStream} />
+            <View style={styles.streamListSectionHeaderWrapper}>
+              <Text id="allStreamsText" type="bodyDefault" style={styles.streamListSectionHeaderText} />
+            </View>
+            <StreamList streams={streamsList} onPlayStream={handlePlayStream} />
+          </ScrollView>
+        ) : (
+          <View style={styles.noStreamsMessageWrapper}>
+            <Text id="noSavedStreamsTitleText" type="h1" align="center" numberOfLines={2} />
+            <Text id="noSavedStreamssubtitleText" type="bodyDefault" color="secondary.200" />
           </View>
-          <StreamList streams={streamsList} onPlayStream={handlePlayStream} />
-        </ScrollView>
+        )}
       </SafeAreaView>
       <WelcomeFooter />
     </Layout>
