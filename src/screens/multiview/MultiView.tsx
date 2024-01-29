@@ -15,7 +15,6 @@ import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ErrorView from '../../components/errorview/ErrorView';
-import { useIntl } from 'react-intl';
 import { Routes } from '../../types/routes.types';
 
 window.Logger = MillicastLogger;
@@ -247,8 +246,7 @@ export const MultiView = ({ navigation }) => {
           marginBottom: 50,
         }}
       >
-       {/* <ErrorView text={intl.formatMessage({id: 'streamOffline'})} onClose={() => navigation.navigate(Routes.UserInput)} testID="ErrorView"/> */}
-       {error && (<ErrorView errorType='streamOffline' onClose={() => { console.log('close'); navigation.navigate(Routes.UserInput); }} />)}
+       {error && (<ErrorView errorType='streamOffline' onClose={() => { navigation.navigate(Routes.UserInput); }} />)}
         {!error && (<FlatList
           key={columnsNumber}
           data={streams}

@@ -14,9 +14,9 @@
   "playDemoStream": "Play Dolby.io demo stream",
   "streamOffline": "Stream is offline",
   "streamOfflineSubtitle": "Please wait for livestream to begin.",
-  "networkDisconnected": "Disconnected",
+  "networkDisconnected": "Disconnected from the network",
   "networkDisconnectedSubtitle": " ",
-  "streamOfflineNotLiveBadge": "NOT LIVE"
+  "streamOfflineNotLiveBadge": "NOT LIVE",
   "enterValidInputMessage": "Invalid input",
   "recentStreamsInfoText": "Open one of your saved streams or join new.",
   "recentlyViewedText": "Recently viewed",
