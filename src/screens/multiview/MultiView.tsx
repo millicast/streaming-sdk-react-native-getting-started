@@ -14,6 +14,9 @@ import {
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
 
+import ErrorView from '../../components/errorview/ErrorView';
+import { Routes } from '../../types/routes.types';
+
 window.Logger = MillicastLogger;
 window.Logger.setLevel(MillicastLogger.DEBUG);
 
@@ -29,6 +32,7 @@ export const MultiView = ({ navigation }) => {
   const playing = useSelector((state) => state.viewerReducer.playing);
   const millicastView = useSelector((state) => state.viewerReducer.millicastView);
   const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
+  const error = useSelector((state) => state.viewerReducer.error);
   const dispatch = useDispatch();
 
   const playingRef = useRef(null);
@@ -51,8 +55,10 @@ export const MultiView = ({ navigation }) => {
       subscription.remove();
       if (playingRef.current) {
         changeStateOfMediaTracks(false);
-        unprojectAll();
-        stopStream();
+        if (millicastViewRef.current) {
+          unprojectAll();
+          stopStream();
+        }
         dispatch({ type: 'viewer/resetAll' });
         streamsRef.current = [];
       }
@@ -64,7 +70,9 @@ export const MultiView = ({ navigation }) => {
   };
 
   const stopStream = async () => {
-    await millicastViewRef.current.stop();
+    if (millicastViewRef.current != null) {
+      await millicastViewRef.current.stop();
+    }
     dispatch({ type: 'viewer/setPlaying', payload: false });
     dispatch({ type: 'viewer/setIsMediaSet', payload: true });
     dispatch({ type: 'viewer/setStreams', payload: [] });
@@ -83,7 +91,7 @@ export const MultiView = ({ navigation }) => {
         streamAccountId: accountId,
       });
     // Create a new instance
-    const view = new MillicastView(streamName, tokenGenerator, null);
+    const view = new MillicastView(streamName, tokenGenerator, undefined, true);
     // Set track event handler to receive streams from Publisher.
     view.on('track', async (event) => {
       dispatch({ type: 'viewer/onTrackEvent', payload: event });
@@ -129,10 +137,12 @@ export const MultiView = ({ navigation }) => {
         events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
       });
       dispatch({ type: 'viewer/setMillicastView', payload: view });
+      dispatch({ type: 'viewer/setError', payload: null });
 
       millicastViewRef.current = view;
     } catch (e) {
-      console.error('Connection failed. Reason:', e);
+      console.log('Connection failed. Reason:', e);
+      dispatch({ type: 'viewer/setError', payload: e });
     }
   };
 
@@ -143,7 +153,7 @@ export const MultiView = ({ navigation }) => {
       const listVideoMids = streamsRef.current.map((track) => track.videoMid).filter((x) => x !== '0' && x !== mid);
       await millicastViewRef.current.unproject(listVideoMids);
     } catch (error) {
-      console.error(error);
+      console.log('unproject error', error);
     }
   };
 
@@ -236,53 +246,63 @@ export const MultiView = ({ navigation }) => {
           marginBottom: 50,
         }}
       >
-        <FlatList
-          key={columnsNumber}
-          data={streams}
-          style={{
-            textAlign: 'center',
-          }}
-          numColumns={columnsNumber}
-          keyExtractor={(_, index) => String(index)}
-          renderItem={({ item, index }) => (
-            <View style={margin}>
-              <>
-                <RTCView
-                  key={item?.stream.toURL() || `${item?.stream.videoMid}` || ''}
-                  streamURL={item?.stream.toURL()}
-                  style={{
-                    width: columnsNumber === 2 ? '70%' : '100%',
-                    flex: 1,
-                    aspectRatio: 1,
-                  }}
-                />
-                <TouchableHighlight
-                  style={{
-                    padding: 1,
-                    position: 'absolute',
-                    marginLeft: labelLayout.marginLeft,
-                    bottom: labelLayout.bottom,
-                    zIndex: 0,
-                  }}
-                  underlayColor="#AA33FF"
-                  onPress={() => undefined}
-                >
-                  <Text
+        {error && (
+          <ErrorView
+            errorType="streamOffline"
+            onClose={() => {
+              navigation.navigate(Routes.UserInput);
+            }}
+          />
+        )}
+        {!error && (
+          <FlatList
+            key={columnsNumber}
+            data={streams}
+            style={{
+              textAlign: 'center',
+            }}
+            numColumns={columnsNumber}
+            keyExtractor={(_, index) => String(index)}
+            renderItem={({ item, index }) => (
+              <View style={margin}>
+                <>
+                  <RTCView
+                    key={item?.stream.toURL() || `${item?.stream.videoMid}` || ''}
+                    streamURL={item?.stream.toURL()}
                     style={{
-                      color: 'white',
-                      backgroundColor: 'grey',
-                      borderRadius: 3,
-                      paddingHorizontal: 3,
-                      justifyContent: 'flex-start',
+                      width: columnsNumber === 2 ? '70%' : '100%',
+                      flex: 1,
+                      aspectRatio: 1,
                     }}
+                  />
+                  <TouchableHighlight
+                    style={{
+                      padding: 1,
+                      position: 'absolute',
+                      marginLeft: labelLayout.marginLeft,
+                      bottom: labelLayout.bottom,
+                      zIndex: 0,
+                    }}
+                    underlayColor="#AA33FF"
+                    onPress={() => undefined}
                   >
-                    {!item.sourceId ? 'Main' : String(item.sourceId)}
-                  </Text>
-                </TouchableHighlight>
-              </>
-            </View>
-          )}
-        />
+                    <Text
+                      style={{
+                        color: 'white',
+                        backgroundColor: 'grey',
+                        borderRadius: 3,
+                        paddingHorizontal: 3,
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      {!item.sourceId ? 'Main' : String(item.sourceId)}
+                    </Text>
+                  </TouchableHighlight>
+                </>
+              </View>
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
