@@ -16,8 +16,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   streamInfoContainer: {
-    borderWidth: 0,
-    borderColor: 'white',
     marginTop: 60,
     marginHorizontal: 16,
   },
