@@ -24,5 +24,7 @@
   "allStreamsText": "All",
   "clearSavedStreamsAlertText": "Are you sure you want to clear the saved streams?",
   "clearSavedStreamsAlertCancelButton": "Cancel",
-  "clearSavedStreamsAlertClearButton": "Clear"
+  "clearSavedStreamsAlertClearButton": "Clear",
+  "noSavedStreamsTitleText": "You don’t have any streams viewed",
+  "noSavedStreamssubtitleText": "View a stream to add it to your history."
 }

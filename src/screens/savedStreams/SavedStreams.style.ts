@@ -19,5 +19,12 @@ const styles = () =>
       flexDirection: 'row',
       flex: 1,
     },
+    noStreamsMessageWrapper: {
+      flexDirection: 'column',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: -100,
+    },
   });
 export default styles;
