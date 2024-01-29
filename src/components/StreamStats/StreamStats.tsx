@@ -3,15 +3,11 @@ import React from 'react';
 import { View, TouchableOpacity, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import { StreamStatInfo } from '../../types/StreamStatInfo.types';
 import { StreamStatsRecord } from '../StreamStatsRecord/StreamStatsRecord';
 import Text from '../text/Text';
 
 import styles from './StreamStats.style';
-
-interface StreamStatInfo {
-  param: string;
-  value: string;
-}
 
 const convertBytes = (bytes: number) => {
   const toMB = 1024 * 1024;
@@ -78,7 +74,7 @@ export const StreamStats = ({ onPress }) => {
         <Text id="streamInfoTitle" type="h2" align="center" style={{ paddingTop: 16, paddingLeft: 16 }} />
 
         <View style={styles.streamInfoContainer}>
-          <StreamStatsRecord param="Name" paramType="h3" value="Value" valueType="h3"/>
+          <StreamStatsRecord param="Name" paramType="h3" value="Value" valueType="h3" />
           <FlatList data={statsRecordsList} keyExtractor={(item) => item.param} renderItem={renderItem} />
         </View>
       </View>
