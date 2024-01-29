@@ -1,8 +1,11 @@
+import { ActionSheetIOS } from 'react-native';
+
 /* eslint-disable */
 const initialState = {
   streamName: null,
   accountId: null,
   playing: false,
+  error: null,
   streams: [],
   sourceIds: ['main'],
   streamsProjecting: [],
@@ -132,6 +135,11 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedSource: { ...action.payload },
+      };
+    case 'viewer/setError':
+      return {
+        ...state,
+        error: action.payload,
       };
     case 'viewer/resetAll':
       return {

@@ -12,6 +12,11 @@
   "demoTitle": "Demo a stream",
   "demoLabel": "Try a Dolby.io demo stream.",
   "playDemoStream": "Play Dolby.io demo stream",
+  "streamOffline": "Stream is offline",
+  "streamOfflineSubtitle": "Please wait for livestream to begin.",
+  "networkDisconnected": "Disconnected",
+  "networkDisconnectedSubtitle": " ",
+  "streamOfflineNotLiveBadge": "NOT LIVE"
   "enterValidInputMessage": "Invalid input",
   "recentStreamsInfoText": "Open one of your saved streams or join new.",
   "recentlyViewedText": "Recently viewed",
