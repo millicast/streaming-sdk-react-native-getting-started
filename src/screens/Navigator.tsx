@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { StreamInfo } from '../../types/StreamInfo.types';
 import { Routes } from '../types/routes.types';
 
+import SingleStreamView from './singleStreamView';
 import MultiView from './multiview';
 import RecentStreams from './recentStreams';
 import UserInput from './userInput';
@@ -46,6 +47,7 @@ export const Navigator = () => {
         component={UserInput}
         options={{ headerBackVisible: streamsList.length > 0 }}
       />
+      <Stack.Screen name={Routes.SingleStreamView} component={SingleStreamView} />
       <Stack.Screen name={Routes.MultiView} component={MultiView} />
     </Stack.Navigator>
   );
