@@ -5,11 +5,11 @@ import React, { useEffect } from 'react';
 import { Platform, LogBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { StreamInfo } from '../../types/StreamInfo.types';
 import { Routes } from '../types/routes.types';
+import { StreamInfo } from '../types/StreamInfo.types';
 
-import SingleStreamView from './singleStreamView';
 import MultiView from './multiview';
+import SingleStreamView from './singleStreamView/SingleStreamView';
 import RecentStreams from './recentStreams';
 import UserInput from './userInput';
 
@@ -47,8 +47,8 @@ export const Navigator = () => {
         component={UserInput}
         options={{ headerBackVisible: streamsList.length > 0 }}
       />
-      <Stack.Screen name={Routes.SingleStreamView} component={SingleStreamView} />
       <Stack.Screen name={Routes.MultiView} component={MultiView} />
+      <Stack.Screen name={Routes.SingleStreamView} component={SingleStreamView} />
     </Stack.Navigator>
   );
 };

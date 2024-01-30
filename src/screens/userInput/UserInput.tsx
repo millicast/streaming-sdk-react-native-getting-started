@@ -47,8 +47,7 @@ export const UserInput = ({ navigation }) => {
       type: 'viewer/setAccountId',
       payload: accountId,
     });
-    // navigation.navigate(Routes.MultiView);
-    navigation.navigate(Routes.SingleStreamView);
+    navigation.navigate(Routes.MultiView);
 
     if (save) {
       // Save stream information

@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const styles = () =>
   StyleSheet.create({
@@ -20,17 +20,26 @@ const styles = () =>
       borderWidth: 0,
       position: 'absolute',
       bottom: 0,
-      backgroundColor: '#14141A',
     },
     bottomIconWrapper: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       width: '80%',
     },
-    indicatorPosition: {
+    indicatorLayout: {
       position: 'absolute',
       left: 20,
-      marginTop: 280,
+      marginTop: 300,
+    },
+    video: {
+      flex: 1,
+      zIndex: -1, // works on ios
+      elevation: -1, // works on android,
+    },
+    videoContainer: {
+      flex: 1,
+      paddingHorizontal: 10,
+      marginTop: -35,
     },
   });
 export default styles;

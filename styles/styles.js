@@ -113,11 +113,6 @@ const theme = StyleSheet.create({
   titleSettings: {
     fontWeight: 'bold',
   },
-  indicatorPosition: {
-    position: 'absolute',
-    left: 20,
-    marginTop: 280,
-  },
 });
 
 module.exports = theme;
