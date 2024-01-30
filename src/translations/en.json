@@ -12,6 +12,11 @@
   "demoTitle": "Demo a stream",
   "demoLabel": "Try a Dolby.io demo stream.",
   "playDemoStream": "Play Dolby.io demo stream",
+  "streamOffline": "Stream is offline",
+  "streamOfflineSubtitle": "Please wait for livestream to begin.",
+  "networkDisconnected": "Disconnected from the network",
+  "networkDisconnectedSubtitle": " ",
+  "streamOfflineNotLiveBadge": "NOT LIVE",
   "enterValidInputMessage": "Invalid input",
   "recentStreamsInfoText": "Open one of your saved streams or join new.",
   "recentlyViewedText": "Recently viewed",
@@ -21,5 +26,13 @@
   "accountIDLabel": "ID:",
   "streamInfoTitle": "Streaming statistics",
   "streamOffline": "Stream is offline",
-  "waitToBegin": "Please wait for livestream to begin."
+  "waitToBegin": "Please wait for livestream to begin.",
+  "savedStreamsHeaderText": "Saved streams",
+  "lastPlayedStreamText": "Last played",
+  "allStreamsText": "All",
+  "clearSavedStreamsAlertText": "Are you sure you want to clear the saved streams?",
+  "clearSavedStreamsAlertCancelButton": "Cancel",
+  "clearSavedStreamsAlertClearButton": "Clear",
+  "noSavedStreamsTitleText": "You don’t have any streams viewed",
+  "noSavedStreamssubtitleText": "View a stream to add it to your history."
 }

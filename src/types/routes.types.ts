@@ -3,4 +3,5 @@ export enum Routes {
   MultiView = 'MultiView',
   RecentStreams = 'RecentStreams',
   SingleStreamView = 'SingleStreamView',
+  SavedStreams = 'SavedStreams',
 }
