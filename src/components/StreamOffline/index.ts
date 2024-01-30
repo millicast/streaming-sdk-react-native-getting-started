@@ -1,3 +1,3 @@
-import { BottomBar } from './BottomBar';
+import { StreamOffline } from './StreamOffline';
 
-export default BottomBar;
+export default StreamOffline;
