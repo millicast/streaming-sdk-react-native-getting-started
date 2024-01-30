@@ -7,10 +7,10 @@ import {
   View,
   Text,
   SafeAreaView,
-  TouchableHighlight,
   FlatList,
   Platform,
   AppState,
+  Pressable,
 } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
@@ -237,7 +237,7 @@ export const MultiView = ({ navigation }) => {
     initializeMultiview();
   }, [addRemoteTrack, navigation, sourceIds]);
 
-  const margin = margins(columnsNumber);
+  const margin = margins(columnsNumber, false);
   const labelLayout = margins(columnsNumber, true);
   const netInfo = useNetInfo();
   return (
@@ -267,7 +267,19 @@ export const MultiView = ({ navigation }) => {
             keyExtractor={(_, index) => String(index)}
             renderItem={({ item, index }) => (
               <View style={margin}>
-                <>
+                <Pressable
+                  style={{ marginBottom: 15 }}
+                  onPress={() => {
+                    dispatch({
+                      type: 'viewer/setSelectedSource',
+                      payload: {
+                        url: item?.stream.toURL(),
+                        mid: item?.videoMid,
+                      },
+                    });
+                    navigation.navigate(Routes.SingleStreamView);
+                  }}
+                >
                   <RTCView
                     key={item?.stream.toURL() || `${item?.stream.videoMid}` || ''}
                     streamURL={item?.stream.toURL()}
@@ -277,30 +289,23 @@ export const MultiView = ({ navigation }) => {
                       aspectRatio: 1,
                     }}
                   />
-                  <TouchableHighlight
+                  <Text
                     style={{
                       padding: 1,
                       position: 'absolute',
                       marginLeft: labelLayout.marginLeft,
                       bottom: labelLayout.bottom,
-                      zIndex: 0,
+                      zindex: 0,
+                      color: 'white',
+                      backgroundColor: 'grey',
+                      borderRadius: 3,
+                      paddingHorizontal: 3,
+                      justifyContent: 'flex-start',
                     }}
-                    underlayColor="#AA33FF"
-                    onPress={() => undefined}
                   >
-                    <Text
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'grey',
-                        borderRadius: 3,
-                        paddingHorizontal: 3,
-                        justifyContent: 'flex-start',
-                      }}
-                    >
-                      {!item.sourceId ? 'Main' : String(item.sourceId)}
-                    </Text>
-                  </TouchableHighlight>
-                </>
+                    {!item.sourceId ? 'Main' : String(item.sourceId)}
+                  </Text>
+                </Pressable>
               </View>
             )}
           />

@@ -5,12 +5,13 @@ import React, { useEffect } from 'react';
 import { Platform, LogBox } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { StreamInfo } from '../../types/StreamInfo.types';
 import { Routes } from '../types/routes.types';
+import { StreamInfo } from '../types/StreamInfo.types';
 
 import MultiView from './multiview';
 import RecentStreams from './recentStreams';
 import SavedStreams from './savedStreams';
+import SingleStreamView from './singleStreamView/SingleStreamView';
 import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();
@@ -49,6 +50,7 @@ export const Navigator = () => {
         options={{ headerBackVisible: streamsList.length > 0 }}
       />
       <Stack.Screen name={Routes.MultiView} component={MultiView} />
+      <Stack.Screen name={Routes.SingleStreamView} component={SingleStreamView} />
     </Stack.Navigator>
   );
 };
