@@ -1,4 +1,5 @@
 import { Layout, Button } from '@dolbyio/uikit-react-native';
+import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { ScrollView, View, Pressable, LogBox } from 'react-native';
@@ -20,6 +21,7 @@ export const RecentStreams = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const streamsList: StreamInfo[] = useSelector((state) => state.persistedSavedStreamsReducer.streams);
+  const isFocused = useIsFocused();
 
   const playNewStreamTitle = intl.formatMessage({
     id: 'playNewStream',
@@ -48,10 +50,18 @@ export const RecentStreams = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (streamsList.length === 0) {
+    navigateToUserInputIfRequired();
+    const unsubscribe = navigation.addListener('focus', () => {
+      navigateToUserInputIfRequired();
+    });
+    return unsubscribe;
+  }, [streamsList, isFocused]);
+
+  const navigateToUserInputIfRequired = () => {
+    if (streamsList.length === 0 && isFocused) {
       navigation.navigate(Routes.UserInput);
     }
-  }, [streamsList]);
+  };
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
