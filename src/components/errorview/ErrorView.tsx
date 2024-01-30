@@ -2,7 +2,7 @@
 import { CustomText, CustomTextProps as UITextProps, IconButton } from '@dolbyio/uikit-react-native';
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Modal, Platform, View } from 'react-native';
+import { Modal, Platform, StyleSheet, View } from 'react-native';
 
 export type ErrorViewProps = {
   text: string;
@@ -34,22 +34,10 @@ const ErrorView = ({ errorType, onClose, children, ...rest }: TextProps) => {
       }}
       visible={modalVisible}
     >
-      <View style={{ flexDirection: 'column', height: '100%', backgroundColor: 'black' }}>
+      <View style={stylesContainer.container}>
         <View style={{ flexDirection: 'row', paddingTop: topPadding }}>
-          <View style={{ justifyContent: 'flex-start', alignContent: 'center', alignItems: 'center', flex: 1 }}>
-            <CustomText
-              {...rest}
-              style={{
-                alignSelf: 'flex-start',
-                backgroundColor: 'grey',
-                borderRadius: 5,
-                paddingHorizontal: 8,
-                paddingVertical: 2,
-                marginHorizontal: 10,
-                marginVertical: 20,
-              }}
-              type="bodySmall"
-            >
+          <View style={stylesContainer.indicatorContainer}>
+            <CustomText {...rest} style={stylesContainer.indicator} type="bodySmall">
               <FormattedMessage id="streamOfflineNotLiveBadge" />
             </CustomText>
           </View>
@@ -69,22 +57,21 @@ const ErrorView = ({ errorType, onClose, children, ...rest }: TextProps) => {
             </View>
           )}
         </View>
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignContent: 'flex-end',
-            alignItems: 'center',
-            flex: 1,
-          }}
-        >
-          <View>
-            <CustomText {...rest} style={{ alignSelf: 'center' }} type="H2">
+        <View style={stylesContainer.textContainer}>
+          <View style={{ padding: 5 }}>
+            <CustomText
+              {...rest}
+              style={{
+                textAlign: 'center',
+              }}
+              type="H2"
+              align="center"
+            >
               <FormattedMessage id={id} />
             </CustomText>
           </View>
           <View>
-            <CustomText {...rest} style={{ alignSelf: 'center', paddingTop: 10 }} type="bodySmall">
+            <CustomText {...rest} style={stylesContainer.paragraph} type="paragraph" align="center">
               <FormattedMessage id={subtitleId} />
             </CustomText>
           </View>
@@ -93,5 +80,42 @@ const ErrorView = ({ errorType, onClose, children, ...rest }: TextProps) => {
     </Modal>
   );
 };
+
+const stylesContainer = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    height: '100%',
+    backgroundColor: '#14141A',
+    ...StyleSheet.absoluteFill,
+  },
+  indicatorContainer: {
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  indicator: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'grey',
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginHorizontal: 10,
+    marginVertical: 20,
+  },
+  textContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 50,
+  },
+  paragraph: {
+    alignSelf: 'center',
+    paddingTop: 10,
+  },
+});
 
 export default ErrorView;

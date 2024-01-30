@@ -1,4 +1,5 @@
 import { Director, View as MillicastView, Logger as MillicastLogger } from '@millicast/sdk';
+import { useNetInfo } from '@react-native-community/netinfo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
@@ -238,6 +239,7 @@ export const MultiView = ({ navigation }) => {
 
   const margin = margins(columnsNumber);
   const labelLayout = margins(columnsNumber, true);
+  const netInfo = useNetInfo();
   return (
     <SafeAreaView style={stylesContainer.container}>
       <View
@@ -248,7 +250,7 @@ export const MultiView = ({ navigation }) => {
       >
         {error && (
           <ErrorView
-            errorType="streamOffline"
+            errorType={netInfo.isConnected ? 'streamOffline' : 'networkOffline'}
             onClose={() => {
               navigation.navigate(Routes.UserInput);
             }}
