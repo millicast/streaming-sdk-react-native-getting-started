@@ -85,7 +85,7 @@ const SingleStreamView = ({ navigation }) => {
   const closeStreamStatsModel = () => {
     if(isStreamStatsModelVisible) {
       setIsStreamStatsModelVisible(false);
-      millicastView.webRTCPeer.stopStats();
+      millicastViewRef.current.webRTCPeer.stopStats();
       dispatch({ type: 'viewer/setStreamStats', payload: null });
     }
   };

@@ -211,7 +211,7 @@ export const MultiView = ({ navigation }) => {
       });
     }
   };
-  // console.log('Raw Stats from event:\n', JSON.stringify(streams, null, 2));
+
   useEffect(() => {
     const initializeMultiview = async () => {
       try {
