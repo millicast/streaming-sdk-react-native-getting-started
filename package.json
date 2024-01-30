@@ -13,6 +13,7 @@
     "@dolbyio/uikit-react-native": "file:./src/uikit/",
     "@millicast/sdk": "^0.1.39",
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/netinfo": "^11.2.1",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@types/color": "3.0.3",
