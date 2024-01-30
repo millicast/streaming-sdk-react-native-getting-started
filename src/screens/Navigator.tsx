@@ -9,9 +9,9 @@ import { Routes } from '../types/routes.types';
 import { StreamInfo } from '../types/StreamInfo.types';
 
 import MultiView from './multiview';
-import SingleStreamView from './singleStreamView/SingleStreamView';
 import RecentStreams from './recentStreams';
 import SavedStreams from './savedStreams';
+import SingleStreamView from './singleStreamView/SingleStreamView';
 import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();

@@ -268,7 +268,7 @@ export const MultiView = ({ navigation }) => {
             renderItem={({ item, index }) => (
               <View style={margin}>
                 <Pressable
-                  style={{marginBottom: 15}}
+                  style={{ marginBottom: 15 }}
                   onPress={() => {
                     dispatch({
                       type: 'viewer/setSelectedSource',
