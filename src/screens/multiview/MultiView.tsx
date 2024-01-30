@@ -273,7 +273,7 @@ export const MultiView = ({ navigation }) => {
                 />
                 <Text
                   style={{
-                    paddingBottom: 1,
+                    padding: 1,
                     position: 'absolute',
                     marginLeft: labelLayout.marginLeft,
                     bottom: labelLayout.bottom,
