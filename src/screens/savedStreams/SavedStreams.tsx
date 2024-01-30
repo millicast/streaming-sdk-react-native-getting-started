@@ -101,7 +101,7 @@ export const SavedStreams = ({ navigation }) => {
           </ScrollView>
         ) : (
           <View style={styles.noStreamsMessageWrapper}>
-            <Text id="noSavedStreamsTitleText" type="h1" align="center" numberOfLines={2} />
+            <Text id="noSavedStreamsTitleText" type="h2" align="center" numberOfLines={2} />
             <Text id="noSavedStreamssubtitleText" type="bodyDefault" color="secondary.200" />
           </View>
         )}

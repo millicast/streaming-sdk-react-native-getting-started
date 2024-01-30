@@ -2,7 +2,7 @@ import { Layout, Input, Button, Icon, ValidationType } from '@dolbyio/uikit-reac
 import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 
@@ -107,7 +107,7 @@ export const UserInput = ({ navigation }) => {
             textColor="white"
             onChangeText={onChangeStreamName}
             validation={validation}
-            autoFocus
+            autoFocus={!Platform.isTV}
           />
           <Input
             value={accountId}
