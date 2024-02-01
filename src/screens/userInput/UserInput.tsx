@@ -1,10 +1,11 @@
 import { Layout, Input, Button, Icon, ValidationType } from '@dolbyio/uikit-react-native';
 import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Pressable, ScrollView, View, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Text from '../../components/text/Text';
 import { WelcomeFooter } from '../../components/WelcomeFooter/WelcomeFooter';
@@ -85,6 +86,26 @@ export const UserInput = ({ navigation }) => {
   const playDisabled = (validation: ValidationType, streamName: string, accountId: string) => {
     return !(validation.valid && streamName.length >= MINIMUM_INPUT_LENGTH && accountId.length >= MINIMUM_INPUT_LENGTH);
   };
+
+  const streamsList: StreamInfo[] = useSelector((state) => state.persistedSavedStreamsReducer.streams);
+
+  const resetNavigationStackIfRequired = () => {
+    const currentRouteIndex = navigation.getState().index;
+
+    if (streamsList.length > 0 && currentRouteIndex === 0) {
+      navigation.reset({
+        index: 1,
+        routes: [{ name: Routes.RecentStreams }, { name: Routes.UserInput }],
+      });
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Screen is focused
+      resetNavigationStackIfRequired();
+    }, [streamsList]),
+  );
 
   return (
     <Layout testID="UserInputScreen">
