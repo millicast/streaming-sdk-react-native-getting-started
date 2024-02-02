@@ -74,7 +74,7 @@ export const SavedStreams = ({ navigation }) => {
           <IconButton backgroundColor="transparent" icon="trash" size="m" onPress={clearSavedStreamsAlert} />
         ),
     });
-  }, []);
+  }, [streamsList]);
 
   return (
     <Layout testID="SavedStreamsScreen">
