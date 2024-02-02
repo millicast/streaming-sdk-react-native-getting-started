@@ -26,7 +26,7 @@ const savedStreamsReducer = (state = initialState, action) => {
       const { stream } = action.payload;
       return {
         ...state,
-        streams: [stream, ...state.streams.filter(element => element.streamName !== stream.streamName && element.accountId !== stream.accountId).slice(0, 24)],
+        streams: [stream, ...state.streams.filter((element) => { return element.streamName === stream.streamName && element.accountId === stream.accountId ? false : true }).slice(0, 24)],
       };
     }
     case DELETE_ALL_STREAMS: {
