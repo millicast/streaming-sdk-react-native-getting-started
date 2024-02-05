@@ -28,8 +28,8 @@ const styles = () =>
     },
     indicatorLayout: {
       position: 'absolute',
-      left: 20,
-      marginTop: 300,
+      left: '3%',
+      top: '38%',
     },
     video: {
       flex: 1,
@@ -38,8 +38,8 @@ const styles = () =>
     },
     videoContainer: {
       flex: 1,
-      paddingHorizontal: 10,
-      marginTop: -35,
+      alignSelf: 'center',
     },
   });
+
 export default styles;

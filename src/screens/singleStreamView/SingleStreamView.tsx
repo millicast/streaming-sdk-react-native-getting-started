@@ -1,20 +1,21 @@
 /* eslint-disable */
 import { Logger as MillicastLogger } from '@millicast/sdk';
 import React, { useEffect, useRef, useState } from 'react';
-import { View, SafeAreaView, FlatList, Dimensions, Text } from 'react-native';
+import { View, SafeAreaView, FlatList, Dimensions, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RTCView } from 'react-native-webrtc';
 
 import { BottomBar } from '../../components/BottomBar/BottomBar';
 import { StreamStats } from '../../components/StreamStats/StreamStats';
 import { StreamStatusIndicator } from '../../components/StreamStatusIndicator/StreamStatusIndicator';
+import { ContainerView } from '../../components/ContainerView/ContainerView';
 
 import makeStyles from './SingleStreamView.style';
 
 window.Logger = MillicastLogger;
 window.Logger.setLevel(MillicastLogger.DEBUG);
 
-const SingleStreamView = ({ navigation }) => {
+export const SingleStreamView = ({ navigation }) => {
   const styles = makeStyles();
   const streams = useSelector((state) => state.viewerReducer.streams);
   const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
@@ -41,10 +42,23 @@ const SingleStreamView = ({ navigation }) => {
     const {width, height} = Dimensions.get('window');
     setWidth(width);
     setHeight(height);
-    if(width > height) {
+
+    if( Platform.isTV ) {
+      if ( Platform.OS === "ios" ) {
+        setIndicatorLayout({...indicatorLayout, left: '1.0%', top:'1.0%'});
+      } else {
+        setIndicatorLayout({...indicatorLayout, left: '1.0%', top:'5%'});
+      }
+    } else if(width > height) {
       // landscape mode
-      setIndicatorLayout({...indicatorLayout, left: 45, marginTop:45});
+      if ( Platform.OS === "ios" ) {
+        setIndicatorLayout({...indicatorLayout, left: '12%', top:'10%'});
+      } else {
+        // android device
+        setIndicatorLayout({...indicatorLayout, left: '8%', top:'12%'});
+      }
     } else {
+      // portrait mode - ios/android
       setIndicatorLayout(styles.indicatorLayout);
     }
   };
@@ -104,7 +118,7 @@ const SingleStreamView = ({ navigation }) => {
 
   return (
     <>
-    <SafeAreaView style={styles.container}>
+    <ContainerView style={styles.container}>
       <FlatList
         ref={flatlistRef}
         initialScrollIndex={videoTileIndex}
@@ -120,11 +134,9 @@ const SingleStreamView = ({ navigation }) => {
       <View style={styles.bottomMultimediaContainer}>
         <BottomBar displayStatsInformation={openStreamStatsModel} />
       </View>
-    </SafeAreaView>
+    </ContainerView>
     { isStreamStatsModelVisible && <StreamStats onPress={closeStreamStatsModel} /> }
     </>
   );
 };
-
-export default SingleStreamView;
 

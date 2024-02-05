@@ -11,7 +11,7 @@ import { StreamInfo } from '../types/StreamInfo.types';
 import MultiView from './multiview';
 import RecentStreams from './recentStreams';
 import SavedStreams from './savedStreams';
-import SingleStreamView from './singleStreamView/SingleStreamView';
+import SingleStreamView from './singleStreamView';
 import UserInput from './userInput';
 
 const Stack = createNativeStackNavigator();
