@@ -6,6 +6,7 @@ on:
       - main
     tags:
       - '*'
+  workflow_dispatch:
 
 jobs:
   Android-App-Build-And-Internal-Distribution:
