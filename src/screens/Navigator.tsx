@@ -43,15 +43,17 @@ export const Navigator = () => {
         headerShown: !(Platform.OS === 'ios' && Platform.isTV),
       }}
     >
-      <Stack.Screen name={Routes.RecentStreams} component={RecentStreams} />
-      <Stack.Screen name={Routes.SavedStreams} component={SavedStreams} />
-      <Stack.Screen
-        name={Routes.UserInput}
-        component={UserInput}
-        options={{ headerBackVisible: streamsList.length > 0 }}
-      />
-      <Stack.Screen name={Routes.MultiView} component={MultiView} />
-      <Stack.Screen name={Routes.SingleStreamView} component={SingleStreamView} />
+      <Stack.Group>
+        <Stack.Screen name={Routes.RecentStreams} component={RecentStreams} />
+        <Stack.Screen name={Routes.SavedStreams} component={SavedStreams} />
+        <Stack.Screen
+          name={Routes.UserInput}
+          component={UserInput}
+          options={{ headerBackVisible: streamsList.length > 0 }}
+        />
+        <Stack.Screen name={Routes.MultiView} component={MultiView} />
+        <Stack.Screen name={Routes.SingleStreamView} component={SingleStreamView} />
+      </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'fullScreenModal', headerShown: false }}>
         <Stack.Screen name={Routes.ErrorView} component={ErrorView} />
       </Stack.Group>

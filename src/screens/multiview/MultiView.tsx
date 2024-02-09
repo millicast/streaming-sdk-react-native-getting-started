@@ -50,10 +50,15 @@ export const MultiView = ({ navigation }) => {
   const [columnsNumber, setColumnsNumber] = useState(1);
 
   useEffect(() => {
-    DeviceEventEmitter.addListener('event.errorView.close', () => {
+    const subscription = DeviceEventEmitter.addListener('event.errorView.close', () => {
       dispatch({ type: 'viewer/setError', payload: null });
       navigation.goBack();
+      console.log('parent go back');
     });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   useEffect(() => {
