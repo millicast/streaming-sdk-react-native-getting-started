@@ -11,6 +11,7 @@ import {
   Platform,
   AppState,
   Pressable,
+  DeviceEventEmitter,
 } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
@@ -47,6 +48,18 @@ export const MultiView = ({ navigation }) => {
   millicastViewRef.current = millicastView;
 
   const [columnsNumber, setColumnsNumber] = useState(1);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('event.errorView.close', () => {
+      dispatch({ type: 'viewer/setError', payload: null });
+      navigation.goBack();
+      console.log('parent go back');
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
@@ -220,6 +233,10 @@ export const MultiView = ({ navigation }) => {
     }
   };
 
+  const margin = margins(columnsNumber, false);
+  const labelLayout = margins(columnsNumber, true);
+  const netInfo = useNetInfo();
+
   useEffect(() => {
     const initializeMultiview = async () => {
       try {
@@ -237,9 +254,12 @@ export const MultiView = ({ navigation }) => {
     initializeMultiview();
   }, [addRemoteTrack, navigation, sourceIds]);
 
-  const margin = margins(columnsNumber, false);
-  const labelLayout = margins(columnsNumber, true);
-  const netInfo = useNetInfo();
+  useEffect(() => {
+    if (error !== null) {
+      navigation.navigate(Routes.ErrorView, { errorType: netInfo.isConnected ? 'streamOffline' : 'networkOffline' });
+    }
+  }, [error]);
+
   return (
     <SafeAreaView style={stylesContainer.container}>
       <View
@@ -248,68 +268,58 @@ export const MultiView = ({ navigation }) => {
           marginBottom: 50,
         }}
       >
-        {error && (
-          <ErrorView
-            errorType={netInfo.isConnected ? 'streamOffline' : 'networkOffline'}
-            onClose={() => {
-              navigation.navigate(Routes.UserInput);
-            }}
-          />
-        )}
-        {!error && (
-          <FlatList
-            key={columnsNumber}
-            data={streams}
-            style={{
-              textAlign: 'center',
-            }}
-            numColumns={columnsNumber}
-            keyExtractor={(_, index) => String(index)}
-            renderItem={({ item, index }) => (
-              <View style={margin}>
-                <Pressable
-                  style={{ marginBottom: 15 }}
-                  onPress={() => {
-                    dispatch({
-                      type: 'viewer/setSelectedSource',
-                      payload: {
-                        url: item?.stream.toURL(),
-                        mid: item?.videoMid,
-                      },
-                    });
-                    navigation.navigate(Routes.SingleStreamView);
+        <FlatList
+          key={columnsNumber}
+          data={streams}
+          style={{
+            textAlign: 'center',
+          }}
+          numColumns={columnsNumber}
+          keyExtractor={(_, index) => String(index)}
+          renderItem={({ item, index }) => (
+            <View style={margin}>
+              <Pressable
+                style={{ marginBottom: 15 }}
+                onPress={() => {
+                  dispatch({
+                    type: 'viewer/setSelectedSource',
+                    payload: {
+                      url: item?.stream.toURL(),
+                      mid: item?.videoMid,
+                    },
+                  });
+                  navigation.navigate(Routes.SingleStreamView);
+                }}
+              >
+                <RTCView
+                  key={item?.stream.toURL() || `${item?.stream.videoMid}` || ''}
+                  streamURL={item?.stream.toURL()}
+                  style={{
+                    width: columnsNumber === 2 ? '70%' : '100%',
+                    flex: 1,
+                    aspectRatio: 1,
+                  }}
+                />
+                <Text
+                  style={{
+                    padding: 1,
+                    position: 'absolute',
+                    marginLeft: labelLayout.marginLeft,
+                    bottom: labelLayout.bottom,
+                    zindex: 0,
+                    color: 'white',
+                    backgroundColor: 'grey',
+                    borderRadius: 3,
+                    paddingHorizontal: 3,
+                    justifyContent: 'flex-start',
                   }}
                 >
-                  <RTCView
-                    key={item?.stream.toURL() || `${item?.stream.videoMid}` || ''}
-                    streamURL={item?.stream.toURL()}
-                    style={{
-                      width: columnsNumber === 2 ? '70%' : '100%',
-                      flex: 1,
-                      aspectRatio: 1,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      padding: 1,
-                      position: 'absolute',
-                      marginLeft: labelLayout.marginLeft,
-                      bottom: labelLayout.bottom,
-                      zindex: 0,
-                      color: 'white',
-                      backgroundColor: 'grey',
-                      borderRadius: 3,
-                      paddingHorizontal: 3,
-                      justifyContent: 'flex-start',
-                    }}
-                  >
-                    {!item.sourceId ? 'Main' : String(item.sourceId)}
-                  </Text>
-                </Pressable>
-              </View>
-            )}
-          />
-        )}
+                  {!item.sourceId ? 'Main' : String(item.sourceId)}
+                </Text>
+              </Pressable>
+            </View>
+          )}
+        />
       </View>
     </SafeAreaView>
   );
