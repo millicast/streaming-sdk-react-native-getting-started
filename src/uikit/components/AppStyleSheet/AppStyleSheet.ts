@@ -49,4 +49,5 @@ export const AppStyleSheet = {
     const modifiedStyleSheetObject = processOuterStyleObject(styleSheetObject, overload);
     return StyleSheet.create(modifiedStyleSheetObject);
   },
+  absoluteFill: StyleSheet.absoluteFill,
 };
