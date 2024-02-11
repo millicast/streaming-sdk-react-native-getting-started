@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { AppStyleSheet as StyleSheet } from '@dolbyio/uikit-react-native';
 
 const styles = StyleSheet.create({
   wrapper: {
