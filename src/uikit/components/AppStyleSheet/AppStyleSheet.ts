@@ -46,7 +46,7 @@ const applyScalingFactor = (size) => {
 
 export const AppStyleSheet = {
   create: (styleSheetObject, overload = {}) => {
-    //const modifiedStyleSheetObject = processOuterStyleObject(styleSheetObject, overload);
-    return StyleSheet.create(styleSheetObject);
+    const modifiedStyleSheetObject = processOuterStyleObject(styleSheetObject, overload);
+    return StyleSheet.create(modifiedStyleSheetObject);
   },
 };
