@@ -40,7 +40,6 @@ const applyScalingFactor = (size) => {
   const applyScalingFactorFactor = Platform.OS === 'android' && Platform.isTV ? 0.5 : 1.0;
   const newSize = size * applyScalingFactorFactor;
   const pixelSize = Math.round(PixelRatio.roundToNearestPixel(newSize));
-  console.log(`lib pixelSize: ${pixelSize} - newSize: ${newSize} old : ${size}`);
   return pixelSize;
 };
 
@@ -50,4 +49,7 @@ export const AppStyleSheet = {
     return StyleSheet.create(modifiedStyleSheetObject);
   },
   absoluteFill: StyleSheet.absoluteFill,
+  applyScalingFactor: (styleObject, overload = {}) => {
+    return processInnerStyleObject(styleObject, overload);
+  },
 };
