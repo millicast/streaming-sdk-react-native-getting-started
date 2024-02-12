@@ -130,6 +130,7 @@ export const SingleStreamView = ({ navigation }) => {
           keyExtractor={(_, index) => String(index)}
           style={{ width: width }}
           renderItem={renderVideoItem}
+          getItemLayout={(data, index) => ({length: width, offset: width * index, index})}
         />
         <View style={styles.bottomMultimediaContainer}>
           <BottomBar displayStatsInformation={openStreamStatsModel} />
