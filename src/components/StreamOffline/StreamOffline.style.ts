@@ -1,4 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { AppStyleSheet as StyleSheet } from '@dolbyio/uikit-react-native';
+import { Dimensions } from 'react-native';
 
 const { height } = Dimensions.get('window');
 

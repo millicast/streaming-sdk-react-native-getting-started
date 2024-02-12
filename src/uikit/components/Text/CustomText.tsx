@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, TextProps } from 'react-native';
+import { Platform, Text, TextProps } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
 import type { ColorKey } from '../../theme/types';
+import { AppStyleSheet as StyleSheet } from '../AppStyleSheet/AppStyleSheet';
 
 import styles from './CustomText.style';
 
@@ -76,7 +77,7 @@ const CustomText = ({
     textAlign: align,
   };
   const stylesGroup = [
-    ...(typeof props.style !== 'undefined' ? [props.style] : []),
+    ...(typeof props.style !== 'undefined' ? [StyleSheet.applyScalingFactor(props.style)] : []),
     styles.text,
     type && styles[type],
     uppercase && styles.uppercase,

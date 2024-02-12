@@ -97,7 +97,7 @@ export const SingleStreamView = ({ navigation }) => {
   };
 
   const closeStreamStatsModel = () => {
-    if(isStreamStatsModelVisible) {
+    if (isStreamStatsModelVisible) {
       setIsStreamStatsModelVisible(false);
       millicastViewRef.current.webRTCPeer.stopStats();
       dispatch({ type: 'viewer/setStreamStats', payload: null });
@@ -105,38 +105,39 @@ export const SingleStreamView = ({ navigation }) => {
   };
 
   const renderVideoItem = ({item}) => (
-      <View style={[styles.videoContainer, {width:width, height: height}]}>
-        <RTCView
-          key={item.videoMid}
-          streamURL={item.stream.toURL()}
-          style={styles.video}
-          objectFit="contain"
-        />
-        <StreamStatusIndicator title="LIVE" position={indicatorLayout} />
-      </View>
+    <View style={[styles.videoContainer, { width: width, height: height }]}>
+      <RTCView
+        key={item.videoMid}
+        streamURL={item.stream.toURL()}
+        style={styles.video}
+        objectFit="contain"
+      />
+      <StreamStatusIndicator title="LIVE" position={indicatorLayout} />
+    </View>
   );
 
   return (
-    <>
-    <ContainerView style={styles.container}>
-      <FlatList
-        ref={flatlistRef}
-        initialScrollIndex={videoTileIndex}
-        key={1}
-        numColumns={1}
-        horizontal={true}
-        pagingEnabled={true}
-        data={streamsRef.current}
-        keyExtractor={(_, index) => String(index)}
-        style={{width: width}}
-        renderItem={renderVideoItem}
-      />
-      <View style={styles.bottomMultimediaContainer}>
-        <BottomBar displayStatsInformation={openStreamStatsModel} />
-      </View>
-    </ContainerView>
-    { isStreamStatsModelVisible && <StreamStats onPress={closeStreamStatsModel} /> }
-    </>
+    <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'red', justifyContent: 'flex-end' }}>
+      <ContainerView style={styles.container}>
+        <FlatList
+          ref={flatlistRef}
+          initialScrollIndex={videoTileIndex}
+          key={1}
+          numColumns={1}
+          horizontal={true}
+          pagingEnabled={true}
+          data={streamsRef.current}
+          keyExtractor={(_, index) => String(index)}
+          style={{ width: width }}
+          renderItem={renderVideoItem}
+          getItemLayout={(data, index) => ({length: width, offset: width * index, index})}
+        />
+        <View style={styles.bottomMultimediaContainer}>
+          <BottomBar displayStatsInformation={openStreamStatsModel} />
+        </View>
+      </ContainerView>
+      {isStreamStatsModelVisible && <StreamStats onPress={closeStreamStatsModel} />}
+    </View>
   );
 };
 

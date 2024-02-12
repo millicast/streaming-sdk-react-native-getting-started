@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { AppStyleSheet } from '@dolbyio/uikit-react-native';
 
-const styles = StyleSheet.create({
+const styles = AppStyleSheet.create({
   wrapper: {
     marginBottom: 10,
     flexDirection: 'row',

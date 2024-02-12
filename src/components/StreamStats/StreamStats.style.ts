@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { AppStyleSheet as StyleSheet } from '@dolbyio/uikit-react-native';
+import { Platform } from 'react-native';
 
 const styles = StyleSheet.create({
   outerContainer: {
@@ -8,15 +9,23 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
   },
+  outerContainerTV: {
+    height: '51%',
+    width: '30%',
+    backgroundColor: '#292930',
+    bottom: 20,
+    left: 20,
+    borderRadius: 14,
+  },
   innerContainer: {
-    marginBottom: 10,
+    marginTop: 10,
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'space-between',
     paddingHorizontal: 0,
   },
   streamInfoContainer: {
-    marginTop: 60,
+    marginTop: Platform.isTV ? 10 : 60,
     marginHorizontal: 16,
   },
   closeIcon: {

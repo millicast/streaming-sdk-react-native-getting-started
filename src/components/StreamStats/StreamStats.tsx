@@ -1,6 +1,6 @@
 import { Icon } from '@dolbyio/uikit-react-native';
 import React from 'react';
-import { View, TouchableOpacity, FlatList } from 'react-native';
+import { View, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { StreamStatInfo } from '../../types/StreamStatInfo.types';
@@ -63,16 +63,20 @@ export const StreamStats = ({ onPress }) => {
   const statsRecordsList = prepareStatsRecordsList(rawStreamStats);
 
   return (
-    <View style={styles.outerContainer}>
+    <View style={Platform.isTV ? styles.outerContainerTV : styles.outerContainer}>
       <View style={styles.closeIcon}>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity hasTVPreferredFocus onPress={onPress}>
           <Icon testID="closeIcon" name="close" size="s" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.innerContainer}>
-        <Text id="streamInfoTitle" type="h2" align="center" style={{ paddingTop: 16, paddingLeft: 16 }} />
-
+        <Text
+          id="streamInfoTitle"
+          type="h2"
+          align={Platform.isTV ? 'left' : 'center'}
+          style={{ paddingTop: 16, paddingLeft: 16 }}
+        />
         <View style={styles.streamInfoContainer}>
           <StreamStatsRecord param="Name" paramType="h3" value="Value" valueType="h3" />
           <FlatList data={statsRecordsList} keyExtractor={(item) => item.param} renderItem={renderItem} />

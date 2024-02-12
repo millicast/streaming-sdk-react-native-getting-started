@@ -40,7 +40,7 @@ export const Navigator = () => {
         headerTintColor: theme.colors.white, // FIXME: Use a different color defined in the themes
         headerBackTitleVisible: false,
         // hide the header bar for tvOS due to incompatibility of the library
-        headerShown: !(Platform.OS === 'ios' && Platform.isTV),
+        headerShown: !Platform.isTV,
       }}
     >
       <Stack.Group>

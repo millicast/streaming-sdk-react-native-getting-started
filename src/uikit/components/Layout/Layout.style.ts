@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { AppStyleSheet as StyleSheet } from '../AppStyleSheet/AppStyleSheet';
 
 const styles = StyleSheet.create({
   layout: {

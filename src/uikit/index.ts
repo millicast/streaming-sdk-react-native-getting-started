@@ -27,6 +27,7 @@ export { default as Timer } from './components/Timer/Timer';
 export { default as Spinner } from './components/Spinner/Spinner';
 export { default as Toast } from './components/Toast/Toast';
 export { default as CustomText } from './components/Text/CustomText';
+export { AppStyleSheet } from './components/AppStyleSheet/AppStyleSheet';
 
 // Types
 export type { CustomTextProps } from './components/Text/CustomText';

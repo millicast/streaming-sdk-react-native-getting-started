@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { AppStyleSheet as StyleSheet } from '../AppStyleSheet/AppStyleSheet';
 
 export default StyleSheet.create({
   text: {
