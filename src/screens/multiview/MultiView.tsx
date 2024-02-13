@@ -16,7 +16,6 @@ import {
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
 
-import ErrorView from '../../components/errorview/ErrorView';
 import { Routes } from '../../types/routes.types';
 
 window.Logger = MillicastLogger;
@@ -36,24 +35,29 @@ export const MultiView = ({ navigation }) => {
   const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
   const error = useSelector((state) => state.viewerReducer.error);
   const dispatch = useDispatch();
-
+  const { routes, index } = navigation.getState();
+  const currentRoute = routes[index].name;
   const playingRef = useRef(null);
   playingRef.current = playing;
   const streamsRef = useRef(null);
   const selectedSourceRef = useRef(null);
   const millicastViewRef = useRef(null);
+  const sourceIdsRef = useRef([]);
+  const netInfo = useNetInfo();
 
   selectedSourceRef.current = selectedSource;
   streamsRef.current = streams;
   millicastViewRef.current = millicastView;
+  sourceIdsRef.current = sourceIds;
 
   const [columnsNumber, setColumnsNumber] = useState(1);
+  const margin = margins(columnsNumber, false);
+  const labelLayout = margins(columnsNumber, true);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('event.errorView.close', () => {
       dispatch({ type: 'viewer/setError', payload: null });
       navigation.goBack();
-      console.log('parent go back');
     });
 
     return () => {
@@ -128,10 +132,22 @@ export const MultiView = ({ navigation }) => {
               }
             }
             // A source has been started on the steam
+            dispatch({ type: 'viewer/setError', payload: null });
             break;
           case 'inactive':
-            console.log('inactive');
             // A source has been stopped on the steam
+            if (data.sourceId !== null && sourceIdsRef.current?.indexOf(data.sourceId) !== -1) {
+              dispatch({
+                type: 'viewer/removeSourceId',
+                payload: data.sourceId,
+              });
+
+              const streamToRemove = streamsRef.current.find((stream) => stream.sourceId === data.sourceId);
+              dispatch({
+                type: 'viewer/removeStream',
+                payload: streamToRemove,
+              });
+            }
             break;
           case 'vad':
             // A new source was multiplexed over the vad tracks
@@ -233,10 +249,6 @@ export const MultiView = ({ navigation }) => {
     }
   };
 
-  const margin = margins(columnsNumber, false);
-  const labelLayout = margins(columnsNumber, true);
-  const netInfo = useNetInfo();
-
   useEffect(() => {
     const initializeMultiview = async () => {
       try {
@@ -257,8 +269,24 @@ export const MultiView = ({ navigation }) => {
   useEffect(() => {
     if (error !== null) {
       navigation.navigate(Routes.ErrorView, { errorType: netInfo.isConnected ? 'streamOffline' : 'networkOffline' });
+    } else if (currentRoute === Routes.ErrorView && error === null) {
+      navigation.goBack();
     }
   }, [error]);
+
+  useEffect(() => {
+    if (netInfo.isConnected === false) {
+      // Set error when there are no active sources
+      dispatch({ type: 'viewer/setError', payload: 'No internet connection' });
+    }
+  }, [netInfo]);
+
+  useEffect(() => {
+    if (playingRef.current && sourceIdsRef.current.length === 0) {
+      // Set error when there are no active sources
+      dispatch({ type: 'viewer/setError', payload: 'Stream is not published' });
+    }
+  }, [streams]);
 
   return (
     <SafeAreaView style={stylesContainer.container}>

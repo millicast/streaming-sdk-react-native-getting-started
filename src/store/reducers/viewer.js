@@ -7,7 +7,7 @@ const initialState = {
   playing: false,
   error: null,
   streams: [],
-  sourceIds: ['main'],
+  sourceIds: [],
   streamsProjecting: [],
   activeLayers: [],
   millicastView: null,
@@ -109,6 +109,12 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         sourceIds: [...state.sourceIds, action.payload],
+      };
+    case 'viewer/removeSourceId':
+      const sourceIds = state.sourceIds.filter((sourceId) => sourceId !== action.payload)
+      return {
+        ...state,
+        sourceIds: [...sourceIds],
       };
     case 'viewer/addStream':
       return {

@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { CustomText, IconButton } from '@dolbyio/uikit-react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { DeviceEventEmitter, Platform, StyleSheet, View } from 'react-native';
+import { DeviceEventEmitter, Platform, StyleSheet, View, BackHandler } from 'react-native';
 
 const ErrorView = (props) => {
   const { navigation, route } = props;
@@ -14,6 +14,19 @@ const ErrorView = (props) => {
   if (Platform.OS === 'ios' && !Platform.isTV) {
     topPadding = 40;
   }
+
+  function handleBackButtonClick() {
+    navigation.goBack();
+    DeviceEventEmitter.emit('event.errorView.close');
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    };
+  }, []);
 
   return (
     <View style={stylesContainer.container}>
