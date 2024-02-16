@@ -12,6 +12,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  wrapperInFocus: {
+    borderWidth: 2,
+    borderColor: '#AA33FF',
+  },
   textWrapper: {
     flex: 1,
     flexDirection: 'column',
@@ -25,6 +29,9 @@ const styles = StyleSheet.create({
   },
   accountIdText: {
     paddingRight: 5,
+  },
+  focusedStyle: {
+    borderWidth: 2,
   },
 });
 export default styles;

@@ -13,5 +13,9 @@ const styles = () =>
       paddingBottom: 32,
       backgroundColor: '#34343B',
     },
+    demoButtonInFocus: {
+      borderWidth: 2,
+      borderColor: '#AA33FF',
+    },
   });
 export default styles;

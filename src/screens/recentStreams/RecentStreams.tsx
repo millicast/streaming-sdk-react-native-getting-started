@@ -1,11 +1,12 @@
 import { Layout, Button } from '@dolbyio/uikit-react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { ScrollView, View, Pressable, LogBox } from 'react-native';
+import { ScrollView, View, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { FocusedComponent } from '../../components/FocusedComponent/FocusedComponent';
 import StreamList from '../../components/StreamList';
 import Text from '../../components/text/Text';
 import { WelcomeFooter } from '../../components/WelcomeFooter/WelcomeFooter';
@@ -21,6 +22,10 @@ export const RecentStreams = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const streamsList: StreamInfo[] = useSelector((state) => state.persistedSavedStreamsReducer.streams);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const viewAllButtonTextType = isFocused ? 'h3' : 'bodyDefault';
+  const viewAllButtonColor = isFocused ? 'white' : 'secondary.200';
 
   const playNewStreamTitle = intl.formatMessage({
     id: 'playNewStream',
@@ -82,9 +87,15 @@ export const RecentStreams = ({ navigation }) => {
           />
           <View style={styles.streamListHeaderWrapper}>
             <Text id="recentlyViewedText" type="bodyDefault" style={styles.recentlyViewedText} />
-            <Pressable onPress={handleViewAllClick} testID="viewAllButton">
-              <Text id="viewAllButtonText" type="bodyDefault" color="secondary.200" />
-            </Pressable>
+            <FocusedComponent
+              name="viewAll"
+              onPress={handleViewAllClick}
+              underlayColor="none"
+              testID="viewAllButton"
+              setParentFocus={setIsFocused}
+            >
+              <Text id="viewAllButtonText" type={viewAllButtonTextType} color={viewAllButtonColor} />
+            </FocusedComponent>
           </View>
           <StreamList streams={streamsList.slice(0, 3)} onPlayStream={handlePlayStreamClick} />
           <Text id="alternateOptionText" type="paragraph" align="center" style={styles.alternateOptionText} />

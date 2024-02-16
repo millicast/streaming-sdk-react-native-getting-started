@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import React, { useRef, useState, MutableRefObject } from 'react';
+import { Platform, TextInput, View } from 'react-native';
 import type { TextInputProps } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
@@ -28,6 +28,7 @@ export type InputProps = TextInputProps & {
   textColor?: ColorKey;
   validation?: ValidationType;
   testID?: string;
+  inputRef?: MutableRefObject<TextInput>;
 };
 
 const Input = ({
@@ -39,10 +40,11 @@ const Input = ({
   labelBackground,
   validation,
   testID,
+  inputRef,
   ...props
 }: InputProps) => {
   const { getColor, theme } = useTheme();
-  const textInput = useRef<TextInput>(null);
+  const textInput = inputRef ?? useRef<TextInput>(null);
   const [textInputInFocus, setTextInputInFocus] = useState(false);
 
   const getBorderColor = () => {
@@ -85,7 +87,7 @@ const Input = ({
           {...props}
         />
       </View>
-      {value.length > 0 && (
+      {value.length > 0 && !Platform.isTV && (
         <View style={styles.buttonContainer}>
           <IconButton
             variant="circle"
