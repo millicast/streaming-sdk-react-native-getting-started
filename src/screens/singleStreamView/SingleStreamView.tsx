@@ -35,6 +35,8 @@ export const SingleStreamView = ({ navigation }) => {
   const [height, setHeight] = useState<number>(Dimensions.get('window').height);
 
   const [indicatorLayout, setIndicatorLayout] = useState<any>(styles.indicatorLayout);
+  const [isStreamStatsModelVisible, setIsStreamStatsModelVisible] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(true);
 
   const flatlistRef = useRef(null);
 
@@ -77,11 +79,10 @@ export const SingleStreamView = ({ navigation }) => {
     setVideoTileIndex(streamIndex);
   }, [selectedSource, streams]);
 
-  const [isStreamStatsModelVisible, setIsStreamStatsModelVisible] = useState<boolean>(false);
-
   const openStreamStatsModel = () => {
     if(!isStreamStatsModelVisible) {
       setIsStreamStatsModelVisible(true);
+      setIsFocused(false);
       millicastViewRef.current.webRTCPeer.initStats();
       millicastViewRef.current.webRTCPeer.on('stats', (stats: any) => {
         dispatch({
@@ -99,6 +100,7 @@ export const SingleStreamView = ({ navigation }) => {
   const closeStreamStatsModel = () => {
     if (isStreamStatsModelVisible) {
       setIsStreamStatsModelVisible(false);
+      setIsFocused(true);
       millicastViewRef.current.webRTCPeer.stopStats();
       dispatch({ type: 'viewer/setStreamStats', payload: null });
     }
@@ -133,7 +135,7 @@ export const SingleStreamView = ({ navigation }) => {
           getItemLayout={(data, index) => ({length: width, offset: width * index, index})}
         />
         <View style={styles.bottomMultimediaContainer}>
-          <BottomBar displayStatsInformation={openStreamStatsModel} />
+          <BottomBar displayStatsInformation={openStreamStatsModel} focus={isFocused} />
         </View>
       </ContainerView>
       {isStreamStatsModelVisible && <StreamStats onPress={closeStreamStatsModel} />}
