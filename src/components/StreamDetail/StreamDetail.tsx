@@ -11,14 +11,14 @@ import styles from './StreamDetail.style';
 export const StreamDetail = ({ stream, onPlay }: { stream: StreamInfo; onPlay: (stream: StreamInfo) => void }) => {
   const [isFocused, setIsFocused] = useState(false);
   const defaultIconColor = !Platform.isTV ? 'white' : 'grey';
-  const iconSize = Platform.isTV && Platform.OS === "android" ? 's' : 'm';
+  const iconSize = Platform.isTV && Platform.OS === 'android' ? 's' : 'm';
   const iconColor = isFocused ? 'white' : defaultIconColor;
 
   return (
     <FocusedComponent
       onPress={() => onPlay(stream)}
       setParentFocus={setIsFocused}
-      underlayColor='none'
+      underlayColor="none"
       testID="StreamDetail"
     >
       <View style={[styles.wrapper, isFocused ? styles.wrapperInFocus : {}]}>
