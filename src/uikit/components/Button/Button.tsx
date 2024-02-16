@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, Pressable, View } from 'react-native';
+import React, { useState } from 'react';
+import { Text, Pressable, View, TouchableHighlight, Platform } from 'react-native';
 
 import useTheme from '../../hooks/useAppTheme';
 import type { Sizes } from '../../theme/types';
@@ -77,7 +77,7 @@ const Button = ({
       } else {
         buttonStyles.push(styles.primaryButtonDefault);
         textStyles.push(styles.primaryTextDefault);
-        pressedButtonStyles.push(styles.primaryButtonPressed);
+        pressedButtonStyles.push(!Platform.isTV ? styles.primaryButtonPressed : styles.tvOSPrimaryButtonPressed);
         pressedTextStyles.push(styles.primaryTextPressed);
       }
       break;
@@ -118,33 +118,54 @@ const Button = ({
     default:
       break;
   }
+  const getStyleBySize = (size) => {
+    let buttonStyle = styles.l;
+    if (size === 'm') {
+      buttonStyle = styles.m;
+    } else if (size === 's') {
+      buttonStyle = styles.s;
+    } else if (size === 'xs') {
+      buttonStyle = styles.xs;
+    }
+    return buttonStyle;
+  };
 
-  return (
-    <Pressable
+  const getButtonByMode = ({ mode, isPressed }: { mode: ButtonMode; isPressed: boolean }): JSX.Element => {
+    if (mode === ButtonMode.Default) {
+      return (
+        <View key="viewKey" style={{ flexDirection: 'row' }}>
+          {iconLeft && <Icon name={iconLeft} color={iconColor} />}
+          <Text style={isPressed ? pressedTextStyles : textStyles}>{title}</Text>
+          {iconRight && <Icon name={iconRight} color={iconColor} />}
+        </View>
+      );
+    }
+    if (mode === ButtonMode.Loading) {
+      return <Spinner key="spinnerKey" spinnerColor={iconColor} testID="loader" />;
+    }
+    // return ButtonMode.Done
+    return <Icon key="successKey" name="success" color={iconColor} />;
+  };
+  const [isFocused, setIsFocused] = useState(false);
+  return Platform.isTV ? (
+    <TouchableHighlight
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
       onPress={onPress}
-      style={({ pressed }) => [
-        pressed ? pressedButtonStyles : buttonStyles,
-        size === 'l' && styles.l,
-        size === 'm' && styles.m,
-        size === 's' && styles.s,
-        size === 'xs' && styles.xs,
-      ]}
+      style={[isFocused ? pressedButtonStyles : buttonStyles, getStyleBySize(size)]}
       disabled={disabled}
       testID={testID}
     >
-      {({ pressed }) => {
-        return [
-          mode === ButtonMode.Default && (
-            <View key="viewKey" style={{ flexDirection: 'row' }}>
-              {iconLeft && <Icon name={iconLeft} color={iconColor} />}
-              <Text style={pressed ? pressedTextStyles : textStyles}>{title}</Text>
-              {iconRight && <Icon name={iconRight} color={iconColor} />}
-            </View>
-          ),
-          mode === ButtonMode.Loading && <Spinner key="spinnerKey" spinnerColor={iconColor} testID="loader" />,
-          mode === ButtonMode.Done && <Icon key="successKey" name="success" color={iconColor} />,
-        ];
-      }}
+      {getButtonByMode({ mode, isPressed: isFocused })}
+    </TouchableHighlight>
+  ) : (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [pressed ? pressedButtonStyles : buttonStyles, getStyleBySize(size)]}
+      disabled={disabled}
+      testID={testID}
+    >
+      {({ pressed }) => getButtonByMode({ mode, isPressed: pressed })}
     </Pressable>
   );
 };

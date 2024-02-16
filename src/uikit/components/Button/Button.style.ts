@@ -43,6 +43,10 @@ const makeButtonStyles = (colors: Colors) =>
     primaryButtonPressed: {
       backgroundColor: colors.primary[600],
     },
+    tvOSPrimaryButtonPressed: {
+      borderColor: colors.primary[400],
+      borderWidth: 2,
+    },
     primaryButtonDisabled: {
       backgroundColor: colors.grey[200],
     },
