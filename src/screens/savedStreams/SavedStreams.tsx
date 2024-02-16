@@ -22,8 +22,8 @@ export const SavedStreams = ({ navigation }) => {
   const intl = useIntl();
 
   const [isFocused, setIsFocused] = useState(false);
-  const defaultIconSize = Platform.isTV && Platform.OS === 'android' ? 's' : 'm';
-  const defaultIconColor = Platform.isTV && Platform.OS === 'android' ? 'grey' : 'white';
+  const defaultIconSize = Platform.isTV && Platform.OS === 'android' ? 'xs' : 'm';
+  const defaultIconColor = Platform.isTV ? 'grey' : 'white';
   const iconColor = isFocused ? 'white' : defaultIconColor;
 
   const savedStreamsHeaderText = intl.formatMessage({
