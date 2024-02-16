@@ -125,7 +125,11 @@ export const UserInput = ({ navigation }) => {
             style={{ paddingTop: 8, paddingHorizontal: 48 }}
             color="grey.500"
           />
-          <FocusedComponent hasTVPreferredFocus testID="StreamNameFocusElement" componentRef={streamNameRef}>
+          <FocusedComponent
+            hasTVPreferredFocus
+            testID="StreamNameFocusElement"
+            componentRef={streamNameRef}
+          >
             <Input
               inputRef={streamNameRef}
               value={streamName}
