@@ -44,6 +44,7 @@ export const MultiView = ({ navigation }) => {
   const millicastViewRef = useRef(null);
   const sourceIdsRef = useRef([]);
   const netInfo = useNetInfo();
+  const [isReconnectionScheduled, setIsReconnectionScheduled] = useState<boolean>(false);
 
   selectedSourceRef.current = selectedSource;
   streamsRef.current = streams;
@@ -120,26 +121,31 @@ export const MultiView = ({ navigation }) => {
       view.on('broadcastEvent', async (event) => {
         // Get event name and data
         const { name, data } = event;
+        let sourceId;
+
         switch (name) {
           case 'active':
-            if (sourceIds?.indexOf(data.sourceId) === -1 && data.sourceId != null) {
+            sourceId = data.sourceId === null || data.sourceId.length === 0 ? 'main' : data.sourceId;
+
+            if (sourceIds?.indexOf(sourceId) === -1) {
               dispatch({
                 type: 'viewer/addSourceId',
-                payload: data.sourceId,
+                payload: sourceId,
               });
-              if (data.sourceId !== 'main' && data.sourceId !== null) {
-                addRemoteTrack(data.sourceId);
+              if (sourceId !== 'main' && sourceId !== null) {
+                addRemoteTrack(sourceId);
               }
             }
-            // A source has been started on the steam
+            // A source has been started on the stream
             dispatch({ type: 'viewer/setError', payload: null });
             break;
           case 'inactive':
             // A source has been stopped on the steam
-            if (data.sourceId !== null && sourceIdsRef.current?.indexOf(data.sourceId) !== -1) {
+            sourceId = data.sourceId === null || data.sourceId.length === 0 ? 'main' : data.sourceId;
+            if (sourceIdsRef.current?.indexOf(sourceId) !== -1) {
               dispatch({
                 type: 'viewer/removeSourceId',
-                payload: data.sourceId,
+                payload: sourceId,
               });
 
               const streamToRemove = streamsRef.current.find((stream) => stream.sourceId === data.sourceId);
@@ -173,6 +179,7 @@ export const MultiView = ({ navigation }) => {
     } catch (e) {
       console.log('Connection failed. Reason:', e);
       dispatch({ type: 'viewer/setError', payload: e });
+      setIsReconnectionScheduled(true);
     }
   };
 
@@ -214,6 +221,10 @@ export const MultiView = ({ navigation }) => {
       dispatch({ type: 'viewer/setIsMediaSet', payload: false });
     }
     changeStateOfMediaTracks(!playing);
+  };
+
+  const reconnect = async () => {
+    await subscribe();
   };
 
   const addRemoteTrack = async (sourceId) => {
@@ -286,7 +297,19 @@ export const MultiView = ({ navigation }) => {
       // Set error when there are no active sources
       dispatch({ type: 'viewer/setError', payload: 'Stream is not published' });
     }
-  }, [streams]);
+  }, [sourceIds]);
+
+  const RECONNECT_INTERVAL = 5000;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isReconnectionScheduled) {
+        setIsReconnectionScheduled(false);
+        reconnect();
+      }
+    }, RECONNECT_INTERVAL);
+
+    return () => clearInterval(interval);
+  }, [isReconnectionScheduled]);
 
   return (
     <SafeAreaView style={stylesContainer.container}>
