@@ -4,12 +4,12 @@ import { View, TouchableOpacity, Platform } from 'react-native';
 
 import styles from './BottomBar.style';
 
-export const BottomBar = ({ displayStatsInformation }) => {
+export const BottomBar = ({ displayStatsInformation, focus }) => {
   const iconSize = Platform.OS === 'android' && Platform.isTV ? 's' : 'm';
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity
-        hasTVPreferredFocus
+        hasTVPreferredFocus={focus}
         onPress={() => {
           displayStatsInformation();
         }}

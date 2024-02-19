@@ -1,12 +1,13 @@
 import { Layout, Input, Button, Icon, ValidationType } from '@dolbyio/uikit-react-native';
 import useTheme from '@dolbyio/uikit-react-native/hooks/useAppTheme';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { Pressable, ScrollView, View, Platform } from 'react-native';
+import { ScrollView, View, Platform, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { FocusedComponent } from '../../components/FocusedComponent/FocusedComponent';
 import Text from '../../components/text/Text';
 import { WelcomeFooter } from '../../components/WelcomeFooter/WelcomeFooter';
 import { addStream } from '../../store/reducers/savedStreams';
@@ -20,12 +21,16 @@ export const UserInput = ({ navigation }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const streamNameRef = useRef<TextInput>(null);
+  const accountIdRef = useRef<TextInput>(null);
 
   const MINIMUM_INPUT_LENGTH = 3;
 
   const [streamName, setStreamName] = useState<string>('');
   const [accountId, setAccountId] = useState<string>('');
   const [validation, setValidation] = useState<ValidationType>({ valid: true });
+  const [isDemoButtonFocused, setIsDemoButtonFocused] = useState<boolean>(false);
+  const defaultDemoButtonIconColor = !Platform.isTV ? 'white' : 'grey';
 
   const streamNameInputLabel = intl.formatMessage({
     id: 'streamNameInputLabel',
@@ -120,39 +125,55 @@ export const UserInput = ({ navigation }) => {
             style={{ paddingTop: 8, paddingHorizontal: 48 }}
             color="grey.500"
           />
-          <Input
-            value={streamName}
-            label={streamNameInputLabel}
-            labelColor="white"
-            labelBackground={theme.colors.background}
-            textColor="white"
-            onChangeText={onChangeStreamName}
-            validation={validation}
-            autoFocus={!Platform.isTV}
-          />
-          <Input
-            value={accountId}
-            label={accountIdInputLabel}
-            labelColor="white"
-            labelBackground={theme.colors.background}
-            textColor="white"
-            onChangeText={onChangeAccountId}
-            validation={validation}
-          />
+          <FocusedComponent hasTVPreferredFocus testID="StreamNameFocusElement" componentRef={streamNameRef}>
+            <Input
+              inputRef={streamNameRef}
+              value={streamName}
+              label={streamNameInputLabel}
+              labelColor="white"
+              labelBackground={theme.colors.background}
+              textColor="white"
+              onChangeText={onChangeStreamName}
+              validation={validation}
+              autoFocus={!Platform.isTV}
+              testID="StreamNameInput"
+            />
+          </FocusedComponent>
+          <FocusedComponent testID="AccountIdFocusElement" componentRef={accountIdRef}>
+            <Input
+              inputRef={accountIdRef}
+              value={accountId}
+              label={accountIdInputLabel}
+              labelColor="white"
+              labelBackground={theme.colors.background}
+              textColor="white"
+              onChangeText={onChangeAccountId}
+              validation={validation}
+              testID="AccountIdInput"
+            />
+          </FocusedComponent>
           <Button
             title="play"
             type="primary"
             onPress={handlePlayClick}
             disabled={playDisabled(validation, streamName, accountId)}
+            testID="PlayButton"
           />
           <Text id="demoTitle" type="h2" align="center" style={{ paddingTop: 48 }} />
           <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} color="grey.500" />
           <View style={{ paddingTop: 16 }} />
-
-          <Pressable onPress={handleDemoPlayClick} style={styles.demoButton}>
-            <Text id="playDemoStream" type="paragraph" />
-            <Icon name="playOutline" />
-          </Pressable>
+          <FocusedComponent
+            onPress={handleDemoPlayClick}
+            style={styles.demoButton}
+            styleInFocus={styles.demoButtonInFocus}
+            setParentFocus={setIsDemoButtonFocused}
+            testID="DemoButtonFocusElement"
+          >
+            <>
+              <Text id="playDemoStream" type="paragraph" />
+              <Icon name="playOutline" color={isDemoButtonFocused ? 'white' : defaultDemoButtonIconColor} />
+            </>
+          </FocusedComponent>
         </ScrollView>
       </SafeAreaView>
       <WelcomeFooter />

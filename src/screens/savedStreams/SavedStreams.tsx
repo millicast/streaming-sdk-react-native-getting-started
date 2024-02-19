@@ -1,17 +1,18 @@
 import { Layout } from '@dolbyio/uikit-react-native';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { ScrollView, View, Alert, Platform, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { FocusedComponent } from '../../components/FocusedComponent/FocusedComponent';
 import StreamList from '../../components/StreamList';
 import Text from '../../components/text/Text';
 import { WelcomeFooter } from '../../components/WelcomeFooter/WelcomeFooter';
 import { addStream, deleteAllStreams } from '../../store/reducers/savedStreams';
 import { Routes } from '../../types/routes.types';
 import { StreamInfo } from '../../types/StreamInfo.types';
-import IconButton from '../../uikit/components/IconButton/IconButton';
+import Icon from '../../uikit/components/Icon/Icon';
 
 import makeStyles from './SavedStreams.style';
 
@@ -19,6 +20,11 @@ export const SavedStreams = ({ navigation }) => {
   const styles = makeStyles();
   const dispatch = useDispatch();
   const intl = useIntl();
+
+  const [isFocused, setIsFocused] = useState(false);
+  const defaultIconSize = Platform.isTV && Platform.OS === 'android' ? 'xs' : 'm';
+  const defaultIconColor = Platform.isTV ? 'grey' : 'white';
+  const iconColor = isFocused ? 'white' : defaultIconColor;
 
   const savedStreamsHeaderText = intl.formatMessage({
     id: 'savedStreamsHeaderText',
@@ -71,7 +77,9 @@ export const SavedStreams = ({ navigation }) => {
       headerTitle: savedStreamsHeaderText,
       headerRight: () =>
         streamsList.length > 0 && (
-          <IconButton backgroundColor="transparent" icon="trash" size="m" onPress={clearSavedStreamsAlert} />
+          <FocusedComponent onPress={clearSavedStreamsAlert} setParentFocus={setIsFocused}>
+            <Icon testID="trashIcon" name="trash" size={defaultIconSize} color={iconColor} />
+          </FocusedComponent>
         ),
     });
   }, [streamsList]);
@@ -81,10 +89,13 @@ export const SavedStreams = ({ navigation }) => {
       <SafeAreaView style={styles.wrapper}>
         {Platform.isTV && (
           <View style={styles.headerViewWrapperTV}>
-            <View />
-            <Text id="savedStreamsHeaderText" type="H2" />
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text id="savedStreamsHeaderText" type="H2" />
+            </View>
             {streamsList.length > 0 && (
-              <IconButton backgroundColor="transparent" icon="trash" size="m" onPress={clearSavedStreamsAlert} />
+              <FocusedComponent onPress={clearSavedStreamsAlert} setParentFocus={setIsFocused}>
+                <Icon testID="trashIcon" name="trash" size={defaultIconSize} color={iconColor} />
+              </FocusedComponent>
             )}
           </View>
         )}
