@@ -92,6 +92,10 @@ export const MultiView = ({ navigation }) => {
     if (millicastViewRef.current != null) {
       await millicastViewRef.current.stop();
     }
+    resetState();
+  };
+
+  const resetState = () => {
     dispatch({ type: 'viewer/setPlaying', payload: false });
     dispatch({ type: 'viewer/setIsMediaSet', payload: true });
     dispatch({ type: 'viewer/setStreams', payload: [] });
@@ -287,7 +291,8 @@ export const MultiView = ({ navigation }) => {
 
   useEffect(() => {
     if (netInfo.isConnected === false) {
-      // Set error when there are no active sources
+      resetState();
+      // Set error when there is no network connection
       dispatch({ type: 'viewer/setError', payload: 'No internet connection' });
     }
   }, [netInfo]);
