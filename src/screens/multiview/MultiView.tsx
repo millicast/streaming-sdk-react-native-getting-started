@@ -12,6 +12,7 @@ import {
   AppState,
   Pressable,
   DeviceEventEmitter,
+  BackHandler,
 } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
@@ -55,10 +56,25 @@ export const MultiView = ({ navigation }) => {
   const margin = margins(columnsNumber, false);
   const labelLayout = margins(columnsNumber, true);
 
+  const navigateToUserInputScreen = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: Routes.UserInput }],
+    });
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', navigateToUserInputScreen);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', navigateToUserInputScreen);
+    };
+  }, []);
+
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('event.errorView.close', () => {
       dispatch({ type: 'viewer/setError', payload: null });
-      navigation.goBack();
+      navigateToUserInputScreen();
     });
 
     return () => {
