@@ -361,10 +361,6 @@ const stylesContainer = StyleSheet.create({
 });
 
 function margins(columnsNumber, isLabel) {
-  if (Platform.isTV && Platform.OS === 'ios') {
-    return { marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0 };
-  }
-
   if (isLabel) {
     return { marginLeft: '2.5%', bottom: '25%' };
   }
