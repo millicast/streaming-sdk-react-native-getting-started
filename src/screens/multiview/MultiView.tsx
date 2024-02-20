@@ -262,7 +262,7 @@ export const MultiView = ({ navigation }) => {
       const mediaStream = new MediaStream();
       const transceiver = await millicastViewRef.current.addRemoteTrack('video', [mediaStream]);
       const mediaId = transceiver.mid;
-      await millicastView.project(sourceId, [
+      await millicastViewRef.current.project(sourceId, [
         {
           media: 'video',
           mediaId,
