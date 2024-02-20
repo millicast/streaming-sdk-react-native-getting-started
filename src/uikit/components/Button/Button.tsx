@@ -57,6 +57,10 @@ const Button = ({
 
   const isUppercase = uppercase != null ? uppercase : false;
 
+  const underlayColor = isDisabled ? 'colors.grey[200]' : 'black';
+
+  const [isFocused, setIsFocused] = useState(false);
+
   if (isUppercase) {
     textStyles.push(styles.textUppercase);
     pressedTextStyles.push(styles.textUppercase);
@@ -146,15 +150,27 @@ const Button = ({
     // return ButtonMode.Done
     return <Icon key="successKey" name="success" color={iconColor} />;
   };
-  const [isFocused, setIsFocused] = useState(false);
+
+  const getButtonStyleByState = (): any[] => {
+    let finalStyle = buttonStyles;
+    if (isDisabled && isFocused) {
+      // add tv style
+      finalStyle.push(Platform.isTV ? styles.tvOSPrimaryButtonPressed : {});
+    } else if (isFocused) {
+      finalStyle = pressedButtonStyles;
+    }
+    return finalStyle;
+  };
+
   return Platform.isTV ? (
     <TouchableHighlight
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       onPress={onPress}
-      style={[isFocused ? pressedButtonStyles : buttonStyles, getStyleBySize(size)]}
+      style={[getButtonStyleByState(), getStyleBySize(size)]}
       disabled={disabled}
       testID={testID}
+      underlayColor={underlayColor}
     >
       {getButtonByMode({ mode, isPressed: isFocused })}
     </TouchableHighlight>
