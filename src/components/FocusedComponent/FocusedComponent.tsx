@@ -34,7 +34,7 @@ export const FocusedComponent = ({
         make = 'appletv';
       } else {
         // for android tv make is either Google or Amazon
-        make = Platform.constants.Manufacturer?? 'unknown';
+        make = Platform.constants.Manufacturer ?? 'unknown';
       }
     }
     return make.toLowerCase();
