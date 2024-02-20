@@ -117,7 +117,7 @@ export const FocusedComponent = ({
       underlayColor={underlayColor ?? 'none'}
       {...restProps}
     >
-      {React.cloneElement(children, { borderColor })}
+      {React.cloneElement(children, { borderHighlightColor: borderColor })}
     </TouchableHighlight>
   ) : (
     <Pressable {...props}>{children}</Pressable>

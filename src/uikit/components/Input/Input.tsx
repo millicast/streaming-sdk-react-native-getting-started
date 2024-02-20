@@ -28,7 +28,7 @@ export type InputProps = TextInputProps & {
   textColor?: ColorKey;
   validation?: ValidationType;
   testID?: string;
-  borderColor?: string;
+  borderHighlightColor?: string;
   inputRef?: MutableRefObject<TextInput>;
 };
 
@@ -41,7 +41,7 @@ const Input = ({
   labelBackground,
   validation,
   testID,
-  borderColor,
+  borderHighlightColor,
   inputRef,
   ...props
 }: InputProps) => {
@@ -56,8 +56,8 @@ const Input = ({
     if (textInputInFocus) {
       return getColor('primary.400');
     }
-    if (borderColor) {
-      return borderColor;
+    if (borderHighlightColor) {
+      return borderHighlightColor;
     }
     if (validation?.valid === false) {
       return getColor('infoError');
