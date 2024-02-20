@@ -262,7 +262,7 @@ export const MultiView = ({ navigation }) => {
       const mediaStream = new MediaStream();
       const transceiver = await millicastViewRef.current.addRemoteTrack('video', [mediaStream]);
       const mediaId = transceiver.mid;
-      await millicastView.project(sourceId, [
+      await millicastViewRef.current.project(sourceId, [
         {
           media: 'video',
           mediaId,
@@ -307,7 +307,13 @@ export const MultiView = ({ navigation }) => {
 
   useEffect(() => {
     if (netInfo.isConnected === false) {
-      resetState();
+      dispatch({ type: 'viewer/setStreams', payload: [] });
+      dispatch({
+        type: 'viewer/setSelectedSource',
+        payload: { url: null, mid: null },
+      });
+      dispatch({ type: 'viewer/setSourceIds', payload: [] });
+
       // Set error when there is no network connection
       dispatch({ type: 'viewer/setError', payload: 'No internet connection' });
     }
