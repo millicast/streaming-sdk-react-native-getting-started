@@ -307,7 +307,13 @@ export const MultiView = ({ navigation }) => {
 
   useEffect(() => {
     if (netInfo.isConnected === false) {
-      resetState();
+      dispatch({ type: 'viewer/setStreams', payload: [] });
+      dispatch({
+        type: 'viewer/setSelectedSource',
+        payload: { url: null, mid: null },
+      });
+      dispatch({ type: 'viewer/setSourceIds', payload: [] });
+
       // Set error when there is no network connection
       dispatch({ type: 'viewer/setError', payload: 'No internet connection' });
     }
