@@ -1,4 +1,4 @@
-import { ActionSheetIOS } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 
 /* eslint-disable */
 const initialState = {
@@ -53,6 +53,11 @@ const viewerReducer = (state = initialState, action) => {
             streamsArray?.map((stream) => {
               if (stream.stream.toURL() == event.streams?.[0]?.toURL()) {
                 stream.audioMid = event.transceiver.mid;
+
+                if (Platform.OS === 'ios') {
+                  const {AudioManager} = NativeModules;
+                  AudioManager.routeAudioThroughDefaultSpeaker();
+                }
               }
             }),
           );
