@@ -298,7 +298,7 @@ export const MultiView = ({ navigation }) => {
   }, [addRemoteTrack, navigation, sourceIds]);
 
   useEffect(() => {
-    if (error !== null) {
+    if (currentRoute !== Routes.ErrorView && error !== null) {
       navigation.navigate(Routes.ErrorView, { errorType: netInfo.isConnected ? 'streamOffline' : 'networkOffline' });
     } else if (currentRoute === Routes.ErrorView && error === null) {
       navigation.goBack();

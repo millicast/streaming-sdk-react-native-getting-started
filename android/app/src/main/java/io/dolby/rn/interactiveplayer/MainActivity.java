@@ -1,5 +1,7 @@
 package io.dolby.rn.interactiveplayer;
 
+import android.content.Context;
+import android.media.AudioManager;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
@@ -23,6 +25,15 @@ public class MainActivity extends ReactActivity {
     SplashScreen.installSplashScreen(this);
 
     super.onCreate(null);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    Context context=getApplicationContext();
+    AudioManager mgr = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+    mgr.setMode(AudioManager.MODE_IN_COMMUNICATION);
+    mgr.setSpeakerphoneOn(true);
   }
 
   /**

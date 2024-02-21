@@ -45,6 +45,8 @@
 		952FFF5D2B57606000308A43 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 952FFF452B57606000308A43 /* Roboto-BoldItalic.ttf */; };
 		D7C814AB2A9257F05D443C46 /* libPods-TestApp-tvOS-TestApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E18A8BA22CAA8B2C348808 /* libPods-TestApp-tvOS-TestApp-tvOSTests.a */; };
 		E878327D2B56496900FF9E84 /* LaunchScreen-tvOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E878327C2B56496900FF9E84 /* LaunchScreen-tvOS.storyboard */; };
+		E8896C452B86A0E300B98F14 /* RCTAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E8896C442B86A0E300B98F14 /* RCTAudioManager.m */; };
+		E8896C462B86A0E300B98F14 /* RCTAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E8896C442B86A0E300B98F14 /* RCTAudioManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +112,8 @@
 		E805F8FE2B3258F6008FE2E4 /* tvOSReleaseSettings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = tvOSReleaseSettings.xcconfig; sourceTree = "<group>"; };
 		E878327C2B56496900FF9E84 /* LaunchScreen-tvOS.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen-tvOS.storyboard"; path = "TestApp/LaunchScreen-tvOS.storyboard"; sourceTree = "<group>"; };
 		E878327E2B5660BB00FF9E84 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
+		E8896C432B86A0E300B98F14 /* RCTAudioManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTAudioManager.h; sourceTree = "<group>"; };
+		E8896C442B86A0E300B98F14 /* RCTAudioManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTAudioManager.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FB052B85A83A3969FB1387D9 /* libPods-TestApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TestApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -179,6 +183,8 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				E878327C2B56496900FF9E84 /* LaunchScreen-tvOS.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				E8896C432B86A0E300B98F14 /* RCTAudioManager.h */,
+				E8896C442B86A0E300B98F14 /* RCTAudioManager.m */,
 			);
 			name = TestApp;
 			sourceTree = "<group>";
@@ -779,6 +785,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8896C452B86A0E300B98F14 /* RCTAudioManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -788,6 +795,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8896C462B86A0E300B98F14 /* RCTAudioManager.m in Sources */,
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.mm in Sources */,
 			);

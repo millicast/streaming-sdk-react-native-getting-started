@@ -2,7 +2,7 @@
 import { CustomText, IconButton } from '@dolbyio/uikit-react-native';
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { DeviceEventEmitter, Platform, StyleSheet, View, BackHandler } from 'react-native';
+import { DeviceEventEmitter, Platform, StyleSheet, View, BackHandler, LogBox } from 'react-native';
 
 const ErrorView = (props) => {
   const { navigation, route } = props;
@@ -20,6 +20,11 @@ const ErrorView = (props) => {
     DeviceEventEmitter.emit('event.errorView.close');
     return true;
   }
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['Error generating token.']);
+    LogBox.ignoreLogs(['Error while getting subscriber connection path.']);
+  }, []);
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
