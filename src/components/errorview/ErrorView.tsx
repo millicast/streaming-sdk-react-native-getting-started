@@ -24,6 +24,8 @@ const ErrorView = (props) => {
   useEffect(() => {
     LogBox.ignoreLogs(['Error generating token.']);
     LogBox.ignoreLogs(['Error while getting subscriber connection path.']);
+    LogBox.ignoreLogs(['Reconnection failed']);
+    LogBox.ignoreLogs(['WebSocket not connected']);
   }, []);
 
   useEffect(() => {
