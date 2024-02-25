@@ -6,16 +6,13 @@ const initialState = {
   accountId: null,
   playing: false,
   error: null,
-  streams: [],
+  remoteTrackSources: [],
+  audioRemoteTrackSource: null,
   sourceIds: [],
-  streamsProjecting: [],
   activeLayers: [],
   millicastView: null,
   isMediaSet: true,
-  selectedSource: {
-    url: null,
-    mid: null,
-  },
+  selectedSource: null,
   muted: false,
   multiView: false,
   streamStats: null,
@@ -37,43 +34,6 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         accountId: action.payload,
-      };
-    case 'viewer/setStreams':
-      return {
-        ...state,
-        streams: action.payload,
-      };
-    case 'viewer/onTrackEvent':
-      const event = action.payload;
-      const mediaStream = event?.streams?.[0];
-      const streamsArray = [...state.streams];
-      if (mediaStream) {
-        const audioPromise = async () => {
-          await Promise.all(
-            streamsArray?.map((stream) => {
-              if (stream.stream.toURL() == event.streams?.[0]?.toURL()) {
-                stream.audioMid = event.transceiver.mid;
-
-                if (Platform.OS === 'ios') {
-                  const {AudioManager} = NativeModules;
-                  AudioManager.routeAudioThroughDefaultSpeaker();
-                }
-              }
-            }),
-          );
-        };
-        if (event.track.kind == 'audio') {
-          audioPromise();
-        } else {
-          streamsArray.push({
-            stream: mediaStream,
-            videoMid: event.transceiver.mid,
-          });
-        }
-      }
-      return {
-        ...state,
-        streams: streamsArray,
       };
     case 'viewer/setSourceIds':
       return {
@@ -121,32 +81,31 @@ const viewerReducer = (state = initialState, action) => {
         ...state,
         sourceIds: [...sourceIds],
       };
-    case 'viewer/addStream':
+    case 'viewer/addRemoteTrackSource':
       return {
         ...state,
-        streams: [...state.streams, action.payload],
+        remoteTrackSources: [...state.remoteTrackSources, action.payload],
       };
-    case 'viewer/removeStream':
-      const streams = state.streams.filter((stream) => stream !== action.payload);
+    case 'viewer/removeRemoteTrackSource':
+      const remoteTrackSources = state.remoteTrackSources.filter((remoteTrackSource) => remoteTrackSource !== action.payload);
       return {
         ...state,
-        streams: [...streams],
+        remoteTrackSources: [...remoteTrackSources],
       };
-    case 'viewer/addProjectingStream':
+    case 'viewer/resetRemoteTrackSources':
       return {
         ...state,
-        streamsProjecting: [...state.streamsProjecting, action.payload],
+        remoteTrackSources: [],
       };
-    case 'viewer/removeProjectingStream':
-      const projectingStreams = state.streamsProjecting.filter((stream) => stream !== action.payload);
+    case 'viewer/addAudioRemoteTrackSource':
       return {
         ...state,
-        streamsProjecting: projectingStreams,
+        audioRemoteTrackSource: action.payload,
       };
-    case 'viewer/removeProjectingStreams':
+    case 'viewer/removeAudioRemoteTrackSource':
       return {
         ...state,
-        streamsProjecting: [],
+        audioRemoteTrackSource: null,
       };
     case 'viewer/setSelectedSource':
       return {

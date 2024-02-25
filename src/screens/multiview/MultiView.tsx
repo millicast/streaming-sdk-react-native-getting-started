@@ -1,4 +1,11 @@
-import { Director, View as MillicastView, Logger as MillicastLogger } from '@millicast/sdk';
+import {
+  Director,
+  View as MillicastView,
+  Logger as MillicastLogger,
+  MediaTrackInfo,
+  ViewProjectSourceMapping,
+  MediaStreamSource,
+} from '@millicast/sdk';
 import { useNetInfo } from '@react-native-community/netinfo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -8,15 +15,17 @@ import {
   Text,
   SafeAreaView,
   FlatList,
-  Platform,
   AppState,
   Pressable,
   DeviceEventEmitter,
   BackHandler,
+  Platform,
+  NativeModules,
 } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { RemoteTrackSource } from '../../types/RemoteTrackSource.types';
 import { Routes } from '../../types/routes.types';
 
 window.Logger = MillicastLogger;
@@ -28,29 +37,27 @@ export const MultiView = ({ navigation }) => {
   const streamName = useSelector((state) => state.viewerReducer.streamName);
   const accountId = useSelector((state) => state.viewerReducer.accountId);
   const isMediaSet = useSelector((state) => state.viewerReducer.isMediaSet);
-  const streams = useSelector((state) => state.viewerReducer.streams);
-  const streamsProjecting = useSelector((state) => state.viewerReducer.streamsProjecting);
+  const remoteTrackSources = useSelector((state) => state.viewerReducer.remoteTrackSources);
   const sourceIds = useSelector((state) => state.viewerReducer.sourceIds);
   const playing = useSelector((state) => state.viewerReducer.playing);
-  const millicastView = useSelector((state) => state.viewerReducer.millicastView);
-  const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
   const error = useSelector((state) => state.viewerReducer.error);
+  const audioRemoteTrackSource = useSelector((state) => state.viewerReducer.audioRemoteTrackSource);
   const dispatch = useDispatch();
   const { routes, index } = navigation.getState();
   const currentRoute = routes[index].name;
   const playingRef = useRef(null);
   playingRef.current = playing;
-  const streamsRef = useRef(null);
-  const selectedSourceRef = useRef(null);
-  const millicastViewRef = useRef(null);
+  const remoteTrackSourcesRef = useRef(null);
   const sourceIdsRef = useRef([]);
   const netInfo = useNetInfo();
+  const audioRemoteTrackSourceRef = useRef(null);
   const [isReconnectionScheduled, setIsReconnectionScheduled] = useState<boolean>(false);
 
-  selectedSourceRef.current = selectedSource;
-  streamsRef.current = streams;
-  millicastViewRef.current = millicastView;
+  remoteTrackSourcesRef.current = remoteTrackSources;
   sourceIdsRef.current = sourceIds;
+  audioRemoteTrackSourceRef.current = audioRemoteTrackSource;
+
+  const millicastViewRef = useRef<MillicastView>();
 
   const [columnsNumber, setColumnsNumber] = useState(1);
   const margin = margins(columnsNumber, false);
@@ -95,7 +102,7 @@ export const MultiView = ({ navigation }) => {
           stopStream();
         }
         dispatch({ type: 'viewer/resetAll' });
-        streamsRef.current = [];
+        remoteTrackSourcesRef.current = [];
       }
     };
   }, [handleAppStateChange, stopStream]);
@@ -114,103 +121,165 @@ export const MultiView = ({ navigation }) => {
   const resetState = () => {
     dispatch({ type: 'viewer/setPlaying', payload: false });
     dispatch({ type: 'viewer/setIsMediaSet', payload: true });
-    dispatch({ type: 'viewer/setStreams', payload: [] });
+    dispatch({ type: 'viewer/resetRemoteTrackSources' });
     dispatch({
       type: 'viewer/setSelectedSource',
-      payload: { url: null, mid: null },
+      payload: null,
     });
-    dispatch({ type: 'viewer/removeProjectingStreams' });
     dispatch({ type: 'viewer/setSourceIds', payload: [] });
   };
 
+  const handleTrack = async (event: RTCTrackEvent) => {
+    const {
+      streams: [mediaStream],
+      transceiver: { mid },
+    } = event;
+    const { current: viewer } = millicastViewRef;
+    if (!viewer) {
+      return;
+    }
+
+    if (mediaStream && mid !== null) {
+      await unprojectMediaIds(viewer, [mid]);
+    }
+  };
+
   const subscribe = async () => {
+    if (millicastViewRef.current?.isActive()) {
+      return;
+    }
     const tokenGenerator = () =>
       Director.getSubscriber({
         streamName,
         streamAccountId: accountId,
       });
+
     // Create a new instance
     const view = new MillicastView(streamName, tokenGenerator, undefined, true);
-    // Set track event handler to receive streams from Publisher.
-    view.on('track', async (event) => {
-      dispatch({ type: 'viewer/onTrackEvent', payload: event });
+    view.on('track', handleTrack);
+    view.on('broadcastEvent', async (event) => {
+      // Get event name and data
+      const { name, data } = event;
+      const { sourceId, tracks } = event.data as MediaStreamSource;
+      const { current: viewer } = millicastViewRef;
+      if (!viewer) {
+        return;
+      }
+
+      switch (name) {
+        case 'active':
+          if (sourceIdsRef.current?.indexOf(sourceId) === -1) {
+            dispatch({
+              type: 'viewer/addSourceId',
+              payload: sourceId,
+            });
+            const newRemoteTrackSource = await addRemoteTrack(viewer, sourceId, tracks);
+
+            await unprojectFromStream(viewer, newRemoteTrackSource);
+            const hasProjectedAudioTrack = audioRemoteTrackSourceRef.current !== null;
+            const videoMapping = newRemoteTrackSource.projectMapping.filter((mapping) => mapping.media === 'video');
+            const audioMapping = newRemoteTrackSource.projectMapping.filter((mapping) => mapping.media === 'audio');
+            const hasAudioMapping = audioMapping.length >= 0;
+            const mappingForProjection =
+              !hasProjectedAudioTrack && hasAudioMapping ? [...videoMapping, ...audioMapping] : videoMapping;
+
+            if (!hasProjectedAudioTrack && hasAudioMapping) {
+              if (Platform.OS === 'ios') {
+                const { AudioManager } = NativeModules;
+                AudioManager.routeAudioThroughDefaultSpeaker();
+              }
+              dispatch({
+                type: 'viewer/addAudioRemoteTrackSource',
+                payload: newRemoteTrackSource,
+              });
+            }
+            await viewer.project(sourceId, mappingForProjection);
+            dispatch({
+              type: 'viewer/addRemoteTrackSource',
+              payload: newRemoteTrackSource,
+            });
+          }
+          // A source has been started on the stream
+          dispatch({ type: 'viewer/setError', payload: null });
+          break;
+        case 'inactive':
+          // A source has been stopped on the steam
+          if (sourceIdsRef.current?.indexOf(sourceId) !== -1) {
+            dispatch({
+              type: 'viewer/removeSourceId',
+              payload: sourceId,
+            });
+
+            const remoteTrackSourceToRemove = remoteTrackSourcesRef.current.find(
+              (remoteTrackSource) => remoteTrackSource.sourceId === sourceId,
+            );
+            await unprojectFromStream(viewer, remoteTrackSourceToRemove);
+
+            if (remoteTrackSourceToRemove === audioRemoteTrackSourceRef.current) {
+              dispatch({
+                type: 'viewer/removeAudioRemoteTrackSource',
+              });
+            }
+
+            dispatch({
+              type: 'viewer/removeRemoteTrackSource',
+              payload: remoteTrackSourceToRemove,
+            });
+          }
+          break;
+        case 'vad':
+          // A new source was multiplexed over the vad tracks
+          break;
+        case 'layers':
+          dispatch({
+            type: 'viewer/setActiveLayers',
+            payload: data.medias?.['0']?.active,
+          });
+          // Updated layer information for each simulcast/svc video track
+          break;
+        default:
+          console.log('Unknown event', name);
+      }
     });
+
+    millicastViewRef.current = view;
+    dispatch({ type: 'viewer/setMillicastView', payload: view });
 
     // Start connection to viewer
     try {
-      view.on('broadcastEvent', async (event) => {
-        // Get event name and data
-        const { name, data } = event;
-        let sourceId;
-
-        switch (name) {
-          case 'active':
-            sourceId = data.sourceId === null || data.sourceId.length === 0 ? 'main' : data.sourceId;
-
-            if (sourceIds?.indexOf(sourceId) === -1) {
-              dispatch({
-                type: 'viewer/addSourceId',
-                payload: sourceId,
-              });
-              if (sourceId !== 'main' && sourceId !== null) {
-                addRemoteTrack(sourceId);
-              }
-            }
-            // A source has been started on the stream
-            dispatch({ type: 'viewer/setError', payload: null });
-            break;
-          case 'inactive':
-            // A source has been stopped on the steam
-            sourceId = data.sourceId === null || data.sourceId.length === 0 ? 'main' : data.sourceId;
-            if (sourceIdsRef.current?.indexOf(sourceId) !== -1) {
-              dispatch({
-                type: 'viewer/removeSourceId',
-                payload: sourceId,
-              });
-
-              const streamToRemove = streamsRef.current.find((stream) => stream.sourceId === data.sourceId);
-              dispatch({
-                type: 'viewer/removeStream',
-                payload: streamToRemove,
-              });
-            }
-            break;
-          case 'vad':
-            // A new source was multiplexed over the vad tracks
-            break;
-          case 'layers':
-            dispatch({
-              type: 'viewer/setActiveLayers',
-              payload: data.medias?.['0']?.active,
-            });
-            // Updated layer information for each simulcast/svc video track
-            break;
-          default:
-            console.log('Unknown event', name);
-        }
-      });
       await view.connect({
         events: ['active', 'inactive', 'vad', 'layers', 'viewercount'],
       });
-      dispatch({ type: 'viewer/setMillicastView', payload: view });
       dispatch({ type: 'viewer/setError', payload: null });
-
-      millicastViewRef.current = view;
     } catch (e) {
-      console.log('Connection failed. Reason:', e);
       dispatch({ type: 'viewer/setError', payload: e });
       setIsReconnectionScheduled(true);
     }
   };
 
-  const unprojectAll = async (url = null, mid = null) => {
-    dispatch({ type: 'viewer/setSelectedSource', payload: { url, mid } });
+  const unprojectAll = async () => {
+    dispatch({ type: 'viewer/setSelectedSource', payload: null });
 
     try {
-      const listVideoMids = streamsRef.current.map((track) => track.videoMid).filter((x) => x !== '0' && x !== mid);
-      await millicastViewRef.current.unproject(listVideoMids);
+      const listVideoMids = remoteTrackSourcesRef.current.map((remoteTrackSource) => remoteTrackSource.videoMediaId);
+      const listAudioMids = remoteTrackSourcesRef.current.map((remoteTrackSource) => remoteTrackSource.audioMediaId);
+
+      await millicastViewRef.current.unproject(listVideoMids.push(...listAudioMids));
     } catch (error) {
       console.log('unproject error', error);
+    }
+  };
+
+  const unprojectFromStream = async (viewer: MillicastView, source: RemoteTrackSource) => {
+    const mediaIds = [];
+    if (source.audioMediaId) mediaIds.push(source.audioMediaId);
+    if (source.videoMediaId) mediaIds.push(source.videoMediaId);
+    unprojectMediaIds(viewer, mediaIds);
+  };
+
+  const unprojectMediaIds = async (viewer: MillicastView, mediaIds: string[]) => {
+    if (mediaIds.length) {
+      await viewer.unproject(mediaIds);
     }
   };
 
@@ -227,8 +296,8 @@ export const MultiView = ({ navigation }) => {
 
   /* eslint no-param-reassign: ["error", { "props": false }] */
   const changeStateOfMediaTracks = (value) => {
-    streams?.map((s) =>
-      s.stream?.getTracks().forEach((videoTrack) => {
+    remoteTrackSourcesRef.current?.map((remoteTrackSource) =>
+      remoteTrackSource.mediaStream?.getTracks().forEach((videoTrack) => {
         videoTrack.enabled = value;
       }),
     );
@@ -247,55 +316,47 @@ export const MultiView = ({ navigation }) => {
     await subscribe();
   };
 
-  const addRemoteTrack = async (sourceId) => {
-    if (millicastViewRef.current == null) {
-      return;
-    }
-    const isAlreadyProjected = streams.some((stream) => stream.sourceId === sourceId);
-    const isAlreadyProjecting = streamsProjecting.some((stream) => stream.sourceId === sourceId);
-    if (!isAlreadyProjected && !isAlreadyProjecting) {
-      dispatch({
-        type: 'viewer/addProjectingStream',
-        payload: { sourceId },
-      });
-      // eslint-disable-next-line no-undef
-      const mediaStream = new MediaStream();
-      const transceiver = await millicastViewRef.current.addRemoteTrack('video', [mediaStream]);
-      const mediaId = transceiver.mid;
-      await millicastViewRef.current.project(sourceId, [
-        {
-          media: 'video',
-          mediaId,
-          trackId: 'video',
-        },
-      ]);
-      dispatch({
-        type: 'viewer/addStream',
-        payload: { stream: mediaStream, videoMid: mediaId, sourceId },
-      });
-      dispatch({
-        type: 'viewer/removeProjectingStream',
-        payload: { sourceId },
-      });
-    }
-  };
+  const addRemoteTrack = async (
+    viewer: MillicastView,
+    sourceId?: string,
+    trackInfo?: MediaTrackInfo[],
+  ): Promise<RemoteTrackSource> => {
+    const mapping: ViewProjectSourceMapping[] = [];
+    const mediaStream = new MediaStream();
 
-  useEffect(() => {
-    const initializeMultiview = async () => {
-      try {
-        await Promise.all(
-          sourceIds?.map(async (sourceId) => {
-            if (sourceId !== 'main') {
-              addRemoteTrack(sourceId);
-            }
-          }),
-        );
-      } catch (e) {
-        console.log('error', e);
+    const trackAudio = trackInfo?.find(({ media }) => media === 'audio');
+    const trackVideo = trackInfo?.find(({ media }) => media === 'video');
+
+    let audioMediaId: string | undefined;
+    let videoMediaId: string | undefined;
+
+    if (trackAudio) {
+      const audioTransceiver = await viewer.addRemoteTrack('audio', [mediaStream]);
+      audioMediaId = audioTransceiver?.mid ?? undefined;
+
+      if (audioMediaId) {
+        mapping.push({ media: 'audio', mediaId: audioMediaId, trackId: 'audio' });
       }
+    }
+
+    if (trackVideo) {
+      const videoTransceiver = await viewer.addRemoteTrack('video', [mediaStream]);
+      videoMediaId = videoTransceiver?.mid ?? undefined;
+
+      if (videoMediaId) {
+        mapping.push({ media: 'video', mediaId: videoMediaId, trackId: 'video' });
+      }
+    }
+
+    return {
+      audioMediaId,
+      mediaStream,
+      projectMapping: mapping,
+      quality: 'Auto',
+      sourceId,
+      videoMediaId,
     };
-    initializeMultiview();
-  }, [addRemoteTrack, navigation, sourceIds]);
+  };
 
   useEffect(() => {
     if (currentRoute !== Routes.ErrorView && error !== null) {
@@ -307,10 +368,10 @@ export const MultiView = ({ navigation }) => {
 
   useEffect(() => {
     if (netInfo.isConnected === false) {
-      dispatch({ type: 'viewer/setStreams', payload: [] });
+      dispatch({ type: 'viewer/resetRemoteTrackSources' });
       dispatch({
         type: 'viewer/setSelectedSource',
-        payload: { url: null, mid: null },
+        payload: null,
       });
       dispatch({ type: 'viewer/setSourceIds', payload: [] });
 
@@ -348,7 +409,7 @@ export const MultiView = ({ navigation }) => {
       >
         <FlatList
           key={columnsNumber}
-          data={streams}
+          data={remoteTrackSourcesRef.current}
           style={{
             textAlign: 'center',
           }}
@@ -361,17 +422,14 @@ export const MultiView = ({ navigation }) => {
                 onPress={() => {
                   dispatch({
                     type: 'viewer/setSelectedSource',
-                    payload: {
-                      url: item?.stream.toURL(),
-                      mid: item?.videoMid,
-                    },
+                    payload: item,
                   });
                   navigation.navigate(Routes.SingleStreamView);
                 }}
               >
                 <RTCView
-                  key={item?.stream.toURL() || `${item?.stream.videoMid}` || ''}
-                  streamURL={item?.stream.toURL()}
+                  key={item?.mediaStream.toURL() || `${item?.videoMediaId}` || ''}
+                  streamURL={item?.mediaStream.toURL()}
                   style={{
                     width: columnsNumber === 2 ? '70%' : '100%',
                     flex: 1,
