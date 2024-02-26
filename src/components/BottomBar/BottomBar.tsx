@@ -9,6 +9,7 @@ export const BottomBar = ({ displayStatsInformation, focus }) => {
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity
+        testID="infoIconButton"
         hasTVPreferredFocus={focus}
         onPress={() => {
           displayStatsInformation();

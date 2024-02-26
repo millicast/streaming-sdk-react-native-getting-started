@@ -18,7 +18,7 @@ import UserInput from './userInput';
 const Stack = createNativeStackNavigator();
 
 const LogoTitle = () => {
-  return <Icon name="dolbyLogo" color="white" />;
+  return <Icon testID="dolbyLogo" name="dolbyLogo" color="white" />;
 };
 
 export const Navigator = () => {

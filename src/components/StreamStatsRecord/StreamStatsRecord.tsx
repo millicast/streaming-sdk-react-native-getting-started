@@ -9,10 +9,14 @@ export const StreamStatsRecord = ({ param, value, paramType, valueType }) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.contentStyle}>
-        <Text type={paramType}>{param}</Text>
+        <Text testID={param} type={paramType}>
+          {param}
+        </Text>
       </View>
       <View style={styles.contentStyle}>
-        <Text type={valueType}>{value}</Text>
+        <Text testID={`${param} Value`} type={valueType}>
+          {value}
+        </Text>
       </View>
     </View>
   );

@@ -19,21 +19,21 @@ export const StreamDetail = ({ stream, onPlay }: { stream: StreamInfo; onPlay: (
       onPress={() => onPlay(stream)}
       setParentFocus={setIsFocused}
       underlayColor="none"
-      testID="StreamDetail"
+      testID={`streamDetail.${stream.streamName}`}
     >
       <View style={[styles.wrapper, isFocused ? styles.wrapperInFocus : {}]}>
         <View style={styles.textWrapper}>
-          <Text type="bodyDefault" style={styles.streamNameText}>
+          <Text testID={stream.streamName} type="bodyDefault" style={styles.streamNameText}>
             {stream.streamName}
           </Text>
           <View style={styles.accountIdTextWrapper}>
-            <Text id="accountIDLabel" type="bodyDefault" style={styles.accountIdText} />
-            <Text type="bodyDefault" color="secondary.200">
+            <Text testID="accountIDLabel" id="accountIDLabel" type="bodyDefault" style={styles.accountIdText} />
+            <Text testID={stream.accountId} type="bodyDefault" color="secondary.200">
               {stream.accountId}
             </Text>
           </View>
         </View>
-        <Icon backgroundColor="transparent" name="playOutline" size={iconSize} color={iconColor} />
+        <Icon testID="playOutline" backgroundColor="transparent" name="playOutline" size={iconSize} color={iconColor} />
       </View>
     </FocusedComponent>
   );

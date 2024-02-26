@@ -65,13 +65,14 @@ export const StreamStats = ({ onPress }) => {
   return (
     <View style={Platform.isTV ? styles.outerContainerTV : styles.outerContainer}>
       <View style={styles.closeIcon}>
-        <TouchableOpacity hasTVPreferredFocus onPress={onPress}>
+        <TouchableOpacity testID="closeIconButton" hasTVPreferredFocus onPress={onPress}>
           <Icon testID="closeIcon" name="close" size="s" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.innerContainer}>
         <Text
+          testID="streamInfoTitle"
           id="streamInfoTitle"
           type="h2"
           align={Platform.isTV ? 'left' : 'center'}
@@ -79,7 +80,12 @@ export const StreamStats = ({ onPress }) => {
         />
         <View style={styles.streamInfoContainer}>
           <StreamStatsRecord param="Name" paramType="h3" value="Value" valueType="h3" />
-          <FlatList data={statsRecordsList} keyExtractor={(item) => item.param} renderItem={renderItem} />
+          <FlatList
+            testID="streamStatsInfoView"
+            data={statsRecordsList}
+            keyExtractor={(item) => item.param}
+            renderItem={renderItem}
+          />
         </View>
       </View>
     </View>

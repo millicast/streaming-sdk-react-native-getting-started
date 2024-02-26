@@ -15,6 +15,7 @@ export const StreamList = ({
 }) => {
   return (
     <FlatList
+      testID="streamList"
       style={styles.wrapper}
       data={streams}
       renderItem={({ item }) => <StreamDetail stream={item} onPlay={onPlayStream} />}

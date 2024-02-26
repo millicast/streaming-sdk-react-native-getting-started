@@ -113,6 +113,7 @@ export const SingleStreamView = ({ navigation }) => {
   const renderVideoItem = ({item}) => (
     <View style={[styles.videoContainer, { width: width, height: height }]}>
       <RTCView
+        testID={!item.sourceId ? 'Main' : String(item.sourceId)}
         key={item.video}
         streamURL={item.mediaStream.toURL()}
         style={styles.video}

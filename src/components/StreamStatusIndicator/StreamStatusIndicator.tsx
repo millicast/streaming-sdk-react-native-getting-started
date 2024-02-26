@@ -7,8 +7,8 @@ import styles from './StreamStatusIndicator.style';
 
 export const StreamStatusIndicator = ({ title, position }) => {
   return (
-    <View style={[styles.container, position]}>
-      <Text>{title}</Text>
+    <View testID="streamStatusIndicator" style={[styles.container, position]}>
+      <Text testID={title}>{title}</Text>
     </View>
   );
 };
