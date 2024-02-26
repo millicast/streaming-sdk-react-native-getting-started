@@ -67,8 +67,8 @@ const Input = ({
 
   return (
     <View testID={testID} style={styles.container}>
-      <View style={[styles.labelContainer, { backgroundColor: labelBackground }]}>
-        <Text type="captionRegular" color={getColor(labelColor, 'grey.500')}>
+      <View testID={label} style={[styles.labelContainer, { backgroundColor: labelBackground }]}>
+        <Text testID={label} type="captionRegular" color={getColor(labelColor, 'grey.500')}>
           {label}
         </Text>
       </View>
@@ -81,6 +81,7 @@ const Input = ({
         ]}
       >
         <TextInput
+          testID={testID}
           ref={textInput}
           value={value}
           onChangeText={onChangeText}
@@ -99,6 +100,7 @@ const Input = ({
       {value.length > 0 && !Platform.isTV && (
         <View style={styles.buttonContainer}>
           <IconButton
+            testID="closeIconButton"
             variant="circle"
             icon="close"
             backgroundColor="transparent"
@@ -114,7 +116,11 @@ const Input = ({
 
       {validation?.message && (
         <View style={styles.errorContainer}>
-          <Text type="captionRegular" color={validation?.valid === false ? 'infoError' : 'grey.600'}>
+          <Text
+            testID="invalidInputText"
+            type="captionRegular"
+            color={validation?.valid === false ? 'infoError' : 'grey.600'}
+          >
             {validation.message}
           </Text>
         </View>

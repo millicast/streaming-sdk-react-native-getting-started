@@ -77,8 +77,9 @@ export const RecentStreams = ({ navigation }) => {
     <Layout testID="RecentStreamsScreen">
       <SafeAreaView style={styles.wrapper}>
         <ScrollView>
-          <Text id="appTitle" type="h1" align="center" />
+          <Text testID="appTitle" id="appTitle" type="h1" align="center" />
           <Text
+            testID="recentStreamsInfoText"
             id="recentStreamsInfoText"
             color="secondary.200"
             type="bodyDefault"
@@ -86,7 +87,12 @@ export const RecentStreams = ({ navigation }) => {
             style={styles.recentStreamsInfoText}
           />
           <View style={styles.streamListHeaderWrapper}>
-            <Text id="recentlyViewedText" type="bodyDefault" style={styles.recentlyViewedText} />
+            <Text
+              testID="recentlyViewedText"
+              id="recentlyViewedText"
+              type="bodyDefault"
+              style={styles.recentlyViewedText}
+            />
             <FocusedComponent
               name="viewAll"
               onPress={handleViewAllClick}
@@ -94,12 +100,28 @@ export const RecentStreams = ({ navigation }) => {
               testID="viewAllButton"
               setParentFocus={setIsFocused}
             >
-              <Text id="viewAllButtonText" type={viewAllButtonTextType} color={viewAllButtonColor} />
+              <Text
+                testID="viewAllButtonText"
+                id="viewAllButtonText"
+                type={viewAllButtonTextType}
+                color={viewAllButtonColor}
+              />
             </FocusedComponent>
           </View>
           <StreamList streams={streamsList.slice(0, 3)} onPlayStream={handlePlayStreamClick} />
-          <Text id="alternateOptionText" type="paragraph" align="center" style={styles.alternateOptionText} />
-          <Button title={playNewStreamTitle} type="primary" onPress={handlePlayNewStreamClick} />
+          <Text
+            testID="alternateOptionText"
+            id="alternateOptionText"
+            type="paragraph"
+            align="center"
+            style={styles.alternateOptionText}
+          />
+          <Button
+            testID="playNewStreamTitle"
+            title={playNewStreamTitle}
+            type="primary"
+            onPress={handlePlayNewStreamClick}
+          />
         </ScrollView>
       </SafeAreaView>
       <WelcomeFooter />

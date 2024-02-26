@@ -79,7 +79,7 @@ export const UserInput = ({ navigation }) => {
   const validateInput = (value: string) => {
     const valid = value.length >= MINIMUM_INPUT_LENGTH;
     setValidation(
-      value.length && value.length >= MINIMUM_INPUT_LENGTH
+      value.length && value.length < MINIMUM_INPUT_LENGTH
         ? {
             valid,
             message: valid ? undefined : intl.formatMessage({ id: 'enterValidInputMessage' }),
@@ -116,9 +116,10 @@ export const UserInput = ({ navigation }) => {
     <Layout testID="UserInputScreen">
       <SafeAreaView style={styles.wrapper}>
         <ScrollView>
-          <Text id="appTitle" type="h2" align="center" style={{ paddingTop: 16 }} />
-          <Text id="startStream" type="h3" align="center" style={{ paddingTop: 24 }} />
+          <Text testID="appTitle" id="appTitle" type="h2" align="center" style={{ paddingTop: 16 }} />
+          <Text testID="startStream" id="startStream" type="h3" align="center" style={{ paddingTop: 24 }} />
           <Text
+            testID="startStreamLabel"
             id="startStreamLabel"
             type="paragraph"
             align="center"
@@ -159,8 +160,15 @@ export const UserInput = ({ navigation }) => {
             disabled={playDisabled(validation, streamName, accountId)}
             testID="PlayButton"
           />
-          <Text id="demoTitle" type="h2" align="center" style={{ paddingTop: 48 }} />
-          <Text id="demoLabel" type="paragraph" align="center" style={{ paddingTop: 8 }} color="grey.500" />
+          <Text testID="demoTitle" id="demoTitle" type="h2" align="center" style={{ paddingTop: 48 }} />
+          <Text
+            testID="demoLabel"
+            id="demoLabel"
+            type="paragraph"
+            align="center"
+            style={{ paddingTop: 8 }}
+            color="grey.500"
+          />
           <View style={{ paddingTop: 16 }} />
           <FocusedComponent
             onPress={handleDemoPlayClick}
@@ -170,8 +178,12 @@ export const UserInput = ({ navigation }) => {
             testID="DemoButtonFocusElement"
           >
             <>
-              <Text id="playDemoStream" type="paragraph" />
-              <Icon name="playOutline" color={isDemoButtonFocused ? 'white' : defaultDemoButtonIconColor} />
+              <Text testID="playDemoStream" id="playDemoStream" type="paragraph" />
+              <Icon
+                testID="playOutline"
+                name="playOutline"
+                color={isDemoButtonFocused ? 'white' : defaultDemoButtonIconColor}
+              />
             </>
           </FocusedComponent>
         </ScrollView>

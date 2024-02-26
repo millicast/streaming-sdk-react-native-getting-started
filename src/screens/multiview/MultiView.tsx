@@ -408,6 +408,7 @@ export const MultiView = ({ navigation }) => {
         }}
       >
         <FlatList
+          testID="multiViewStreamList"
           key={columnsNumber}
           data={remoteTrackSourcesRef.current}
           style={{
@@ -418,6 +419,7 @@ export const MultiView = ({ navigation }) => {
           renderItem={({ item, index }) => (
             <View style={margin}>
               <Pressable
+                testID={`${!item.sourceId ? 'Main' : String(item.sourceId)}SourceButton`}
                 style={{ marginBottom: 15 }}
                 onPress={() => {
                   dispatch({
@@ -428,6 +430,7 @@ export const MultiView = ({ navigation }) => {
                 }}
               >
                 <RTCView
+                  testID={!item.sourceId ? 'Main' : String(item.sourceId)}
                   key={item?.mediaStream.toURL() || `${item?.videoMediaId}` || ''}
                   streamURL={item?.mediaStream.toURL()}
                   style={{
@@ -437,6 +440,7 @@ export const MultiView = ({ navigation }) => {
                   }}
                 />
                 <Text
+                  testID={!item.sourceId ? 'Main' : String(item.sourceId)}
                   style={{
                     padding: 1,
                     position: 'absolute',

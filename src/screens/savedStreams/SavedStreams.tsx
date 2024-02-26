@@ -77,7 +77,7 @@ export const SavedStreams = ({ navigation }) => {
       headerTitle: savedStreamsHeaderText,
       headerRight: () =>
         streamsList.length > 0 && (
-          <FocusedComponent onPress={clearSavedStreamsAlert} setParentFocus={setIsFocused}>
+          <FocusedComponent testID="trashIconButton" onPress={clearSavedStreamsAlert} setParentFocus={setIsFocused}>
             <Icon testID="trashIcon" name="trash" size={defaultIconSize} color={iconColor} />
           </FocusedComponent>
         ),
@@ -90,10 +90,10 @@ export const SavedStreams = ({ navigation }) => {
         {Platform.isTV && (
           <View style={styles.headerViewWrapperTV}>
             <View style={{ flex: 1, alignItems: 'center' }}>
-              <Text id="savedStreamsHeaderText" type="H2" />
+              <Text testID="savedStreamsHeaderText" id="savedStreamsHeaderText" type="H2" />
             </View>
             {streamsList.length > 0 && (
-              <FocusedComponent onPress={clearSavedStreamsAlert} setParentFocus={setIsFocused}>
+              <FocusedComponent testID="trashIconButton" onPress={clearSavedStreamsAlert} setParentFocus={setIsFocused}>
                 <Icon testID="trashIcon" name="trash" size={defaultIconSize} color={iconColor} />
               </FocusedComponent>
             )}
@@ -102,18 +102,39 @@ export const SavedStreams = ({ navigation }) => {
         {streamsList.length > 0 ? (
           <ScrollView>
             <View style={styles.streamListSectionHeaderWrapper}>
-              <Text id="lastPlayedStreamText" type="bodyDefault" style={styles.streamListSectionHeaderText} />
+              <Text
+                testID="lastPlayedStreamText"
+                id="lastPlayedStreamText"
+                type="bodyDefault"
+                style={styles.streamListSectionHeaderText}
+              />
             </View>
             <StreamList streams={streamsList.slice(0, 1)} onPlayStream={handlePlayStream} />
             <View style={styles.streamListSectionHeaderWrapper}>
-              <Text id="allStreamsText" type="bodyDefault" style={styles.streamListSectionHeaderText} />
+              <Text
+                testID="allStreamsText"
+                id="allStreamsText"
+                type="bodyDefault"
+                style={styles.streamListSectionHeaderText}
+              />
             </View>
             <StreamList streams={streamsList} onPlayStream={handlePlayStream} />
           </ScrollView>
         ) : (
           <View style={styles.noStreamsMessageWrapper}>
-            <Text id="noSavedStreamsTitleText" type="h2" align="center" numberOfLines={2} />
-            <Text id="noSavedStreamssubtitleText" type="bodyDefault" color="secondary.200" />
+            <Text
+              testID="noSavedStreamsTitleText"
+              id="noSavedStreamsTitleText"
+              type="h2"
+              align="center"
+              numberOfLines={2}
+            />
+            <Text
+              testID="noSavedStreamssubtitleText"
+              id="noSavedStreamssubtitleText"
+              type="bodyDefault"
+              color="secondary.200"
+            />
           </View>
         )}
       </SafeAreaView>
