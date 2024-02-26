@@ -179,7 +179,7 @@ export const MultiView = ({ navigation }) => {
             const hasProjectedAudioTrack = audioRemoteTrackSourceRef.current !== null;
             const videoMapping = newRemoteTrackSource.projectMapping.filter((mapping) => mapping.media === 'video');
             const audioMapping = newRemoteTrackSource.projectMapping.filter((mapping) => mapping.media === 'audio');
-            const hasAudioMapping = audioMapping.length >= 0;
+            const hasAudioMapping = audioMapping.length > 0;
             const mappingForProjection =
               !hasProjectedAudioTrack && hasAudioMapping ? [...videoMapping, ...audioMapping] : videoMapping;
 
