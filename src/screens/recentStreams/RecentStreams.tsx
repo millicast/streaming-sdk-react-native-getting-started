@@ -108,7 +108,11 @@ export const RecentStreams = ({ navigation }) => {
               />
             </FocusedComponent>
           </View>
-          <StreamList streams={streamsList.slice(0, 3)} onPlayStream={handlePlayStreamClick} />
+          <StreamList
+            sectionName="recentlyPlayed"
+            streams={streamsList.slice(0, 3)}
+            onPlayStream={handlePlayStreamClick}
+          />
           <Text
             testID="alternateOptionText"
             id="alternateOptionText"

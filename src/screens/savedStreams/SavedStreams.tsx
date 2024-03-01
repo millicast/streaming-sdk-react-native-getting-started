@@ -109,7 +109,7 @@ export const SavedStreams = ({ navigation }) => {
                 style={styles.streamListSectionHeaderText}
               />
             </View>
-            <StreamList streams={streamsList.slice(0, 1)} onPlayStream={handlePlayStream} />
+            <StreamList sectionName="lastPlayed" streams={streamsList.slice(0, 1)} onPlayStream={handlePlayStream} />
             <View style={styles.streamListSectionHeaderWrapper}>
               <Text
                 testID="allStreamsText"
@@ -118,7 +118,7 @@ export const SavedStreams = ({ navigation }) => {
                 style={styles.streamListSectionHeaderText}
               />
             </View>
-            <StreamList streams={streamsList} onPlayStream={handlePlayStream} />
+            <StreamList sectionName="allPlayed" streams={streamsList} onPlayStream={handlePlayStream} />
           </ScrollView>
         ) : (
           <View style={styles.noStreamsMessageWrapper}>

@@ -7,18 +7,20 @@ import StreamDetail from '../StreamDetail';
 import styles from './StreamList.style';
 
 export const StreamList = ({
+  sectionName,
   streams,
   onPlayStream,
 }: {
+  sectionName: string;
   streams: StreamInfo[];
   onPlayStream: (stream: StreamInfo) => void;
 }) => {
   return (
     <FlatList
-      testID="streamList"
+      testID={`${sectionName}.streamList`}
       style={styles.wrapper}
       data={streams}
-      renderItem={({ item }) => <StreamDetail stream={item} onPlay={onPlayStream} />}
+      renderItem={({ item }) => <StreamDetail sectionName={sectionName} stream={item} onPlay={onPlayStream} />}
       keyExtractor={(item) => item.streamName + item.accountId}
     />
   );

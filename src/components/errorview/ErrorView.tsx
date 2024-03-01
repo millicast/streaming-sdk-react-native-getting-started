@@ -39,13 +39,14 @@ const ErrorView = (props) => {
     <View style={stylesContainer.container}>
       <View style={{ flexDirection: 'row', paddingTop: topPadding }}>
         <View style={stylesContainer.indicatorContainer}>
-          <CustomText style={stylesContainer.indicator} type="bodySmall">
+          <CustomText testID="streamOfflineNotLiveBadge" style={stylesContainer.indicator} type="bodySmall">
             <FormattedMessage id="streamOfflineNotLiveBadge" />
           </CustomText>
         </View>
         {!isTV && (
           <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', padding: 10 }}>
             <IconButton
+              testID="closeIconButton"
               style={{ alignSelf: 'flex-end', marginLeft: 'auto' }}
               variant="circle"
               backgroundColor="grey"
@@ -62,6 +63,7 @@ const ErrorView = (props) => {
       <View style={stylesContainer.textContainer}>
         <View style={{ padding: 5 }}>
           <CustomText
+            testID="errorTitle"
             style={{
               textAlign: 'center',
             }}
@@ -72,7 +74,7 @@ const ErrorView = (props) => {
           </CustomText>
         </View>
         <View>
-          <CustomText style={stylesContainer.paragraph} type="paragraph" align="center">
+          <CustomText testID="errorSubtitle" style={stylesContainer.paragraph} type="paragraph" align="center">
             <FormattedMessage id={subtitleId} />
           </CustomText>
         </View>
