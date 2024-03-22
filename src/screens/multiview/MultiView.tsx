@@ -421,6 +421,7 @@ export const MultiView = ({ navigation }) => {
               <Pressable
                 testID={`${!item.sourceId ? 'Main' : String(item.sourceId)}SourceButton`}
                 style={{ marginBottom: 15 }}
+                hasTVPreferredFocus={Platform.isTV && index === 0}
                 onPress={() => {
                   dispatch({
                     type: 'viewer/setSelectedSource',
