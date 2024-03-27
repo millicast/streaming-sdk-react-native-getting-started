@@ -9,14 +9,23 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
   },
+  simulcastCell: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+    backgroundColor: '#34343B',
+    marginVertical: 5,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
   outerContainerTV: {
-    height: '51%',
-    width: '30%',
+    height: '50%',
+    width: '20%',
+    position: 'absolute',
     backgroundColor: '#292930',
     bottom: 20,
-    left: 20,
+    left: '80%',
     borderRadius: 14,
-    position: 'absolute',
   },
   innerContainer: {
     marginTop: 10,
@@ -25,7 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 0,
   },
-  streamInfoContainer: {
+  simulcastOptionsContainer: {
     marginTop: Platform.isTV ? 10 : 60,
     marginHorizontal: 16,
   },

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { Logger as MillicastLogger } from '@millicast/sdk';
+import { Logger as MillicastLogger, ViewProjectSourceMapping } from '@millicast/sdk';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { View, SafeAreaView, FlatList, Dimensions, Platform } from 'react-native';
+import { View, FlatList, Dimensions, Platform, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RTCView } from 'react-native-webrtc';
 
@@ -9,8 +9,10 @@ import { BottomBar } from '../../components/BottomBar/BottomBar';
 import { StreamStats } from '../../components/StreamStats/StreamStats';
 import { StreamStatusIndicator } from '../../components/StreamStatusIndicator/StreamStatusIndicator';
 import { ContainerView } from '../../components/ContainerView/ContainerView';
-import { RemoteTrackSource } from '../../types/RemoteTrackSource.types';
+import { RemoteTrackSource, SimulcastQuality } from '../../types/RemoteTrackSource.types';
 import makeStyles from './SingleStreamView.style';
+import Text from '../../components/text/Text';
+import { SimulcastView } from '../../components/SimulcastView/SimulcastView';
 
 window.Logger = MillicastLogger;
 window.Logger.setLevel(MillicastLogger.DEBUG);
@@ -20,22 +22,33 @@ export const SingleStreamView = ({ navigation }) => {
   const remoteTrackSources = useSelector((state) => state.viewerReducer.remoteTrackSources);
   const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
   const millicastView = useSelector((state) => state.viewerReducer.millicastView);
+  const activeLayers = useSelector((state) => state.viewerReducer.activeLayers);
+  const projectedLayers = useSelector((state) => state.viewerReducer.projectedLayers);
+
   const dispatch = useDispatch();
 
   const remoteTrackSourcesRef = useRef(null);
   const selectedSourceRef = useRef<RemoteTrackSource>(null);
   const millicastViewRef = useRef(null);
+  const activeLayersRef = useRef(null);
+  const projectedLayersRef = useRef(null);
 
   selectedSourceRef.current = selectedSource;
   remoteTrackSourcesRef.current = remoteTrackSources;
   millicastViewRef.current = millicastView;
+  activeLayersRef.current = activeLayers;
+  projectedLayersRef.current = projectedLayers;
 
   const [videoTileIndex, setVideoTileIndex] = useState<number>(-1);
   const [width, setWidth] = useState<number>(Dimensions.get('window').width);
   const [height, setHeight] = useState<number>(Dimensions.get('window').height);
+  const [streamQualities, setStreamQualities] = useState<SimulcastQuality[]>([]);
 
   const [indicatorLayout, setIndicatorLayout] = useState<any>(styles.indicatorLayout);
   const [isStreamStatsModelVisible, setIsStreamStatsModelVisible] = useState<boolean>(false);
+  const [isSimulcastSelectionVisible, setIsSimulcastSelectionVisible] = useState<boolean>(false);
+  const [selectedStreamQuality, setSelectedStreamQuality] = useState<string>('Auto');
+
   const [isFocused, setIsFocused] = useState<boolean>(true);
   const [visibleRemoteTrackSource, setVisibleRemoteTrackSource] = useState<RemoteTrackSource>(null);
 
@@ -75,11 +88,68 @@ export const SingleStreamView = ({ navigation }) => {
   }, []);
 
   useEffect(()=> {
-    const streamIndex = remoteTrackSourcesRef.current.findIndex( (remoteTrackSource) => remoteTrackSource.videoMediaId === selectedSourceRef.current?.videoMediaId && remoteTrackSource.mediaStream.toURL() === selectedSourceRef.current?.mediaStream.toURL());
+    const streamIndex = remoteTrackSourcesRef.current.findIndex((remoteTrackSource) => remoteTrackSource.videoMediaId === selectedSourceRef.current?.videoMediaId && remoteTrackSource.mediaStream.toURL() === selectedSourceRef.current?.mediaStream.toURL());
     const remoteTrackSource = remoteTrackSources[streamIndex];
     setVisibleRemoteTrackSource(remoteTrackSource);
     setVideoTileIndex(streamIndex);
+
+    updateStreamQualitiesAndSelectedLayerStates();
   }, [selectedSource, remoteTrackSources]);
+
+  useEffect(()=> {
+    updateStreamQualitiesAndSelectedLayerStates();
+  }, [activeLayers]);
+
+  useEffect(()=> {
+    updateStreamQualitiesAndSelectedLayerStates();
+  }, [projectedLayers]);
+
+  const updateStreamQualitiesAndSelectedLayerStates = () => {
+    const mediaId = selectedSourceRef.current?.videoMediaId
+    if (mediaId) {
+      const layerObjectMatchingMid = activeLayersRef.current?.find((activeLayer) => activeLayer.mediaId === mediaId);
+      if (layerObjectMatchingMid === undefined) {
+        setStreamQualities([]);
+      } else {
+        const streamQualitiesToSet = layerObjectMatchingMid.streamQualities
+        setStreamQualities(streamQualitiesToSet);
+      }
+
+      const selectedLayer = projectedLayersRef.current?.find((layer) => layer.mediaId === mediaId);
+      if (selectedLayer) {
+        setSelectedStreamQuality(selectedLayer.streamQuality);
+      } else {
+        setSelectedStreamQuality('Auto');
+      }
+    }
+  };
+
+  const selectStreamQuality = async (quality) => {
+    const simulcastQualityToSelect = streamQualities.find((streamQuality) => streamQuality.streamQuality === quality.streamQuality);
+
+    const selectedSourceMid = selectedSourceRef.current?.videoMediaId
+    const sourceMatchingMid = remoteTrackSourcesRef.current.find(
+      (remoteTrackSource) => remoteTrackSource.videoMediaId === selectedSourceMid,
+    );
+
+    if (simulcastQualityToSelect && sourceMatchingMid) {
+      const videoTrackId = sourceMatchingMid.videoTrackId;
+      const videoMapping = { media: 'video', trackId: videoTrackId, mediaId: selectedSourceMid } as ViewProjectSourceMapping;
+      if (quality !== 'Auto') {
+        videoMapping.layer = simulcastQualityToSelect.simulcastLayer;
+      }
+      await millicastViewRef.current.unproject([selectedSourceMid]);
+      await millicastViewRef.current.project(sourceMatchingMid.sourceId, [videoMapping]);
+
+      dispatch({
+        type: 'viewer/setProjectedLayer',
+        payload: {
+          videoMediaId: selectedSourceMid,
+          streamQuality: quality.streamQuality,
+        }
+      });
+    }
+  }
 
   const openStreamStatsModel = () => {
     if(!isStreamStatsModelVisible) {
@@ -109,6 +179,20 @@ export const SingleStreamView = ({ navigation }) => {
       dispatch({ type: 'viewer/setStreamStats', payload: null });
     }
   };
+
+  const openSimulcastModel = () => {
+    if(!isSimulcastSelectionVisible) {
+      setIsSimulcastSelectionVisible(true);
+      setIsFocused(false);
+    }
+  }
+
+   const closeSimulcastModel = () => {
+    if(isSimulcastSelectionVisible) {
+      setIsSimulcastSelectionVisible(false);
+      setIsFocused(true);
+    }
+  }
 
   const renderVideoItem = ({item}) => (
     <View style={[styles.videoContainer, { width: width, height: height }]}>
@@ -154,11 +238,11 @@ export const SingleStreamView = ({ navigation }) => {
           viewabilityConfig={viewabilityConfig}
         />
         <View style={styles.bottomMultimediaContainer}>
-          <BottomBar displayStatsInformation={openStreamStatsModel} focus={isFocused} />
+          <BottomBar displayStatsInformation={openStreamStatsModel} displaySimulcastSelection={openSimulcastModel} focus={isFocused} />
         </View>
       </ContainerView>
       {isStreamStatsModelVisible && <StreamStats onPress={closeStreamStatsModel} />}
+      {isSimulcastSelectionVisible && <SimulcastView streamQualityList={streamQualities} selectedStreamQuality={selectedStreamQuality} onClose={closeSimulcastModel} onSelectStreamQuality={selectStreamQuality}/>}
     </View>
   );
 };
-
