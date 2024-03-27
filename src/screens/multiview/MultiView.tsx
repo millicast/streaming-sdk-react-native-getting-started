@@ -5,6 +5,9 @@ import {
   MediaTrackInfo,
   ViewProjectSourceMapping,
   MediaStreamSource,
+  MediaStreamLayers,
+  MediaLayer,
+  LayerInfo,
 } from '@millicast/sdk';
 import { useNetInfo } from '@react-native-community/netinfo';
 import React, { useEffect, useRef, useState } from 'react';
@@ -25,7 +28,7 @@ import {
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { RemoteTrackSource } from '../../types/RemoteTrackSource.types';
+import { RemoteTrackSource, StreamQuality, SimulcastQuality } from '../../types/RemoteTrackSource.types';
 import { Routes } from '../../types/routes.types';
 
 window.Logger = MillicastLogger;
@@ -42,6 +45,7 @@ export const MultiView = ({ navigation }) => {
   const playing = useSelector((state) => state.viewerReducer.playing);
   const error = useSelector((state) => state.viewerReducer.error);
   const audioRemoteTrackSource = useSelector((state) => state.viewerReducer.audioRemoteTrackSource);
+
   const dispatch = useDispatch();
   const { routes, index } = navigation.getState();
   const currentRoute = routes[index].name;
@@ -51,6 +55,7 @@ export const MultiView = ({ navigation }) => {
   const sourceIdsRef = useRef([]);
   const netInfo = useNetInfo();
   const audioRemoteTrackSourceRef = useRef(null);
+
   const [isReconnectionScheduled, setIsReconnectionScheduled] = useState<boolean>(false);
 
   remoteTrackSourcesRef.current = remoteTrackSources;
@@ -144,6 +149,41 @@ export const MultiView = ({ navigation }) => {
     }
   };
 
+  const buildQualityOptions = (active, layers) => {
+    const qualities: StreamQuality[] = [];
+
+    switch (active.length) {
+      case 2:
+        qualities.push('High', 'Low');
+        break;
+
+      case 3:
+        qualities.push('High', 'Medium', 'Low');
+        break;
+
+      default:
+        // Exit with only the auto layer
+        return [{ streamQuality: 'Auto' } as SimulcastQuality];
+    }
+
+    const descendingLayers = active.sort((a, b) => b.bitrate - a.bitrate);
+
+    const qualityOptions: SimulcastQuality[] = descendingLayers.map((active, idx) => ({
+      simulcastLayer: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx),
+      // simulcastLayer: {
+      //   encodingId: active.id,
+      //   spatialLayerId: active.layers[0]?.spatialLayerId, // H264 doesn't have layers.
+      //   temporalLayerId: active.layers[0]?.temporalLayerId, // H264 doesn't have layers.
+      // },
+      streamQuality: qualities[idx],
+    }));
+
+    console.log('---> active', active);
+    console.log('---> layers', layers);
+
+    return [{ streamQuality: 'Auto' } as SimulcastQuality, ...qualityOptions];
+  };
+
   const subscribe = async () => {
     if (millicastViewRef.current?.isActive()) {
       return;
@@ -231,11 +271,17 @@ export const MultiView = ({ navigation }) => {
           // A new source was multiplexed over the vad tracks
           break;
         case 'layers':
+          const { medias } = data;
+          const mediaId = Object.keys(medias)[0];
+          const { active, layers } = (event.data as MediaStreamLayers).medias[mediaId] ?? {};
+          const streamQualities = buildQualityOptions(active, layers);
+
+          console.log('---> streamQualities set - ', streamQualities);
+
           dispatch({
             type: 'viewer/setActiveLayers',
-            payload: data.medias?.['0']?.active,
+            payload: { mediaId, streamQualities },
           });
-          // Updated layer information for each simulcast/svc video track
           break;
         default:
           console.log('Unknown event', name);
