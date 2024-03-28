@@ -116,20 +116,25 @@ export const SingleStreamView = ({ navigation }) => {
     }
   }, [activeLayers]);
 
-  const selectStreamQuality = async (quality: StreamQuality) => {
-    const simulcastQualityToSelect = streamQualities.find((streamQuality) => streamQuality.streamQuality === quality);
+  const selectStreamQuality = async (quality) => {
+    const simulcastQualityToSelect = streamQualities.find((streamQuality) => streamQuality.streamQuality === quality.streamQuality);
 
-    const selectMid = selectedSourceRef.current?.videoMediaId
+    const selectedSourceMid = selectedSourceRef.current?.videoMediaId
     const sourceMatchingMid = remoteTrackSourcesRef.current.find(
-      (remoteTrackSource) => remoteTrackSource.videoMediaId === selectMid,
+      (remoteTrackSource) => remoteTrackSource.videoMediaId === selectedSourceMid,
     );
+
+    console.log('---> project', quality);
+    console.log('---> project simulcastQualityToSelect', simulcastQualityToSelect);
 
     if (simulcastQualityToSelect && sourceMatchingMid) {
       const videoMapping = sourceMatchingMid.projectMapping.filter((mapping) => mapping.media === 'video');
-      videoMapping.layer = simulcastQualityToSelect.simulcastLayer;
-      await millicastViewRef.current.unproject([selectMid]);
+      if (quality !== 'Auto') {
+        videoMapping.layer = simulcastQualityToSelect.simulcastLayer;
+      }
+      await millicastViewRef.current.unproject([selectedSourceMid]);
       await millicastViewRef.current.project(sourceMatchingMid.sourceId, videoMapping);
-      console.log('---> project', videoMapping, selectMid);
+      console.log('---> project', videoMapping, selectedSourceMid);
     }
   }
 

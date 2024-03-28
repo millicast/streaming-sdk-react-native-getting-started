@@ -28,7 +28,7 @@ import {
 import { RTCView } from 'react-native-webrtc';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { RemoteTrackSource, StreamQuality, SimulcastQuality } from '../../types/RemoteTrackSource.types';
+import { RemoteTrackSource, SimulcastQuality } from '../../types/RemoteTrackSource.types';
 import { Routes } from '../../types/routes.types';
 
 window.Logger = MillicastLogger;
@@ -150,9 +150,7 @@ export const MultiView = ({ navigation }) => {
   };
 
   const buildQualityOptions = (active, layers) => {
-    const qualities: StreamQuality[] = ['High', 'Medium', 'Low'];
-
-    const descendingLayers = active.sort((a, b) => b.bitrate - a.bitrate).slice(0, 3);
+    const descendingLayers = active.sort((a, b) => b.height - a.height);
 
     const qualityOptions: SimulcastQuality[] = descendingLayers.map((active, idx) => ({
       simulcastLayer: {
@@ -160,7 +158,7 @@ export const MultiView = ({ navigation }) => {
         spatialLayerId: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx)?.spatialLayerId,
         temporalLayerId: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx)?.temporalLayerId,
       },
-      streamQuality: qualities[idx],
+      streamQuality: `${active.height}p`,
     }));
 
     return [{ streamQuality: 'Auto' } as SimulcastQuality, ...qualityOptions];
