@@ -4,20 +4,20 @@ import { Platform } from 'react-native';
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
+    position: 'absolute',
     backgroundColor: '#292930E5',
     marginTop: 100,
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
-    position: 'absolute',
   },
   outerContainerTV: {
-    height: '51%',
-    width: '30%',
+    height: '30%',
+    width: '20%',
+    position: 'absolute',
     backgroundColor: '#292930',
     bottom: 20,
-    left: 20,
+    left: '80%',
     borderRadius: 14,
-    position: 'absolute',
   },
   innerContainer: {
     marginTop: 10,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 0,
   },
-  streamInfoContainer: {
+  simulcastOptionsContainer: {
     marginTop: Platform.isTV ? 10 : 60,
     marginHorizontal: 16,
   },

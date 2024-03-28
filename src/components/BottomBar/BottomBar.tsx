@@ -4,7 +4,7 @@ import { View, TouchableOpacity, Platform } from 'react-native';
 
 import styles from './BottomBar.style';
 
-export const BottomBar = ({ displayStatsInformation, focus }) => {
+export const BottomBar = ({ displayStatsInformation, displaySimulcastSelection, focus }) => {
   const iconSize = Platform.OS === 'android' && Platform.isTV ? 's' : 'm';
   return (
     <View style={styles.wrapper}>
@@ -16,6 +16,15 @@ export const BottomBar = ({ displayStatsInformation, focus }) => {
         }}
       >
         <Icon testID="infoIcon" name="info" size={iconSize} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        testID="settingsIconButton"
+        hasTVPreferredFocus={focus}
+        onPress={() => {
+          displaySimulcastSelection();
+        }}
+      >
+        <Icon testID="settingsIcon" name="settings" size={iconSize} />
       </TouchableOpacity>
     </View>
   );

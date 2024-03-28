@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Logger as MillicastLogger } from '@millicast/sdk';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { View, SafeAreaView, FlatList, Dimensions, Platform, TouchableOpacity } from 'react-native';
+import { View, FlatList, Dimensions, Platform, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RTCView } from 'react-native-webrtc';
 
@@ -12,7 +12,7 @@ import { ContainerView } from '../../components/ContainerView/ContainerView';
 import { RemoteTrackSource, SimulcastQuality } from '../../types/RemoteTrackSource.types';
 import makeStyles from './SingleStreamView.style';
 import Text from '../../components/text/Text';
-import { Icon } from '@dolbyio/uikit-react-native';
+import { SimulcastView } from '../../components/SimulcastView/SimulcastView';
 
 window.Logger = MillicastLogger;
 window.Logger.setLevel(MillicastLogger.DEBUG);
@@ -22,28 +22,29 @@ export const SingleStreamView = ({ navigation }) => {
   const remoteTrackSources = useSelector((state) => state.viewerReducer.remoteTrackSources);
   const selectedSource = useSelector((state) => state.viewerReducer.selectedSource);
   const millicastView = useSelector((state) => state.viewerReducer.millicastView);
-  const activeLayersMapping = useSelector((state) => state.viewerReducer.activeLayersMapping);
+  const activeLayers = useSelector((state) => state.viewerReducer.activeLayers);
 
   const dispatch = useDispatch();
 
   const remoteTrackSourcesRef = useRef(null);
   const selectedSourceRef = useRef<RemoteTrackSource>(null);
   const millicastViewRef = useRef(null);
-  const activeLayersMappingRef = useRef(null);
+  const activeLayersRef = useRef(null);
 
   selectedSourceRef.current = selectedSource;
   remoteTrackSourcesRef.current = remoteTrackSources;
   millicastViewRef.current = millicastView;
-  activeLayersMappingRef.current = activeLayersMapping;
-
-  const [streamQualities, setStreamQualities] = useState<SimulcastQuality[]>([]);
+  activeLayersRef.current = activeLayers;
 
   const [videoTileIndex, setVideoTileIndex] = useState<number>(-1);
   const [width, setWidth] = useState<number>(Dimensions.get('window').width);
   const [height, setHeight] = useState<number>(Dimensions.get('window').height);
+  const [streamQualities, setStreamQualities] = useState<SimulcastQuality[]>([]);
 
   const [indicatorLayout, setIndicatorLayout] = useState<any>(styles.indicatorLayout);
   const [isStreamStatsModelVisible, setIsStreamStatsModelVisible] = useState<boolean>(false);
+  const [isSimulcastSelectionVisible, setIsSimulcastSelectionVisible] = useState<boolean>(false);
+
   const [isFocused, setIsFocused] = useState<boolean>(true);
   const [visibleRemoteTrackSource, setVisibleRemoteTrackSource] = useState<RemoteTrackSource>(null);
 
@@ -90,9 +91,30 @@ export const SingleStreamView = ({ navigation }) => {
     setVisibleRemoteTrackSource(remoteTrackSource);
     setVideoTileIndex(streamIndex);
 
-    const simulcastLayers = activeLayersMappingRef.current[selectedSourceRef.current?.videoMediaId]
-    setStreamQualities(simulcastLayers);
+    const mediaId = selectedSourceRef.current?.videoMediaId
+    if (mediaId &&  activeLayersRef.current) {
+      const layerObjectatchingMid = activeLayersRef.current.find((activeLayer) => activeLayer.mediaId === mediaId);
+      const streamQualities = layerObjectatchingMid.streamQualities
+      if (streamQualities) {
+        setStreamQualities(streamQualities);
+      } else {
+        setStreamQualities([]);
+      }
+    }
   }, [selectedSource, remoteTrackSources]);
+
+  useEffect(()=> {
+    const mediaId = selectedSourceRef.current?.videoMediaId
+    if (mediaId &&  activeLayersRef.current) {
+      const layerObjectatchingMid = activeLayersRef.current.find((activeLayer) => activeLayer.mediaId === mediaId);
+      const streamQualities = layerObjectatchingMid.streamQualities
+      if (streamQualities) {
+        setStreamQualities(streamQualities);
+      } else {
+        setStreamQualities([]);
+      }
+    }
+  }, [activeLayers]);
 
   const selectStreamQuality = async (quality: StreamQuality) => {
     const simulcastQualityToSelect = streamQualities.find((streamQuality) => streamQuality.streamQuality === quality);
@@ -107,7 +129,7 @@ export const SingleStreamView = ({ navigation }) => {
       videoMapping.layer = simulcastQualityToSelect.simulcastLayer;
       await millicastViewRef.current.unproject([selectMid]);
       await millicastViewRef.current.project(sourceMatchingMid.sourceId, videoMapping);
-      console.log('---> videoMapping', videoMapping, selectMid);
+      console.log('---> project', videoMapping, selectMid);
     }
   }
 
@@ -140,6 +162,20 @@ export const SingleStreamView = ({ navigation }) => {
     }
   };
 
+  const openSimulcastModel = () => {
+    if(!isSimulcastSelectionVisible) {
+      setIsSimulcastSelectionVisible(true);
+      setIsFocused(false);
+    }
+  }
+
+   const closeSimulcastModel = () => {
+    if(isSimulcastSelectionVisible) {
+      setIsSimulcastSelectionVisible(false);
+      setIsFocused(true);
+    }
+  }
+
   const renderVideoItem = ({item}) => (
     <View style={[styles.videoContainer, { width: width, height: height }]}>
       <RTCView
@@ -165,10 +201,6 @@ export const SingleStreamView = ({ navigation }) => {
     itemVisiblePercentThreshold: 100
   }
 
-  const hasLow = streamQualities.find((streamQuality) => streamQuality.streamQuality === 'Low')
-  const hasMedium = streamQualities.find((streamQuality) => streamQuality.streamQuality === 'Medium')
-  const hasHigh = streamQualities.find((streamQuality) => streamQuality.streamQuality === 'High')
-
   return (
     <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'red', justifyContent: 'flex-end' }}>
       <ContainerView style={styles.container}>
@@ -188,39 +220,11 @@ export const SingleStreamView = ({ navigation }) => {
           viewabilityConfig={viewabilityConfig}
         />
         <View style={styles.bottomMultimediaContainer}>
-          <BottomBar displayStatsInformation={openStreamStatsModel} focus={isFocused} />
-          <View style={{justifyContent:'center', width: '100%', height: 100, marginLeft: 500}}>
-        { hasLow && (
-            <TouchableOpacity
-              onPress={() => {
-                selectStreamQuality('Low');
-              }}
-            >
-              <Text type="bodyDefault" >Low</Text>
-            </TouchableOpacity>
-          )} 
-          { hasMedium && (
-            <TouchableOpacity
-              onPress={() => {
-                selectStreamQuality('Medium');
-              }}
-            >
-              <Text type="bodyDefault" >Medium</Text>
-            </TouchableOpacity>
-          )} 
-          { hasHigh && (
-            <TouchableOpacity
-              onPress={() => {
-                selectStreamQuality('High');
-              }}
-            >
-              <Text type="bodyDefault" >High</Text>
-            </TouchableOpacity>
-          )} 
-      </View>
+          <BottomBar displayStatsInformation={openStreamStatsModel} displaySimulcastSelection={openSimulcastModel} focus={isFocused} />
         </View>
       </ContainerView>
       {isStreamStatsModelVisible && <StreamStats onPress={closeStreamStatsModel} />}
+      {isSimulcastSelectionVisible && <SimulcastView streamQualityList={streamQualities} onClose={closeSimulcastModel} onSelectStreamQuality={selectStreamQuality}/>}
     </View>
   );
 };

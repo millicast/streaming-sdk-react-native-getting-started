@@ -150,36 +150,18 @@ export const MultiView = ({ navigation }) => {
   };
 
   const buildQualityOptions = (active, layers) => {
-    const qualities: StreamQuality[] = [];
+    const qualities: StreamQuality[] = ['High', 'Medium', 'Low'];
 
-    switch (active.length) {
-      case 2:
-        qualities.push('High', 'Low');
-        break;
-
-      case 3:
-        qualities.push('High', 'Medium', 'Low');
-        break;
-
-      default:
-        // Exit with only the auto layer
-        return [{ streamQuality: 'Auto' } as SimulcastQuality];
-    }
-
-    const descendingLayers = active.sort((a, b) => b.bitrate - a.bitrate);
+    const descendingLayers = active.sort((a, b) => b.bitrate - a.bitrate).slice(0, 3);
 
     const qualityOptions: SimulcastQuality[] = descendingLayers.map((active, idx) => ({
-      simulcastLayer: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx),
-      // simulcastLayer: {
-      //   encodingId: active.id,
-      //   spatialLayerId: active.layers[0]?.spatialLayerId, // H264 doesn't have layers.
-      //   temporalLayerId: active.layers[0]?.temporalLayerId, // H264 doesn't have layers.
-      // },
+      simulcastLayer: {
+        encodingId: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx)?.encodingId,
+        spatialLayerId: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx)?.spatialLayerId,
+        temporalLayerId: layers.find((layer) => layer.simulcastIdx === active.simulcastIdx)?.temporalLayerId,
+      },
       streamQuality: qualities[idx],
     }));
-
-    console.log('---> active', active);
-    console.log('---> layers', layers);
 
     return [{ streamQuality: 'Auto' } as SimulcastQuality, ...qualityOptions];
   };
@@ -273,10 +255,8 @@ export const MultiView = ({ navigation }) => {
         case 'layers':
           const { medias } = data;
           const mediaId = Object.keys(medias)[0];
-          const { active, layers } = (event.data as MediaStreamLayers).medias[mediaId] ?? {};
+          const { active, layers } = (data as MediaStreamLayers).medias[mediaId] ?? {};
           const streamQualities = buildQualityOptions(active, layers);
-
-          console.log('---> streamQualities set - ', streamQualities);
 
           dispatch({
             type: 'viewer/setActiveLayers',

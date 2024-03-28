@@ -13,7 +13,7 @@ const styles = () =>
       ...StyleSheet.absoluteFill,
     },
     bottomMultimediaContainer: {
-      width,
+      width: '100%',
       alignItems: 'stretch',
       justifyContent: 'space-between',
       paddingVertical: 15,

@@ -7,6 +7,7 @@ const styles = AppStyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    width: '100%',
   },
 });
 export default styles;

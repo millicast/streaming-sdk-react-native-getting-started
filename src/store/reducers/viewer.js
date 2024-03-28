@@ -9,7 +9,7 @@ const initialState = {
   remoteTrackSources: [],
   audioRemoteTrackSource: null,
   sourceIds: [],
-  activeLayersMapping: {},
+  activeLayers: [],
   millicastView: null,
   isMediaSet: true,
   selectedSource: null,
@@ -42,19 +42,19 @@ const viewerReducer = (state = initialState, action) => {
         sourceIds: action.payload,
       };
     case 'viewer/setActiveLayers':
-      const {mediaId, streamQualities} = action.payload
+      const {mediaId, streamQualities} = action.payload;
       const sourceToAddLayer = state.remoteTrackSources.find(
         (remoteTrackSource) => remoteTrackSource.videoMediaId === mediaId,
       );
       if (sourceToAddLayer) {
-        const activeLayersMapping = state.activeLayersMapping
-        activeLayersMapping[mediaId] = streamQualities
-         return {
+        return {
           ...state,
-          activeLayersMapping: activeLayersMapping,
+          activeLayers: [...state.activeLayers.filter((activeLayer) => activeLayer.mediaId !== mediaId), {mediaId, streamQualities}]
         };
       } else {
-        return state;
+        return {
+          ...state,
+        };
       }
     case 'viewer/setPlaying':
       return {
