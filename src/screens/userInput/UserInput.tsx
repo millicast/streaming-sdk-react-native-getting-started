@@ -26,8 +26,8 @@ export const UserInput = ({ navigation }) => {
 
   const MINIMUM_INPUT_LENGTH = 3;
 
-  const [streamName, setStreamName] = useState<string>('');
-  const [accountId, setAccountId] = useState<string>('');
+  const [streamName, setStreamName] = useState<string>('prod');
+  const [accountId, setAccountId] = useState<string>('sjf6bf');
   const [validation, setValidation] = useState<ValidationType>({ valid: true });
   const [isDemoButtonFocused, setIsDemoButtonFocused] = useState<boolean>(false);
   const defaultDemoButtonIconColor = !Platform.isTV ? 'white' : 'grey';
