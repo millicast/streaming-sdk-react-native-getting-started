@@ -29,7 +29,7 @@
     "react-native-screen": "^1.0.1",
     "react-native-screens": "^3.20.0",
     "react-native-svg": "^12.3.0",
-    "react-native-webrtc": "github:montanaeli/react-native-webrtc#2c7b6e3",
+    "react-native-webrtc": "github:aravind-raveendran/react-native-webrtc#045ef81",
     "react-redux": "^8.1.3",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0"

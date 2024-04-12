@@ -261,6 +261,8 @@ export const MultiView = ({ navigation }) => {
           const { active, layers } = (data as MediaStreamLayers).medias[mediaId] ?? {};
           const streamQualities = buildQualityOptions(active, layers);
 
+          console.log('---> data', data);
+
           dispatch({
             type: 'viewer/setActiveLayers',
             payload: { mediaId, streamQualities },
