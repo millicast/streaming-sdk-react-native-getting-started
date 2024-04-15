@@ -3,6 +3,7 @@ import cameraOff from './camera-off.svg';
 import cameraReverse from './camera-reverse.svg';
 import camera from './camera.svg';
 import chat from './chat.svg';
+import checkmark from './checkmark.svg';
 import close from './close.svg';
 import copy from './copy.svg';
 import dolbyLogo from './dolby.svg';
@@ -40,6 +41,7 @@ const Icons = {
   cameraOff,
   cameraReverse,
   chat,
+  checkmark,
   close,
   copy,
   dolbyLogo,

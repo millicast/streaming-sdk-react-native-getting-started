@@ -34,5 +34,6 @@
   "clearSavedStreamsAlertCancelButton": "Cancel",
   "clearSavedStreamsAlertClearButton": "Clear",
   "noSavedStreamsTitleText": "You don’t have any streams viewed",
-  "noSavedStreamssubtitleText": "View a stream to add it to your history."
+  "noSavedStreamssubtitleText": "View a stream to add it to your history.",
+  "simulcastTitle": "Simulcast selection"
 }

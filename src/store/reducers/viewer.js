@@ -1,5 +1,3 @@
-import { NativeModules, Platform } from 'react-native';
-
 /* eslint-disable */
 const initialState = {
   streamName: null,
@@ -16,6 +14,8 @@ const initialState = {
   muted: false,
   multiView: false,
   streamStats: null,
+  projectedVideoMids: [],
+  projectedLayers: [],
 };
 
 const viewerReducer = (state = initialState, action) => {
@@ -41,9 +41,25 @@ const viewerReducer = (state = initialState, action) => {
         sourceIds: action.payload,
       };
     case 'viewer/setActiveLayers':
+      const {mediaId, streamQualities} = action.payload;
+      const sourceToAddLayer = state.remoteTrackSources.find(
+        (remoteTrackSource) => remoteTrackSource.videoMediaId === mediaId,
+      );
+      if (sourceToAddLayer) {
+        return {
+          ...state,
+          activeLayers: [...state.activeLayers.filter((activeLayer) => activeLayer.mediaId !== mediaId), {mediaId, streamQualities}]
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
+    case 'viewer/setProjectedLayer':
+      const {videoMediaId, streamQuality} = action.payload;
       return {
         ...state,
-        activeLayers: action.payload,
+        projectedLayers: [...state.projectedLayers.filter((projectedLayer) => projectedLayer.mediaId !== videoMediaId), {mediaId: videoMediaId, streamQuality}]
       };
     case 'viewer/setPlaying':
       return {
@@ -69,6 +85,11 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         isMediaSet: action.payload,
+      };
+    case 'viewer/addVideoMid':
+      return {
+        ...state,
+        sourceIds: [...state.projectedVideoMids, action.payload],
       };
     case 'viewer/addSourceId':
       return {
