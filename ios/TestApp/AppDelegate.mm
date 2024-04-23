@@ -5,6 +5,8 @@
 #import <React/RCTRootView.h>
 
 #import <React/RCTAppSetupUtils.h>
+#import <react-native-webrtc/WebRTCModuleOptions.h>
+#import "TestApp-Swift.h"
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -31,6 +33,15 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  WebRTCModuleOptions *options = [WebRTCModuleOptions sharedInstance];
+  options.loggingSeverity = RTCLoggingSeverityInfo;
+  
+  id<RTCAudioDevice> device;
+  
+  device = [[AUAudioUnitRTCAudioDevice alloc] init];
+  
+  options.audioDevice = device;
+  
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
