@@ -542,7 +542,7 @@ SPEC CHECKSUMS:
   React-logger: e30a213559d779b696231615a145ddb29d18c742
   react-native-netinfo: 8a7fd3f7130ef4ad2fb4276d5c9f8d3f28d2df3d
   react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
-  react-native-webrtc: 8b024c7bb9a005d2b9efeba4c691172dbd00268d
+  react-native-webrtc: 55df64a150b3586029b5d110744286419c9fd2df
   React-perflogger: 6c01400e9d679980209c5debe4438eafd7e656b0
   React-RCTAnimation: 00220b81e0f8bc61cc1283544fc78d4f5cc8f857
   React-RCTBlob: a23e9da46cd0523a130b4658a22ffa758c459cc4

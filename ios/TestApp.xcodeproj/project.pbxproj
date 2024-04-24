@@ -45,20 +45,6 @@
 		E878327D2B56496900FF9E84 /* LaunchScreen-tvOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E878327C2B56496900FF9E84 /* LaunchScreen-tvOS.storyboard */; };
 		E8896C452B86A0E300B98F14 /* RCTAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E8896C442B86A0E300B98F14 /* RCTAudioManager.m */; };
 		E8896C462B86A0E300B98F14 /* RCTAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E8896C442B86A0E300B98F14 /* RCTAudioManager.m */; };
-		E89BE2A22BD78C0C009DF6FD /* AUAudioUnitRTCAudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE2992BD78C0C009DF6FD /* AUAudioUnitRTCAudioDevice.swift */; };
-		E89BE2A32BD78C0D009DF6FD /* AUAudioUnitRTCAudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE2992BD78C0C009DF6FD /* AUAudioUnitRTCAudioDevice.swift */; };
-		E89BE2A62BD78C0D009DF6FD /* SimpleAudioConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29B2BD78C0C009DF6FD /* SimpleAudioConverter.swift */; };
-		E89BE2A72BD78C0D009DF6FD /* SimpleAudioConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29B2BD78C0C009DF6FD /* SimpleAudioConverter.swift */; };
-		E89BE2A82BD78C0D009DF6FD /* SimulateStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29C2BD78C0C009DF6FD /* SimulateStream.swift */; };
-		E89BE2A92BD78C0D009DF6FD /* SimulateStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29C2BD78C0C009DF6FD /* SimulateStream.swift */; };
-		E89BE2AA2BD78C0D009DF6FD /* AVAudioEngineRTCAudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29D2BD78C0C009DF6FD /* AVAudioEngineRTCAudioDevice.swift */; };
-		E89BE2AB2BD78C0D009DF6FD /* AVAudioEngineRTCAudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29D2BD78C0C009DF6FD /* AVAudioEngineRTCAudioDevice.swift */; };
-		E89BE2AC2BD78C0D009DF6FD /* AudioSessionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29E2BD78C0C009DF6FD /* AudioSessionHandler.swift */; };
-		E89BE2AD2BD78C0D009DF6FD /* AudioSessionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE29E2BD78C0C009DF6FD /* AudioSessionHandler.swift */; };
-		E89BE2AE2BD78C0D009DF6FD /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = E89BE2A02BD78C0C009DF6FD /* Synth.aif */; };
-		E89BE2AF2BD78C0D009DF6FD /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = E89BE2A02BD78C0C009DF6FD /* Synth.aif */; };
-		E89BE2B02BD78C0D009DF6FD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE2A12BD78C0C009DF6FD /* Utils.swift */; };
-		E89BE2B12BD78C0D009DF6FD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BE2A12BD78C0C009DF6FD /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,13 +109,6 @@
 		E878327E2B5660BB00FF9E84 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		E8896C432B86A0E300B98F14 /* RCTAudioManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTAudioManager.h; sourceTree = "<group>"; };
 		E8896C442B86A0E300B98F14 /* RCTAudioManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTAudioManager.m; sourceTree = "<group>"; };
-		E89BE2992BD78C0C009DF6FD /* AUAudioUnitRTCAudioDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUAudioUnitRTCAudioDevice.swift; sourceTree = "<group>"; };
-		E89BE29B2BD78C0C009DF6FD /* SimpleAudioConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleAudioConverter.swift; sourceTree = "<group>"; };
-		E89BE29C2BD78C0C009DF6FD /* SimulateStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimulateStream.swift; sourceTree = "<group>"; };
-		E89BE29D2BD78C0C009DF6FD /* AVAudioEngineRTCAudioDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAudioEngineRTCAudioDevice.swift; sourceTree = "<group>"; };
-		E89BE29E2BD78C0C009DF6FD /* AudioSessionHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioSessionHandler.swift; sourceTree = "<group>"; };
-		E89BE2A02BD78C0C009DF6FD /* Synth.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = Synth.aif; sourceTree = "<group>"; };
-		E89BE2A12BD78C0C009DF6FD /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -187,7 +166,6 @@
 		13B07FAE1A68108700A75B9A /* TestApp */ = {
 			isa = PBXGroup;
 			children = (
-				E89BE2982BD78C0C009DF6FD /* CustomAudioDevice */,
 				952FFF392B57604300308A43 /* Resources */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -292,28 +270,6 @@
 				E805F8FE2B3258F6008FE2E4 /* tvOSReleaseSettings.xcconfig */,
 			);
 			path = Configuration;
-			sourceTree = "<group>";
-		};
-		E89BE2982BD78C0C009DF6FD /* CustomAudioDevice */ = {
-			isa = PBXGroup;
-			children = (
-				E89BE2992BD78C0C009DF6FD /* AUAudioUnitRTCAudioDevice.swift */,
-				E89BE29B2BD78C0C009DF6FD /* SimpleAudioConverter.swift */,
-				E89BE29C2BD78C0C009DF6FD /* SimulateStream.swift */,
-				E89BE29D2BD78C0C009DF6FD /* AVAudioEngineRTCAudioDevice.swift */,
-				E89BE29E2BD78C0C009DF6FD /* AudioSessionHandler.swift */,
-				E89BE29F2BD78C0C009DF6FD /* Audio */,
-				E89BE2A12BD78C0C009DF6FD /* Utils.swift */,
-			);
-			path = CustomAudioDevice;
-			sourceTree = "<group>";
-		};
-		E89BE29F2BD78C0C009DF6FD /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				E89BE2A02BD78C0C009DF6FD /* Synth.aif */,
-			);
-			path = Audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -461,7 +417,6 @@
 				952FFF5A2B57606000308A43 /* Roboto-MediumItalic.ttf in Resources */,
 				952FFF582B57606000308A43 /* Roboto-LightItalic.ttf in Resources */,
 				952FFF542B57606000308A43 /* Roboto-Light.ttf in Resources */,
-				E89BE2AE2BD78C0D009DF6FD /* Synth.aif in Resources */,
 				952FFF4A2B57606000308A43 /* Roboto-ThinItalic.ttf in Resources */,
 				952FFF462B57606000308A43 /* Roboto-Regular.ttf in Resources */,
 				952FFF562B57606000308A43 /* Roboto-Black.ttf in Resources */,
@@ -483,7 +438,6 @@
 				952FFF5B2B57606000308A43 /* Roboto-MediumItalic.ttf in Resources */,
 				952FFF592B57606000308A43 /* Roboto-LightItalic.ttf in Resources */,
 				952FFF552B57606000308A43 /* Roboto-Light.ttf in Resources */,
-				E89BE2AF2BD78C0D009DF6FD /* Synth.aif in Resources */,
 				952FFF4B2B57606000308A43 /* Roboto-ThinItalic.ttf in Resources */,
 				952FFF472B57606000308A43 /* Roboto-Regular.ttf in Resources */,
 				952FFF572B57606000308A43 /* Roboto-Black.ttf in Resources */,
@@ -702,13 +656,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8896C452B86A0E300B98F14 /* RCTAudioManager.m in Sources */,
-				E89BE2A82BD78C0D009DF6FD /* SimulateStream.swift in Sources */,
-				E89BE2AA2BD78C0D009DF6FD /* AVAudioEngineRTCAudioDevice.swift in Sources */,
-				E89BE2A62BD78C0D009DF6FD /* SimpleAudioConverter.swift in Sources */,
-				E89BE2A22BD78C0C009DF6FD /* AUAudioUnitRTCAudioDevice.swift in Sources */,
-				E89BE2B02BD78C0D009DF6FD /* Utils.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				E89BE2AC2BD78C0D009DF6FD /* AudioSessionHandler.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -718,13 +666,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8896C462B86A0E300B98F14 /* RCTAudioManager.m in Sources */,
-				E89BE2A92BD78C0D009DF6FD /* SimulateStream.swift in Sources */,
-				E89BE2AB2BD78C0D009DF6FD /* AVAudioEngineRTCAudioDevice.swift in Sources */,
-				E89BE2A72BD78C0D009DF6FD /* SimpleAudioConverter.swift in Sources */,
-				E89BE2A32BD78C0D009DF6FD /* AUAudioUnitRTCAudioDevice.swift in Sources */,
-				E89BE2B12BD78C0D009DF6FD /* Utils.swift in Sources */,
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
-				E89BE2AD2BD78C0D009DF6FD /* AudioSessionHandler.swift in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,7 +699,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 49B2F21746781BAB0E2342FD /* Pods-TestApp-TestAppTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -786,7 +727,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 237F23863DD5493E6D9E7638 /* Pods-TestApp-TestAppTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
@@ -1131,7 +1071,6 @@
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -1163,7 +1102,6 @@
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
