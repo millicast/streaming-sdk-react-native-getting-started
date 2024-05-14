@@ -18,8 +18,6 @@ In this document we describe how to run a sample application for publishing and 
 | iPhone |   &#x2713; |  &#x2713; |  &#x2713; | Xcode, WebRTC build for iOS.
 | tvOS |   &#x2717; |  &#x2713; |  &#x2713; | Xcode, WebRTC build for tvOS.
 
-
-
 ## Requirements and supported platforms
 
 The application is meant to run on mobile (Android and iOS) and TV (Android and tvOS).
@@ -30,7 +28,7 @@ So far, we have tested the app on the following emulators, having good results i
 - **Android mobile:** Pixel 6 Pro API 33 Tiramisu
 - **Apple TV:** Apple TV 4K (3rd generation) (at 1080p) tvOS 16.0 and above
 - **Apple mobile:** iPhone 13 Pro Max iOS 16.4
-- **Xcode** version 15.0
+- **Xcode** version 15.2
 - **Android Studio** Dolphin 2021.3.1 patch 1
 
 ### Environment Set Up
@@ -38,11 +36,6 @@ So far, we have tested the app on the following emulators, having good results i
 - We recommend using `yarn`, if you don't have it installed execute:
 ```
 npm install --global yarn
-```
-
-- For **iOS** and **tvOS** Git Large File Storage is needed, install it with
-```
-brew install git-lfs
 ```
 
 - For **Android** platforms you will need `Java SDK 11` and Android Studio installed.
@@ -65,6 +58,7 @@ REACT_APP_MILLICAST_PUBLISHING_TOKEN=yourPublishToken
 > **Note 1:** This is an open issue in [react-native-dotenv](https://github.com/goatandsheep/react-native-dotenv/issues/422) repository. This is one of the workarounds that works.
 
 > **Note 2:** A previously made change will probably keep the cached environment variables. If no new changes can be made, close Metro and re-run the app.
+
 ## Getting Started
 
 To get started with building this app, you will need a Dolby.io account.
@@ -72,13 +66,10 @@ To get started with building this app, you will need a Dolby.io account.
 ### Pre-requisites
 
 - Dolby account
-- [Git LFS](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) installed
 - It is required to have Java SDK 11
 - Yarn installed
-- Xcode 15.1
+- Xcode 15.2
 - Android Studio Dolphin
-- iOS 16
-- tvOS 16
 - Android API 33
 - Ruby version 3.1 or higher
 - Bundler
@@ -94,7 +85,6 @@ In case you want to run the app on Android, be sure to create a file `/android/l
 sdk.dir = PATH_ANDROID_SDK
 ```
 Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
-
 
 ##### Setting Up an Emulator with Android Studio
 
@@ -141,6 +131,8 @@ yarn
 4. Then, execute:
 ```
 cd ios && bundle install
+
+export GITHUB_PERSONAL_ACCESS_TOKEN=<PERSONAL_ACCESS_TOKEN_ISSUED_TO_YOU>
 
 bundle exec pod install
 ```
@@ -202,45 +194,6 @@ If you have any issues related to WebRTC, and you already used this app it maybe
 2. Run `yarn cache clean`.
 3. Re install dependencies with `yarn` command.
 4. Continue with [Getting Started](#getting-started).
-
-### Framework not found WebRTC
-Check inside the TestApp or TestApp-tvOS project (depending on which platform do you want to run the application) go to `General -> Framework, Libraries, and Embedded Content` and look for WebRTC.framework. You should to confirm that you are using the proper framework for the platform and it should be with `Embed && Sign` option.
-
-If you are still having the error, maybe is because the project has an old link to another platform framework, go to `Build Settings -> Search Paths` and inside `Frameworks Search Paths` remove the path of the other framework platform. Do the same thing for `Header Search Paths` and leave only the path to the correct WebRTC framework where do you want to run the application.
-
-### react-native-webrtc-tvOS or react-native-webrtc-iOS WebRTC.h not found error
-
-![WebRTC local reference not found](assets/WebRTC-ReferenceNotFoundError.png)
-
-The Pods target has an incorrect Framework Path configured in Search Paths inside the Build Settings page. 
-
-### No Bundle URL present
-
-![No Bundle URL present](assets/NoBundleURLFoundError.png) 
-
-You should stop the running instances of the application and from Xcode menu go to `Product -> Clean build folder`.
-
-Also you can go to `Xcode -> Settings -> Locations`. Click on the arrow next to `Derived Data` path and this will open on Finder `Derived Data` folder, you can delete the cached files.
-
-If the error persists, you should check your localhost port and make sure that the app is using port 8081, and for this purpose, that port should be available.
-
-To fix this error shown when `pod install` is executed:
-
-```
-[!] The platform of the target `TestApp-tvOS` (tvOS 16.0) is not compatible with `JitsiWebRTC (111.0.2)`, which does not support `tvOS`.
-```
-
-You should go to `node_modules -> react-native-webrtc -> react-native-webrtc.podspec` and comment this line:
-
-```
-s.dependency          'JitsiWebRTC', '~> 111.0.0'
-```
-
-We are using a local dependency of WebRTC that supports tvOS.
-
-## Compatibility/Requirements
-
-It is used a specific version of React Native because of the need for compatibility between `react-native-tvos` and `react-native-webrtc`.
 
 ## License
 Please refer to [LICENSE](https://github.com/millicast/streaming-sdk-react-native-getting-started/blob/main/LICENSE) file.
