@@ -6149,9 +6149,9 @@ react-native-svg@^12.3.0:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
-"react-native-webrtc@github:millicast/react-native-webrtc#6be32b7":
+"react-native-webrtc@github:millicast/react-native-webrtc#2434f4b":
   version "118.0.7"
-  resolved "https://codeload.github.com/millicast/react-native-webrtc/tar.gz/6be32b73be664808c8a1ac9c3435b18998bcaa86"
+  resolved "https://codeload.github.com/millicast/react-native-webrtc/tar.gz/2434f4bfff2fa09df4e54e13560a1e6d2ab3bc34"
   dependencies:
     base64-js "1.5.1"
     debug "4.3.4"

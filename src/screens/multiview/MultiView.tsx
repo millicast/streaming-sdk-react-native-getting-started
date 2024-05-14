@@ -184,10 +184,6 @@ export const MultiView = ({ navigation }) => {
               !hasProjectedAudioTrack && hasAudioMapping ? [...videoMapping, ...audioMapping] : videoMapping;
 
             if (!hasProjectedAudioTrack && hasAudioMapping) {
-              if (Platform.OS === 'ios') {
-                const { AudioManager } = NativeModules;
-                AudioManager.routeAudioThroughDefaultSpeaker();
-              }
               dispatch({
                 type: 'viewer/addAudioRemoteTrackSource',
                 payload: newRemoteTrackSource,
