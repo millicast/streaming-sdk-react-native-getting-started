@@ -63,7 +63,7 @@ export const UserInput = ({ navigation }) => {
   };
 
   const handleDemoPlayClick = () => {
-    play('simulcastmultiview', 'k9Mwad', false);
+    play('multiview', 'k9Mwad', false);
   };
 
   const onChangeStreamName = (text: string) => {
