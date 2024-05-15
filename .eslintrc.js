@@ -1,7 +1,15 @@
+/* eslint no-undef: "off" */
+
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  extends: ['airbnb', 'eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+  extends: [
+    'airbnb',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    '@react-native',
+  ],
   plugins: ['@typescript-eslint', 'prettier'],
   settings: {
     'import/resolver': {

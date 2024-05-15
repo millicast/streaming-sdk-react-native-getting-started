@@ -1,5 +1,3 @@
-import { NativeModules, Platform } from 'react-native';
-
 /* eslint-disable */
 const initialState = {
   streamName: null,
@@ -76,7 +74,7 @@ const viewerReducer = (state = initialState, action) => {
         sourceIds: [...state.sourceIds, action.payload],
       };
     case 'viewer/removeSourceId':
-      const sourceIds = state.sourceIds.filter((sourceId) => sourceId !== action.payload)
+      const sourceIds = state.sourceIds.filter((sourceId) => sourceId !== action.payload);
       return {
         ...state,
         sourceIds: [...sourceIds],
@@ -87,7 +85,9 @@ const viewerReducer = (state = initialState, action) => {
         remoteTrackSources: [...state.remoteTrackSources, action.payload],
       };
     case 'viewer/removeRemoteTrackSource':
-      const remoteTrackSources = state.remoteTrackSources.filter((remoteTrackSource) => remoteTrackSource !== action.payload);
+      const remoteTrackSources = state.remoteTrackSources.filter(
+        (remoteTrackSource) => remoteTrackSource !== action.payload,
+      );
       return {
         ...state,
         remoteTrackSources: [...remoteTrackSources],
