@@ -7,16 +7,16 @@
     <img src="./assets/AndroidTVMultiview.png" style="width: auto; height: 150px; margin: 0 10px;" />
 </div>
 
-
 ## Overview
+
 In this document we describe how to run a sample application for publishing and subscribing to a stream using Dolby credentials on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
 
-| Use Case | Publish | Subscribe | Multiview | Tech Stack| 
-| -------- | -------- | --------- | --------- | --------- |
-| Android mobile |   &#x2713; |  &#x2713; |  &#x2713; | Java 11 SDK, Android Studio, Android emulator.
-| Android TV |   &#x2717; |  &#x2713; |  &#x2713; | Java 11 SDK, Android Studio, Android TV emulator.
-| iPhone |   &#x2713; |  &#x2713; |  &#x2713; | Xcode, WebRTC build for iOS.
-| tvOS |   &#x2717; |  &#x2713; |  &#x2713; | Xcode, WebRTC build for tvOS.
+| Use Case       | Publish  | Subscribe | Multiview | Tech Stack                                        |
+| -------------- | -------- | --------- | --------- | ------------------------------------------------- |
+| Android mobile | &#x2713; | &#x2713;  | &#x2713;  | Java 11 SDK, Android Studio, Android emulator.    |
+| Android TV     | &#x2717; | &#x2713;  | &#x2713;  | Java 11 SDK, Android Studio, Android TV emulator. |
+| iPhone         | &#x2713; | &#x2713;  | &#x2713;  | Xcode, WebRTC build for iOS.                      |
+| tvOS           | &#x2717; | &#x2713;  | &#x2713;  | Xcode, WebRTC build for tvOS.                     |
 
 ## Requirements and supported platforms
 
@@ -34,6 +34,7 @@ So far, we have tested the app on the following emulators, having good results i
 ### Environment Set Up
 
 - We recommend using `yarn`, if you don't have it installed execute:
+
 ```
 npm install --global yarn
 ```
@@ -41,6 +42,7 @@ npm install --global yarn
 - For **Android** platforms you will need `Java SDK 11` and Android Studio installed.
 
 - Add a `.env` file in current path. You can find the following example in `.env.sample`:
+
 ```sh
 # Make a .env file with the following vars
 REACT_APP_MILLICAST_STREAM_NAME_VIEWER=yourStreamNameForViewer
@@ -75,15 +77,18 @@ To get started with building this app, you will need a Dolby.io account.
 - Bundler
 
 #### How to get a Dolby.io account
+
 To set up your [Dolby.io](https://dolby.io/) account, go to the [Dolby.io](https://dolby.io/) dashboard and complete the form. After confirming your email address, you will be logged in.
 If you did not receive a verification email, check your Spam or Junk email folders.
 
 #### Setting Up the Project in Android
 
 In case you want to run the app on Android, be sure to create a file `/android/local.properties` with the following content:
+
 ```
 sdk.dir = PATH_ANDROID_SDK
 ```
+
 Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
 
 ##### Setting Up an Emulator with Android Studio
@@ -91,13 +96,13 @@ Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
 Following the guide above, you should already have your emulator up and running.
 
 From the Android Studio welcome page:
+
 1. Select the `More actions` drop-down menu.
 2. Select `Virtual Device Manager`.
 
 As shown in the image below:
 
 <img src="assets/virtualEmulator.png" alt="drawing" width="500"/>
-
 
 Be sure to give access to your computer camera and microphone in order to be able to use it for testing, otherwise the emulator will create a sample video simulating the camera usage.
 
@@ -124,15 +129,17 @@ The following steps are common for all Apple devices.
 2. `WebRTC.framework` is a required dependency for the iOS/tvOS apps. You can find it in `ios/libWebRTC.zip`. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
 
 3. Install the dependencies:
+
 ```
 yarn
 ```
 
 4. Then, execute:
+
 ```
 cd ios && bundle install
 
-export GITHUB_PERSONAL_ACCESS_TOKEN=<PERSONAL_ACCESS_TOKEN_ISSUED_TO_YOU>
+export GITHUB_PERSONAL_ACCESS_TOKEN=<ISSUED_PERSONAL_ACCESS_TOKEN>
 
 bundle exec pod install
 ```
@@ -161,11 +168,13 @@ The following steps are common for all Android devices.
 
 1. Clone this repository.
 2. To install dependencies, run:
+
 ```
 yarn
 ```
 
 3. Inside the `android` directory, create a file called `local.properties` which only content should be the path of the Java SDK directory, this should look like this:
+
 ```
 sdk.dir = /../Android/sdk
 ```
@@ -175,6 +184,7 @@ This varies from OS to OS, so make sure to put the right path.
 4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on a real Android device, just plug it in through USB. Make sure you have already upgraded the device to 'developer mode'.
 
 5. Open and run the simulator and then execute the application from the terminal:
+
 ```
 yarn run android
 ```
@@ -189,11 +199,14 @@ You should have an Android TV/mobile simulator on Android Studio.
 ## Troubleshooting
 
 ### WebRTC related errors during runtime
+
 If you have any issues related to WebRTC, and you already used this app it maybe due to an outdated node module. Follow this steps:
+
 1. Delete `node_modules` directory.
 2. Run `yarn cache clean`.
 3. Re install dependencies with `yarn` command.
 4. Continue with [Getting Started](#getting-started).
 
 ## License
+
 Please refer to [LICENSE](https://github.com/millicast/streaming-sdk-react-native-getting-started/blob/main/LICENSE) file.

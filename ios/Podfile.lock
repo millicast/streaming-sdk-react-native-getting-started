@@ -1243,7 +1243,7 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  "git@github.com:millicast/millicast-cocoapods-specs.git":
+  https://github.com/millicast/millicast-cocoapods-specs.git:
     - RNMillicastWebRTC
   trunk:
     - SocketRocket
@@ -1435,6 +1435,6 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: d84d1e521e3f8fa3cdd139d617ddf6514d061c78
 
-PODFILE CHECKSUM: 16cf59238864cbebad662be7477731e8cfe34644
+PODFILE CHECKSUM: 61aeb3fb0c8d18c37ff07de354c47cbf12693716
 
 COCOAPODS: 1.14.3
