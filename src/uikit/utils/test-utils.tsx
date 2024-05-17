@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { render, RenderOptions } from '@testing-library/react-native';
 import React from 'react';
 

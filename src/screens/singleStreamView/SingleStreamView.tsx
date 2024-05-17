@@ -30,7 +30,7 @@ export const SingleStreamView = ({ navigation }) => {
   remoteTrackSourcesRef.current = remoteTrackSources;
   millicastViewRef.current = millicastView;
 
-  const [videoTileIndex, setVideoTileIndex] = useState<number>(-1);
+  const [videoTileIndex, setVideoTileIndex] = useState<number | null>(null);
   const [width, setWidth] = useState<number>(Dimensions.get('window').width);
   const [height, setHeight] = useState<number>(Dimensions.get('window').height);
 
