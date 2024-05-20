@@ -1,65 +1,26 @@
-# React Native Sample App
-
-<div style="display: flex; align-items: center; justify-content: center;">
-    <img src="./assets/AndroidHomePage.png" style="width: auto; height: 150px; margin: 0 10px;" />
-    <img src="./assets/iPhoneViewer.png" style="width: auto; height: 150px; margin: 0 10px;" />
-    <img src="./assets/tvOSHomePage.png" style="width: auto; height: 150px; margin: 0 10px;" />
-    <img src="./assets/AndroidTVMultiview.png" style="width: auto; height: 150px; margin: 0 10px;" />
-</div>
+# Dolby.io Interactive Player React Native
 
 ## Overview
 
-In this document we describe how to run a sample application for publishing and subscribing to a stream using Dolby credentials on mobile (Android and iOS) and TV (Android and tvOS) on emulators.
+This project demonstrates a multiview Realtime Streaming Viewing sample app.
 
-| Use Case       | Publish  | Subscribe | Multiview | Tech Stack                                        |
-| -------------- | -------- | --------- | --------- | ------------------------------------------------- |
-| Android mobile | &#x2713; | &#x2713;  | &#x2713;  | Java 11 SDK, Android Studio, Android emulator.    |
-| Android TV     | &#x2717; | &#x2713;  | &#x2713;  | Java 11 SDK, Android Studio, Android TV emulator. |
-| iPhone         | &#x2713; | &#x2713;  | &#x2713;  | Xcode, WebRTC build for iOS.                      |
-| tvOS           | &#x2717; | &#x2713;  | &#x2713;  | Xcode, WebRTC build for tvOS.                     |
+| Use cases                        | Features                                                         | Tech Stack   |
+| -------------------------------- | ---------------------------------------------------------------- | ------------ |
+| Multisource video stream monitor | Start a stream monitoring with a stream name and account ID pair | React Native |
 
 ## Requirements and supported platforms
 
 The application is meant to run on mobile (Android and iOS) and TV (Android and tvOS).
 
-So far, we have tested the app on the following emulators, having good results in all of them:
-
-- **Android TV:** Android TV (1080p) API 33 Tiramisu
-- **Android mobile:** Pixel 6 Pro API 33 Tiramisu
-- **Apple TV:** Apple TV 4K (3rd generation) (at 1080p) tvOS 16.0 and above
-- **Apple mobile:** iPhone 13 Pro Max iOS 16.4
-- **Xcode** version 15.2
-- **Android Studio** Dolphin 2021.3.1 patch 1
-
 ### Environment Set Up
 
-- We recommend using `yarn`, if you don't have it installed execute:
+- We recommend using `yarn`, if you previously haven't installed yarn, please execute the below command:
 
 ```
 npm install --global yarn
 ```
 
 - For **Android** platforms you will need `Java SDK 11` and Android Studio installed.
-
-- Add a `.env` file in current path. You can find the following example in `.env.sample`:
-
-```sh
-# Make a .env file with the following vars
-REACT_APP_MILLICAST_STREAM_NAME_VIEWER=yourStreamNameForViewer
-REACT_APP_MILLICAST_STREAM_NAME_PUBLISHER=yourStreamNameForPublishing
-REACT_APP_MILLICAST_ACCOUNT_ID=yourAccountId
-REACT_APP_MILLICAST_PUBLISHING_TOKEN=yourPublishToken
-```
-
-#### In case `.env` file needs to be changed, some steps should be taken into account:
-
-1. First change any variable needed and save the `.env` file.
-2. Then, make any minimal change to the `App.js` file and save it (a whitespace should be enough).
-3. Reload the app running in Metro typing `r key` in the keyboard.
-
-> **Note 1:** This is an open issue in [react-native-dotenv](https://github.com/goatandsheep/react-native-dotenv/issues/422) repository. This is one of the workarounds that works.
-
-> **Note 2:** A previously made change will probably keep the cached environment variables. If no new changes can be made, close Metro and re-run the app.
 
 ## Getting Started
 
@@ -91,33 +52,6 @@ sdk.dir = PATH_ANDROID_SDK
 
 Where `PATH_ANDROID_SDK` should be replaced by your Android SDK path.
 
-##### Setting Up an Emulator with Android Studio
-
-Following the guide above, you should already have your emulator up and running.
-
-From the Android Studio welcome page:
-
-1. Select the `More actions` drop-down menu.
-2. Select `Virtual Device Manager`.
-
-As shown in the image below:
-
-<img src="assets/virtualEmulator.png" alt="drawing" width="500"/>
-
-Be sure to give access to your computer camera and microphone in order to be able to use it for testing, otherwise the emulator will create a sample video simulating the camera usage.
-
-##### Setting Up the Camera
-
-To give your Android emulator access to your camera, go to Android Studio and edit your desired emulator.
-
-<img src="assets/setCameraAndroidStudio.png" alt="drawing" width="500"/>
-
-##### Setting Up the Microphone
-
-To give your Android emulator access to your microphone, start your emulator and open the emulator options. Then enable `Virtual headset plug inserted` and `Virtual microphone uses host audio input`.
-
-<img src="assets/setMicAndroidEmulator.png" alt="drawing" width="500"/>
-
 ## How to build and run the React Native Sample App
 
 ### Apple
@@ -126,20 +60,18 @@ The following steps are common for all Apple devices.
 
 1. Clone this repository.
 
-2. `WebRTC.framework` is a required dependency for the iOS/tvOS apps. You can find it in `ios/libWebRTC.zip`. To download the zip file from Git LFS is needed to run the command `git lfs pull`.
-
-3. Install the dependencies:
+2. Install the dependencies:
 
 ```
 yarn
 ```
 
-4. Then, execute:
+3. Then, execute:
 
 ```
 cd ios && bundle install
 
-export GITHUB_PERSONAL_ACCESS_TOKEN=<ISSUED_PERSONAL_ACCESS_TOKEN>
+export GITHUB_PERSONAL_ACCESS_TOKEN=<YOUR_PERSONAL_ACCESS_TOKEN>
 
 bundle exec pod install
 ```
@@ -149,16 +81,16 @@ bundle exec pod install
 1. Open Xcode.
 2. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
 3. Select `TestApp project`, then `TestApp` target.
-4. Select `TestApp` project and use an iOS simulator with iOS 16.
-5. Run the project, you should see the simulator with the app home page with a button to publish or subscribe to a stream.
+4. Select `TestApp` project and use any iOS simulator or device.
+5. Run the project, you should see the app with a home screen where you can enter a Stream name and Account Id to view.
 
 #### tvOS
 
 1. Open Xcode.
 2. Select `Open a project from a file` and then select `/streaming-sdk-react-native-getting-started/ios/TestApp.xcworkspace`.
 3. Select `TestApp project`, then `TestApp-tvOS` target.
-4. Select `TestApp-tvOS` project and use a tvOS simulator with tvOS 16.
-5. Run the project, you should see the simulator with the app home page with a buttom to subscribe to a stream.
+4. Select `TestApp-tvOS` project and use any tvOS simulator or device.
+5. Run the project, you should see the app with a home screen where you can enter a Stream name and Account Id to view.
 
 To navigate use the arrow keys and enter button. Also, on the Simulator window you can go to `Window -> Show Apple TV Remote` and use it.
 
@@ -179,8 +111,6 @@ yarn
 sdk.dir = /../Android/sdk
 ```
 
-This varies from OS to OS, so make sure to put the right path.
-
 4. If you want to run it on an emulator, make sure to have installed one on Android Studio (mobile or TV). To do this go to: `Android Studio -> More Actions -> Virtual Device Manager -> Create device`. In case you want to run it on a real Android device, just plug it in through USB. Make sure you have already upgraded the device to 'developer mode'.
 
 5. Open and run the simulator and then execute the application from the terminal:
@@ -189,12 +119,7 @@ This varies from OS to OS, so make sure to put the right path.
 yarn run android
 ```
 
-You should have an Android TV/mobile simulator on Android Studio.
-
-## Known issues
-
-- It's known that the application may crash from time to time for unknown reasons.
-- For obvious reasons, the 'Publisher' will not work on TV but it does on mobile.
+You should have an Android TV/mobile simulator on Android Studio or a device connected.
 
 ## Troubleshooting
 
@@ -210,3 +135,7 @@ If you have any issues related to WebRTC, and you already used this app it maybe
 ## License
 
 Please refer to [LICENSE](https://github.com/millicast/streaming-sdk-react-native-getting-started/blob/main/LICENSE) file.
+
+## More resources
+
+Looking for more sample apps and projects? Head to the [Project Gallery](https://docs.dolby.io/communications-apis/page/gallery).

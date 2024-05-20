@@ -175,7 +175,6 @@ export const MultiView = ({ navigation }) => {
             });
             const newRemoteTrackSource = await addRemoteTrack(viewer, sourceId, tracks);
 
-            await unprojectFromStream(viewer, newRemoteTrackSource);
             const hasProjectedAudioTrack = audioRemoteTrackSourceRef.current !== null;
             const videoMapping = newRemoteTrackSource.projectMapping.filter((mapping) => mapping.media === 'video');
             const audioMapping = newRemoteTrackSource.projectMapping.filter((mapping) => mapping.media === 'audio');
