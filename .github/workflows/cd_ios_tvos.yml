@@ -14,10 +14,6 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
-        with:
-          lfs: true
-      - name: Checkout LFS objects
-        run: git lfs pull
       - uses: actions/setup-node@v3
       - name: Install modules
         run: yarn install
@@ -34,6 +30,8 @@ jobs:
           ruby-version: 3.1.2
 
       - name: Setup Bundler
+        env:
+          GITHUB_PERSONAL_ACCESS_TOKEN: ${{ secrets.MILLICAST_PODS_PERSONAL_ACCESS_TOKEN }}
         run: |
           cd ios
           gem install bundler
