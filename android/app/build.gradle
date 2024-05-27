@@ -1,7 +1,9 @@
-apply plugin: "com.android.application"
-apply plugin: "com.facebook.react"
-apply plugin: "org.jetbrains.kotlin.android"
-
+plugins {
+    id 'com.android.application'
+    id 'com.facebook.react'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.github.triplet.play' version '3.9.1'
+}
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -79,8 +81,8 @@ android {
         applicationId "io.dolby.rn.interactiveplayer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.valueOf(System.env.VERSION_CODE ?: 1)
+        versionName System.env.VERSION_NAME ?: "1.0"
     }
     signingConfigs {
         release {
