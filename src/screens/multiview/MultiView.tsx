@@ -122,11 +122,6 @@ export const MultiView = ({ navigation }) => {
     dispatch({ type: 'viewer/setPlaying', payload: false });
     dispatch({ type: 'viewer/setIsMediaSet', payload: true });
     dispatch({ type: 'viewer/resetRemoteTrackSources' });
-    dispatch({
-      type: 'viewer/setSelectedSource',
-      payload: null,
-    });
-    dispatch({ type: 'viewer/setSourceIds', payload: [] });
   };
 
   const handleTrack = async (event: RTCTrackEvent) => {
@@ -364,12 +359,6 @@ export const MultiView = ({ navigation }) => {
   useEffect(() => {
     if (netInfo.isConnected === false) {
       dispatch({ type: 'viewer/resetRemoteTrackSources' });
-      dispatch({
-        type: 'viewer/setSelectedSource',
-        payload: null,
-      });
-      dispatch({ type: 'viewer/setSourceIds', payload: [] });
-
       // Set error when there is no network connection
       dispatch({ type: 'viewer/setError', payload: 'No internet connection' });
     }
