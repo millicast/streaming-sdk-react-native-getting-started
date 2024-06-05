@@ -33,11 +33,6 @@ const viewerReducer = (state = initialState, action) => {
         ...state,
         accountId: action.payload,
       };
-    case 'viewer/setSourceIds':
-      return {
-        ...state,
-        sourceIds: action.payload,
-      };
     case 'viewer/setActiveLayers':
       return {
         ...state,
@@ -96,6 +91,9 @@ const viewerReducer = (state = initialState, action) => {
       return {
         ...state,
         remoteTrackSources: [],
+        audioRemoteTrackSource: null,
+        selectedSource: null,
+        sourceIds: [],
       };
     case 'viewer/addAudioRemoteTrackSource':
       return {
