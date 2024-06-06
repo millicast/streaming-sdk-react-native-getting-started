@@ -138,6 +138,7 @@ export const UserInput = ({ navigation }) => {
               validation={validation}
               autoFocus={!Platform.isTV}
               testID="StreamNameInput"
+              onSubmitEditing={() => accountIdRef.current.focus()}
             />
           </FocusedComponent>
           <FocusedComponent testID="AccountIdFocusElement" componentRef={accountIdRef}>
@@ -151,6 +152,13 @@ export const UserInput = ({ navigation }) => {
               onChangeText={onChangeAccountId}
               validation={validation}
               testID="AccountIdInput"
+              onSubmitEditing={() => {
+                if (Platform.isTV && Platform.OS === 'android') {
+                  // FIXME: Workaround in Android TV's to keep the focus directed 
+                  // to another input field otherwise the focus is lost.
+                  streamNameRef.current.focus()
+                }
+              }}
             />
           </FocusedComponent>
           <Button
