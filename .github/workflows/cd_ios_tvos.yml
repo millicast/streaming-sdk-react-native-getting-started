@@ -69,7 +69,7 @@ jobs:
           bundle exec fastlane build_and_deploy_to_appstore --env testapp-tvos-appstore build_number:$GITHUB_RUN_NUMBER
 
       - name: 'Upload Artifacts'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build_artifacts_appstore
           path: |

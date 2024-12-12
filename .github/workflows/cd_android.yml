@@ -59,7 +59,7 @@ jobs:
           source ~/.env_version
           cd android && chmod +x ./gradlew && ./gradlew bundleRelease
       - name: Archive production bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-release-bundle
           path: |
